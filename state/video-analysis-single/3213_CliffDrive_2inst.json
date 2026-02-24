@@ -1,0 +1,5314 @@
+{
+  "chunks": [
+    {
+      "chunk_index": 0,
+      "summary": "{\"error\": \"HTTP Error 400: Bad Request\"}"
+    },
+    {
+      "chunk_index": 1,
+      "summary": "{\"error\": \"HTTP Error 400: Bad Request\"}"
+    },
+    {
+      "chunk_index": 2,
+      "summary": "{\"error\": \"HTTP Error 400: Bad Request\"}"
+    },
+    {
+      "chunk_index": 3,
+      "summary": "{\"error\": \"HTTP Error 400: Bad Request\"}"
+    },
+    {
+      "chunk_index": 4,
+      "summary": "{\n  \"flow\": \"The sequence progresses through various rooms (living room, dining area, kitchen, dining room) with a consistent wide shot style, transitioning slowly between spaces, maintaining a static camera and balanced composition throughout.\",\n  \"typography\": false,\n  \"themes\": \"Establishing the domestic environment, emphasizing space and layout without narrative or text elements.\",\n  \"color\": \"Predominantly neutral, with warm and natural tones introduced in dining areas, suggesting a cozy, lived-in atmosphere.\",\n  \"shot_types\": \"Predominantly wide shots, with occasional medium shots in the dining room, all static.\",\n  \"sequence\": \"A slow, methodical tour of the home\u2019s main areas, starting with the living room, moving to dining, then kitchen, and returning to dining room, concluding with medium shots in the dining room.\",\n  \"amenities\": \"Living room, dining area, kitchen, dining room \u2014 all residential spaces with no visible amenities or text overlays.\",\n  \"movement_composition\": \"Static camera with balanced composition throughout; no camera movement or dynamic framing, emphasizing stability and spatial clarity.\"\n}"
+    },
+    {
+      "chunk_index": 5,
+      "summary": "{\n  \"flow\": \"The sequence begins in the dining room, transitions to the bedroom with evolving color grades (natural \u2192 warm \u2192 neutral), and later moves to the bathroom before returning to the bedroom. All shots are static wide shots serving as establishing shots.\",\n  \"typography\": false,\n  \"themes\": \"Establishing domestic spaces with a focus on ambiance and visual balance, transitioning between rooms without narrative action.\",\n  \"color\": \"Varies from natural to warm to neutral, with soft pastels in the bathroom, creating a calm, lived-in atmosphere.\",\n  \"shot_types\": \"Wide shots throughout, with some frames using foreground elements (lamp, window) to frame the composition.\",\n  \"sequence\": \"Establishing shots of rooms (dining \u2192 bedroom \u2192 bathroom \u2192 bedroom) with minimal camera movement, emphasizing spatial layout and mood.\",\n  \"amenities\": \"Dining room, bedroom, bathroom \u2014 each shown in wide, static shots with natural, warm, or neutral color grading.\",\n  \"movement_composition\": \"Static camera with balanced composition; some frames use foreground elements (lamp, window) to add depth and visual interest.\"\n}"
+    },
+    {
+      "chunk_index": 6,
+      "summary": "{\n  \"flow\": \"The sequence begins with establishing shots of a bedroom, transitions to a home office, returns to the bedroom, and then moves to a bathroom and finally a pool, maintaining a static, wide-shot style throughout.\",\n  \"typography\": false,\n  \"themes\": \"Establishing domestic spaces with a focus on calm, neutral, and warm environments.\",\n  \"color\": \"Predominantly neutral, with warm tones introduced in the bathroom and pool scenes.\",\n  \"shot_types\": \"Wide shot throughout\",\n  \"sequence\": \"Bedroom \u2192 Home Office \u2192 Bedroom \u2192 Bathroom \u2192 Pool\",\n  \"amenities\": [\"bedroom\", \"home office\", \"bathroom\", \"pool\"],\n  \"movement_composition\": \"Static, balanced composition\"\n}"
+    },
+    {
+      "chunk_index": 7,
+      "summary": "{\"error\": \"HTTP Error 400: Bad Request\"}"
+    },
+    {
+      "chunk_index": 8,
+      "summary": "{\"error\": \"HTTP Error 400: Bad Request\"}"
+    },
+    {
+      "chunk_index": 9,
+      "summary": "{\"error\": \"HTTP Error 400: Bad Request\"}"
+    },
+    {
+      "chunk_index": 10,
+      "summary": "{\"error\": \"HTTP Error 400: Bad Request\"}"
+    },
+    {
+      "chunk_index": 11,
+      "summary": "{\n  \"flow\": \"The sequence begins with a static wide establishing shot, transitions into a series of wide shots with text overlays and centered logos, maintaining a cinematic and warm color grade throughout.\",\n  \"typography\": \"Present in all frames from 133.2 onwards, with text overlays and centered logos appearing in the composition.\",\n  \"themes\": \"Introductory sequence with natural landscape backgrounds, emphasizing branding or title presentation.\",\n  \"color\": \"Alternates between warm and cinematic tones, with a consistent natural base in earlier frames.\",\n  \"shot_types\": \"Wide shots, mostly static, transitioning from establishing to intro-style with text and logo overlays.\",\n  \"sequence\": \"Establishing shots (132.0\u2013133.0) followed by a branded intro sequence (133.2\u2013136.6) with text and logo overlays.\",\n  \"amenities\": null,\n  \"movement_composition\": \"Static camera with horizontal composition in early frames; later frames feature landscape with text overlays and centered logos, maintaining balanced or centered visual weight.\"\n}"
+    }
+  ],
+  "final": "# Enhanced Temporal Summary (Posthoc)\n\n- Frames analyzed: 684 @ 5 fps\n- Shot count: 56\n- Movement mix: handheld=2, orbit=1, pan=8, static=20, tilt=13, truck=12\n\n## Shot-Level Motion Table\n\n| Shot | Start (s) | End (s) | Dur (s) | Movement | Conf | mean dx | mean dy |\n|---:|---:|---:|---:|---|---:|---:|---:|\n| 1 | 0.000 | 6.800 | 6.800 | static | 0.250 | 0.412 | -1.588 |\n| 2 | 6.800 | 7.800 | 1.000 | static | 0.261 | 0.000 | 0.000 |\n| 3 | 7.800 | 11.000 | 3.200 | handheld | 0.260 | 8.500 | -13.375 |\n| 4 | 11.000 | 13.200 | 2.200 | static | 0.327 | -8.727 | -14.546 |\n| 5 | 13.200 | 15.200 | 2.000 | truck | 0.415 | -16.900 | -16.000 |\n| 6 | 15.200 | 17.600 | 2.400 | tilt | 0.320 | -0.917 | -2.583 |\n| 7 | 17.600 | 19.800 | 2.200 | pan | 0.330 | 12.000 | 10.182 |\n| 8 | 19.800 | 22.000 | 2.200 | truck | 0.441 | -11.091 | -4.364 |\n| 9 | 22.000 | 26.600 | 4.600 | tilt | 0.355 | -4.174 | -3.043 |\n| 10 | 26.600 | 28.000 | 1.400 | tilt | 0.354 | -0.143 | 5.857 |\n| 11 | 28.000 | 31.000 | 3.000 | tilt | 0.393 | -9.667 | 1.667 |\n| 12 | 31.000 | 33.400 | 2.400 | truck | 0.366 | 4.667 | 4.833 |\n| 13 | 33.400 | 35.600 | 2.200 | static | 0.365 | -27.636 | 0.727 |\n| 14 | 35.600 | 37.800 | 2.200 | static | 0.264 | 18.182 | 2.182 |\n| 15 | 37.800 | 40.000 | 2.200 | static | 0.256 | 3.818 | 16.000 |\n| 16 | 40.000 | 42.400 | 2.400 | tilt | 0.345 | 14.917 | -3.917 |\n| 17 | 42.400 | 44.600 | 2.200 | truck | 0.374 | -35.636 | -15.364 |\n| 18 | 44.600 | 45.600 | 1.000 | pan | 0.450 | 42.400 | 22.400 |\n| 19 | 45.600 | 46.800 | 1.200 | pan | 0.446 | -7.667 | 13.333 |\n| 20 | 46.800 | 49.000 | 2.200 | static | 0.306 | -5.818 | -0.727 |\n| 21 | 49.000 | 51.200 | 2.200 | pan | 0.418 | -7.636 | 8.727 |\n| 22 | 51.200 | 53.400 | 2.200 | tilt | 0.330 | -10.909 | -1.727 |\n| 23 | 53.400 | 55.800 | 2.400 | static | 0.404 | -4.000 | -2.667 |\n| 24 | 55.800 | 58.000 | 2.200 | static | 0.274 | -17.364 | 7.273 |\n| 25 | 58.000 | 60.200 | 2.200 | tilt | 0.384 | -0.727 | -0.182 |\n| 26 | 60.200 | 62.600 | 2.400 | truck | 0.397 | 4.750 | -2.750 |\n| 27 | 62.600 | 64.800 | 2.200 | static | 0.301 | -24.818 | 8.727 |\n| 28 | 64.800 | 67.000 | 2.200 | truck | 0.429 | -1.454 | -14.546 |\n| 29 | 67.000 | 69.200 | 2.200 | pan | 0.443 | -3.273 | -9.454 |\n| 30 | 69.200 | 71.400 | 2.200 | truck | 0.402 | -4.000 | 0.000 |\n| 31 | 71.400 | 73.800 | 2.400 | static | 0.431 | 16.000 | -2.667 |\n| 32 | 73.800 | 76.000 | 2.200 | static | 0.327 | -11.636 | 2.273 |\n| 33 | 76.000 | 78.200 | 2.200 | tilt | 0.314 | -12.182 | -3.091 |\n| 34 | 78.200 | 80.600 | 2.400 | static | 0.354 | 9.333 | 3.333 |\n| 35 | 80.600 | 82.800 | 2.200 | static | 0.306 | 29.091 | -15.273 |\n| 36 | 82.800 | 87.200 | 4.400 | orbit | 0.356 | 9.182 | 2.818 |\n| 37 | 87.200 | 89.400 | 2.200 | pan | 0.469 | -25.727 | -6.545 |\n| 38 | 89.400 | 91.800 | 2.400 | tilt | 0.456 | 0.000 | -16.000 |\n| 39 | 91.800 | 94.000 | 2.200 | handheld | 0.306 | -10.909 | 10.273 |\n| 40 | 94.000 | 96.400 | 2.400 | pan | 0.376 | -9.167 | -6.667 |\n| 41 | 96.400 | 98.600 | 2.200 | pan | 0.414 | 20.727 | -12.364 |\n| 42 | 98.600 | 101.000 | 2.400 | tilt | 0.345 | 12.167 | 3.000 |\n| 43 | 101.000 | 103.200 | 2.200 | tilt | 0.371 | 12.000 | 9.636 |\n| 44 | 103.200 | 104.800 | 1.600 | tilt | 0.325 | -11.750 | 4.125 |\n| 45 | 104.800 | 108.000 | 3.200 | tilt | 0.323 | 15.500 | 6.250 |\n| 46 | 108.000 | 110.200 | 2.200 | static | 0.414 | -16.727 | -12.454 |\n| 47 | 110.200 | 112.400 | 2.200 | static | 0.316 | 6.545 | 13.091 |\n| 48 | 112.400 | 114.800 | 2.400 | static | 0.396 | 0.000 | 0.000 |\n| 49 | 114.800 | 117.000 | 2.200 | static | 0.369 | -19.636 | 0.000 |\n| 50 | 117.000 | 120.200 | 3.200 | truck | 0.355 | 9.312 | -0.188 |\n| 51 | 120.200 | 124.000 | 3.800 | truck | 0.365 | 1.158 | 2.000 |\n| 52 | 124.000 | 126.200 | 2.200 | truck | 0.353 | 29.182 | 0.636 |\n| 53 | 126.200 | 128.600 | 2.400 | static | 0.251 | 17.333 | -0.667 |\n| 54 | 128.600 | 130.800 | 2.200 | truck | 0.395 | 17.727 | -3.273 |\n| 55 | 130.800 | 133.200 | 2.400 | truck | 0.385 | -2.000 | 1.333 |\n| 56 | 133.200 | 136.600 | 3.400 | static | 0.590 | 0.000 | 0.000 |\n\n## Notes\n\n- Movement labels are deterministic and inferential from global inter-frame motion only.\n- `push/pull/truck/orbit` are emitted only when heuristics are strong enough; otherwise motion defaults to `pan/tilt/static/handheld`.\n- No semantic frame inference was rerun in this pass.",
+  "fps": 5,
+  "frames_analyzed": 684,
+  "instances": [
+    "qwen/qwen3-vl-8b:3",
+    "qwen/qwen3-vl-8b:4"
+  ],
+  "temporal_post": {
+    "fps": 5.0,
+    "frames_total": 684,
+    "interpolated_motion": [
+      {
+        "frame_index": 0,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 0.0
+      },
+      {
+        "frame_index": 1,
+        "interp_dx": 1.75,
+        "interp_dy": -6.75,
+        "t": 0.2
+      },
+      {
+        "frame_index": 2,
+        "interp_dx": 3.5,
+        "interp_dy": -13.5,
+        "t": 0.4
+      },
+      {
+        "frame_index": 3,
+        "interp_dx": 5.25,
+        "interp_dy": -20.25,
+        "t": 0.6
+      },
+      {
+        "frame_index": 4,
+        "interp_dx": 7.0,
+        "interp_dy": -27.0,
+        "t": 0.8
+      },
+      {
+        "frame_index": 5,
+        "interp_dx": 8.75,
+        "interp_dy": -33.75,
+        "t": 1.0
+      },
+      {
+        "frame_index": 6,
+        "interp_dx": 10.5,
+        "interp_dy": -40.5,
+        "t": 1.2
+      },
+      {
+        "frame_index": 7,
+        "interp_dx": 12.25,
+        "interp_dy": -47.25,
+        "t": 1.4
+      },
+      {
+        "frame_index": 8,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 1.6
+      },
+      {
+        "frame_index": 9,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 1.8
+      },
+      {
+        "frame_index": 10,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 2.0
+      },
+      {
+        "frame_index": 11,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 2.2
+      },
+      {
+        "frame_index": 12,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 2.4
+      },
+      {
+        "frame_index": 13,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 2.6
+      },
+      {
+        "frame_index": 14,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 2.8
+      },
+      {
+        "frame_index": 15,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 3.0
+      },
+      {
+        "frame_index": 16,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 3.2
+      },
+      {
+        "frame_index": 17,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 3.4
+      },
+      {
+        "frame_index": 18,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 3.6
+      },
+      {
+        "frame_index": 19,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 3.8
+      },
+      {
+        "frame_index": 20,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 4.0
+      },
+      {
+        "frame_index": 21,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 4.2
+      },
+      {
+        "frame_index": 22,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 4.4
+      },
+      {
+        "frame_index": 23,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 4.6
+      },
+      {
+        "frame_index": 24,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 4.8
+      },
+      {
+        "frame_index": 25,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 5.0
+      },
+      {
+        "frame_index": 26,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 5.2
+      },
+      {
+        "frame_index": 27,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 5.4
+      },
+      {
+        "frame_index": 28,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 5.6
+      },
+      {
+        "frame_index": 29,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 5.8
+      },
+      {
+        "frame_index": 30,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 6.0
+      },
+      {
+        "frame_index": 31,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 6.2
+      },
+      {
+        "frame_index": 32,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 6.4
+      },
+      {
+        "frame_index": 33,
+        "interp_dx": 14.0,
+        "interp_dy": -54.0,
+        "t": 6.6
+      },
+      {
+        "frame_index": 34,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 6.8
+      },
+      {
+        "frame_index": 35,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 7.0
+      },
+      {
+        "frame_index": 36,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 7.2
+      },
+      {
+        "frame_index": 37,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 7.4
+      },
+      {
+        "frame_index": 38,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 7.6
+      },
+      {
+        "frame_index": 39,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 7.8
+      },
+      {
+        "frame_index": 40,
+        "interp_dx": 0.0,
+        "interp_dy": -1.625,
+        "t": 8.0
+      },
+      {
+        "frame_index": 41,
+        "interp_dx": 0.0,
+        "interp_dy": -3.25,
+        "t": 8.2
+      },
+      {
+        "frame_index": 42,
+        "interp_dx": 0.0,
+        "interp_dy": -4.875,
+        "t": 8.4
+      },
+      {
+        "frame_index": 43,
+        "interp_dx": 0.0,
+        "interp_dy": -6.5,
+        "t": 8.6
+      },
+      {
+        "frame_index": 44,
+        "interp_dx": 0.0,
+        "interp_dy": -8.125,
+        "t": 8.8
+      },
+      {
+        "frame_index": 45,
+        "interp_dx": 0.0,
+        "interp_dy": -9.75,
+        "t": 9.0
+      },
+      {
+        "frame_index": 46,
+        "interp_dx": 0.0,
+        "interp_dy": -11.375,
+        "t": 9.2
+      },
+      {
+        "frame_index": 47,
+        "interp_dx": 0.0,
+        "interp_dy": -13.0,
+        "t": 9.4
+      },
+      {
+        "frame_index": 48,
+        "interp_dx": 17.0,
+        "interp_dy": -38.125,
+        "t": 9.6
+      },
+      {
+        "frame_index": 49,
+        "interp_dx": 34.0,
+        "interp_dy": -63.25,
+        "t": 9.8
+      },
+      {
+        "frame_index": 50,
+        "interp_dx": 51.0,
+        "interp_dy": -88.375,
+        "t": 10.0
+      },
+      {
+        "frame_index": 51,
+        "interp_dx": 68.0,
+        "interp_dy": -113.5,
+        "t": 10.2
+      },
+      {
+        "frame_index": 52,
+        "interp_dx": 85.0,
+        "interp_dy": -138.625,
+        "t": 10.4
+      },
+      {
+        "frame_index": 53,
+        "interp_dx": 102.0,
+        "interp_dy": -163.75,
+        "t": 10.6
+      },
+      {
+        "frame_index": 54,
+        "interp_dx": 119.0,
+        "interp_dy": -188.875,
+        "t": 10.8
+      },
+      {
+        "frame_index": 55,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 11.0
+      },
+      {
+        "frame_index": 56,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 11.2
+      },
+      {
+        "frame_index": 57,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 11.4
+      },
+      {
+        "frame_index": 58,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 11.6
+      },
+      {
+        "frame_index": 59,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 11.8
+      },
+      {
+        "frame_index": 60,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 12.0
+      },
+      {
+        "frame_index": 61,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 12.2
+      },
+      {
+        "frame_index": 62,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 12.4
+      },
+      {
+        "frame_index": 63,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 12.6
+      },
+      {
+        "frame_index": 64,
+        "interp_dx": -32.0,
+        "interp_dy": -53.3333,
+        "t": 12.8
+      },
+      {
+        "frame_index": 65,
+        "interp_dx": -64.0,
+        "interp_dy": -106.6667,
+        "t": 13.0
+      },
+      {
+        "frame_index": 66,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 13.2
+      },
+      {
+        "frame_index": 67,
+        "interp_dx": -4.25,
+        "interp_dy": 0.0,
+        "t": 13.4
+      },
+      {
+        "frame_index": 68,
+        "interp_dx": -8.5,
+        "interp_dy": 0.0,
+        "t": 13.6
+      },
+      {
+        "frame_index": 69,
+        "interp_dx": -12.75,
+        "interp_dy": 0.0,
+        "t": 13.8
+      },
+      {
+        "frame_index": 70,
+        "interp_dx": -17.0,
+        "interp_dy": 0.0,
+        "t": 14.0
+      },
+      {
+        "frame_index": 71,
+        "interp_dx": -21.25,
+        "interp_dy": 0.0,
+        "t": 14.2
+      },
+      {
+        "frame_index": 72,
+        "interp_dx": -25.5,
+        "interp_dy": 0.0,
+        "t": 14.4
+      },
+      {
+        "frame_index": 73,
+        "interp_dx": -29.75,
+        "interp_dy": 0.0,
+        "t": 14.6
+      },
+      {
+        "frame_index": 74,
+        "interp_dx": -34.0,
+        "interp_dy": 0.0,
+        "t": 14.8
+      },
+      {
+        "frame_index": 75,
+        "interp_dx": -101.5,
+        "interp_dy": -80.0,
+        "t": 15.0
+      },
+      {
+        "frame_index": 76,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 15.2
+      },
+      {
+        "frame_index": 77,
+        "interp_dx": -2.25,
+        "interp_dy": -6.125,
+        "t": 15.4
+      },
+      {
+        "frame_index": 78,
+        "interp_dx": -4.5,
+        "interp_dy": -12.25,
+        "t": 15.6
+      },
+      {
+        "frame_index": 79,
+        "interp_dx": -6.75,
+        "interp_dy": -18.375,
+        "t": 15.8
+      },
+      {
+        "frame_index": 80,
+        "interp_dx": -9.0,
+        "interp_dy": -24.5,
+        "t": 16.0
+      },
+      {
+        "frame_index": 81,
+        "interp_dx": -11.25,
+        "interp_dy": -30.625,
+        "t": 16.2
+      },
+      {
+        "frame_index": 82,
+        "interp_dx": -13.5,
+        "interp_dy": -36.75,
+        "t": 16.4
+      },
+      {
+        "frame_index": 83,
+        "interp_dx": -15.75,
+        "interp_dy": -42.875,
+        "t": 16.6
+      },
+      {
+        "frame_index": 84,
+        "interp_dx": -18.0,
+        "interp_dy": -49.0,
+        "t": 16.8
+      },
+      {
+        "frame_index": 85,
+        "interp_dx": -16.25,
+        "interp_dy": -44.5,
+        "t": 17.0
+      },
+      {
+        "frame_index": 86,
+        "interp_dx": -14.5,
+        "interp_dy": -40.0,
+        "t": 17.2
+      },
+      {
+        "frame_index": 87,
+        "interp_dx": -12.75,
+        "interp_dy": -35.5,
+        "t": 17.4
+      },
+      {
+        "frame_index": 88,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 17.6
+      },
+      {
+        "frame_index": 89,
+        "interp_dx": 2.25,
+        "interp_dy": -0.875,
+        "t": 17.8
+      },
+      {
+        "frame_index": 90,
+        "interp_dx": 4.5,
+        "interp_dy": -1.75,
+        "t": 18.0
+      },
+      {
+        "frame_index": 91,
+        "interp_dx": 6.75,
+        "interp_dy": -2.625,
+        "t": 18.2
+      },
+      {
+        "frame_index": 92,
+        "interp_dx": 9.0,
+        "interp_dy": -3.5,
+        "t": 18.4
+      },
+      {
+        "frame_index": 93,
+        "interp_dx": 11.25,
+        "interp_dy": -4.375,
+        "t": 18.6
+      },
+      {
+        "frame_index": 94,
+        "interp_dx": 13.5,
+        "interp_dy": -5.25,
+        "t": 18.8
+      },
+      {
+        "frame_index": 95,
+        "interp_dx": 15.75,
+        "interp_dy": -6.125,
+        "t": 19.0
+      },
+      {
+        "frame_index": 96,
+        "interp_dx": 18.0,
+        "interp_dy": -7.0,
+        "t": 19.2
+      },
+      {
+        "frame_index": 97,
+        "interp_dx": 56.0,
+        "interp_dy": 32.6667,
+        "t": 19.4
+      },
+      {
+        "frame_index": 98,
+        "interp_dx": 94.0,
+        "interp_dy": 72.3333,
+        "t": 19.6
+      },
+      {
+        "frame_index": 99,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 19.8
+      },
+      {
+        "frame_index": 100,
+        "interp_dx": 4.5,
+        "interp_dy": 0.0,
+        "t": 20.0
+      },
+      {
+        "frame_index": 101,
+        "interp_dx": 9.0,
+        "interp_dy": 0.0,
+        "t": 20.2
+      },
+      {
+        "frame_index": 102,
+        "interp_dx": 13.5,
+        "interp_dy": 0.0,
+        "t": 20.4
+      },
+      {
+        "frame_index": 103,
+        "interp_dx": 18.0,
+        "interp_dy": 0.0,
+        "t": 20.6
+      },
+      {
+        "frame_index": 104,
+        "interp_dx": 22.5,
+        "interp_dy": 0.0,
+        "t": 20.8
+      },
+      {
+        "frame_index": 105,
+        "interp_dx": 27.0,
+        "interp_dy": 0.0,
+        "t": 21.0
+      },
+      {
+        "frame_index": 106,
+        "interp_dx": 31.5,
+        "interp_dy": 0.0,
+        "t": 21.2
+      },
+      {
+        "frame_index": 107,
+        "interp_dx": 36.0,
+        "interp_dy": 0.0,
+        "t": 21.4
+      },
+      {
+        "frame_index": 108,
+        "interp_dx": -16.6667,
+        "interp_dy": -16.0,
+        "t": 21.6
+      },
+      {
+        "frame_index": 109,
+        "interp_dx": -69.3333,
+        "interp_dy": -32.0,
+        "t": 21.8
+      },
+      {
+        "frame_index": 110,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 22.0
+      },
+      {
+        "frame_index": 111,
+        "interp_dx": 0.0,
+        "interp_dy": -0.75,
+        "t": 22.2
+      },
+      {
+        "frame_index": 112,
+        "interp_dx": 0.0,
+        "interp_dy": -1.5,
+        "t": 22.4
+      },
+      {
+        "frame_index": 113,
+        "interp_dx": 0.0,
+        "interp_dy": -2.25,
+        "t": 22.6
+      },
+      {
+        "frame_index": 114,
+        "interp_dx": 0.0,
+        "interp_dy": -3.0,
+        "t": 22.8
+      },
+      {
+        "frame_index": 115,
+        "interp_dx": 0.0,
+        "interp_dy": -3.75,
+        "t": 23.0
+      },
+      {
+        "frame_index": 116,
+        "interp_dx": 0.0,
+        "interp_dy": -4.5,
+        "t": 23.2
+      },
+      {
+        "frame_index": 117,
+        "interp_dx": 0.0,
+        "interp_dy": -5.25,
+        "t": 23.4
+      },
+      {
+        "frame_index": 118,
+        "interp_dx": 0.0,
+        "interp_dy": -6.0,
+        "t": 23.6
+      },
+      {
+        "frame_index": 119,
+        "interp_dx": 0.0,
+        "interp_dy": -7.375,
+        "t": 23.8
+      },
+      {
+        "frame_index": 120,
+        "interp_dx": 0.0,
+        "interp_dy": -8.75,
+        "t": 24.0
+      },
+      {
+        "frame_index": 121,
+        "interp_dx": 0.0,
+        "interp_dy": -10.125,
+        "t": 24.2
+      },
+      {
+        "frame_index": 122,
+        "interp_dx": 0.0,
+        "interp_dy": -11.5,
+        "t": 24.4
+      },
+      {
+        "frame_index": 123,
+        "interp_dx": 0.0,
+        "interp_dy": -12.875,
+        "t": 24.6
+      },
+      {
+        "frame_index": 124,
+        "interp_dx": 0.0,
+        "interp_dy": -14.25,
+        "t": 24.8
+      },
+      {
+        "frame_index": 125,
+        "interp_dx": 0.0,
+        "interp_dy": -15.625,
+        "t": 25.0
+      },
+      {
+        "frame_index": 126,
+        "interp_dx": 0.0,
+        "interp_dy": -17.0,
+        "t": 25.2
+      },
+      {
+        "frame_index": 127,
+        "interp_dx": -13.7143,
+        "interp_dy": -24.5714,
+        "t": 25.4
+      },
+      {
+        "frame_index": 128,
+        "interp_dx": -27.4286,
+        "interp_dy": -32.1429,
+        "t": 25.6
+      },
+      {
+        "frame_index": 129,
+        "interp_dx": -41.1429,
+        "interp_dy": -39.7143,
+        "t": 25.8
+      },
+      {
+        "frame_index": 130,
+        "interp_dx": -54.8571,
+        "interp_dy": -47.2857,
+        "t": 26.0
+      },
+      {
+        "frame_index": 131,
+        "interp_dx": -68.5714,
+        "interp_dy": -54.8571,
+        "t": 26.2
+      },
+      {
+        "frame_index": 132,
+        "interp_dx": -82.2857,
+        "interp_dy": -62.4286,
+        "t": 26.4
+      },
+      {
+        "frame_index": 133,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 26.6
+      },
+      {
+        "frame_index": 134,
+        "interp_dx": -0.1429,
+        "interp_dy": 5.8571,
+        "t": 26.8
+      },
+      {
+        "frame_index": 135,
+        "interp_dx": -0.2857,
+        "interp_dy": 11.7143,
+        "t": 27.0
+      },
+      {
+        "frame_index": 136,
+        "interp_dx": -0.4286,
+        "interp_dy": 17.5714,
+        "t": 27.2
+      },
+      {
+        "frame_index": 137,
+        "interp_dx": -0.5714,
+        "interp_dy": 23.4286,
+        "t": 27.4
+      },
+      {
+        "frame_index": 138,
+        "interp_dx": -0.7143,
+        "interp_dy": 29.2857,
+        "t": 27.6
+      },
+      {
+        "frame_index": 139,
+        "interp_dx": -0.8571,
+        "interp_dy": 35.1429,
+        "t": 27.8
+      },
+      {
+        "frame_index": 140,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 28.0
+      },
+      {
+        "frame_index": 141,
+        "interp_dx": -39.125,
+        "interp_dy": 1.375,
+        "t": 28.2
+      },
+      {
+        "frame_index": 142,
+        "interp_dx": -78.25,
+        "interp_dy": 2.75,
+        "t": 28.4
+      },
+      {
+        "frame_index": 143,
+        "interp_dx": -117.375,
+        "interp_dy": 4.125,
+        "t": 28.6
+      },
+      {
+        "frame_index": 144,
+        "interp_dx": -156.5,
+        "interp_dy": 5.5,
+        "t": 28.8
+      },
+      {
+        "frame_index": 145,
+        "interp_dx": -195.625,
+        "interp_dy": 6.875,
+        "t": 29.0
+      },
+      {
+        "frame_index": 146,
+        "interp_dx": -234.75,
+        "interp_dy": 8.25,
+        "t": 29.2
+      },
+      {
+        "frame_index": 147,
+        "interp_dx": -273.875,
+        "interp_dy": 9.625,
+        "t": 29.4
+      },
+      {
+        "frame_index": 148,
+        "interp_dx": -313.0,
+        "interp_dy": 11.0,
+        "t": 29.6
+      },
+      {
+        "frame_index": 149,
+        "interp_dx": -289.0,
+        "interp_dy": 13.0,
+        "t": 29.8
+      },
+      {
+        "frame_index": 150,
+        "interp_dx": -265.0,
+        "interp_dy": 15.0,
+        "t": 30.0
+      },
+      {
+        "frame_index": 151,
+        "interp_dx": -241.0,
+        "interp_dy": 17.0,
+        "t": 30.2
+      },
+      {
+        "frame_index": 152,
+        "interp_dx": -217.0,
+        "interp_dy": 19.0,
+        "t": 30.4
+      },
+      {
+        "frame_index": 153,
+        "interp_dx": -193.0,
+        "interp_dy": 21.0,
+        "t": 30.6
+      },
+      {
+        "frame_index": 154,
+        "interp_dx": -169.0,
+        "interp_dy": 23.0,
+        "t": 30.8
+      },
+      {
+        "frame_index": 155,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 31.0
+      },
+      {
+        "frame_index": 156,
+        "interp_dx": 7.0,
+        "interp_dy": 1.375,
+        "t": 31.2
+      },
+      {
+        "frame_index": 157,
+        "interp_dx": 14.0,
+        "interp_dy": 2.75,
+        "t": 31.4
+      },
+      {
+        "frame_index": 158,
+        "interp_dx": 21.0,
+        "interp_dy": 4.125,
+        "t": 31.6
+      },
+      {
+        "frame_index": 159,
+        "interp_dx": 28.0,
+        "interp_dy": 5.5,
+        "t": 31.8
+      },
+      {
+        "frame_index": 160,
+        "interp_dx": 35.0,
+        "interp_dy": 6.875,
+        "t": 32.0
+      },
+      {
+        "frame_index": 161,
+        "interp_dx": 42.0,
+        "interp_dy": 8.25,
+        "t": 32.2
+      },
+      {
+        "frame_index": 162,
+        "interp_dx": 49.0,
+        "interp_dy": 9.625,
+        "t": 32.4
+      },
+      {
+        "frame_index": 163,
+        "interp_dx": 56.0,
+        "interp_dy": 11.0,
+        "t": 32.6
+      },
+      {
+        "frame_index": 164,
+        "interp_dx": 56.0,
+        "interp_dy": 22.75,
+        "t": 32.8
+      },
+      {
+        "frame_index": 165,
+        "interp_dx": 56.0,
+        "interp_dy": 34.5,
+        "t": 33.0
+      },
+      {
+        "frame_index": 166,
+        "interp_dx": 56.0,
+        "interp_dy": 46.25,
+        "t": 33.2
+      },
+      {
+        "frame_index": 167,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 33.4
+      },
+      {
+        "frame_index": 168,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 33.6
+      },
+      {
+        "frame_index": 169,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 33.8
+      },
+      {
+        "frame_index": 170,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 34.0
+      },
+      {
+        "frame_index": 171,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 34.2
+      },
+      {
+        "frame_index": 172,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 34.4
+      },
+      {
+        "frame_index": 173,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 34.6
+      },
+      {
+        "frame_index": 174,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 34.8
+      },
+      {
+        "frame_index": 175,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 35.0
+      },
+      {
+        "frame_index": 176,
+        "interp_dx": -101.3333,
+        "interp_dy": 2.6667,
+        "t": 35.2
+      },
+      {
+        "frame_index": 177,
+        "interp_dx": -202.6667,
+        "interp_dy": 5.3333,
+        "t": 35.4
+      },
+      {
+        "frame_index": 178,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 35.6
+      },
+      {
+        "frame_index": 179,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 35.8
+      },
+      {
+        "frame_index": 180,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 36.0
+      },
+      {
+        "frame_index": 181,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 36.2
+      },
+      {
+        "frame_index": 182,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 36.4
+      },
+      {
+        "frame_index": 183,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 36.6
+      },
+      {
+        "frame_index": 184,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 36.8
+      },
+      {
+        "frame_index": 185,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 37.0
+      },
+      {
+        "frame_index": 186,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 37.2
+      },
+      {
+        "frame_index": 187,
+        "interp_dx": 66.6667,
+        "interp_dy": 8.0,
+        "t": 37.4
+      },
+      {
+        "frame_index": 188,
+        "interp_dx": 133.3333,
+        "interp_dy": 16.0,
+        "t": 37.6
+      },
+      {
+        "frame_index": 189,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 37.8
+      },
+      {
+        "frame_index": 190,
+        "interp_dx": 0.25,
+        "interp_dy": 0.0,
+        "t": 38.0
+      },
+      {
+        "frame_index": 191,
+        "interp_dx": 0.5,
+        "interp_dy": 0.0,
+        "t": 38.2
+      },
+      {
+        "frame_index": 192,
+        "interp_dx": 0.75,
+        "interp_dy": 0.0,
+        "t": 38.4
+      },
+      {
+        "frame_index": 193,
+        "interp_dx": 1.0,
+        "interp_dy": 0.0,
+        "t": 38.6
+      },
+      {
+        "frame_index": 194,
+        "interp_dx": 1.25,
+        "interp_dy": 0.0,
+        "t": 38.8
+      },
+      {
+        "frame_index": 195,
+        "interp_dx": 1.5,
+        "interp_dy": 0.0,
+        "t": 39.0
+      },
+      {
+        "frame_index": 196,
+        "interp_dx": 1.75,
+        "interp_dy": 0.0,
+        "t": 39.2
+      },
+      {
+        "frame_index": 197,
+        "interp_dx": 2.0,
+        "interp_dy": 0.0,
+        "t": 39.4
+      },
+      {
+        "frame_index": 198,
+        "interp_dx": 15.3333,
+        "interp_dy": 58.6667,
+        "t": 39.6
+      },
+      {
+        "frame_index": 199,
+        "interp_dx": 28.6667,
+        "interp_dy": 117.3333,
+        "t": 39.8
+      },
+      {
+        "frame_index": 200,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 40.0
+      },
+      {
+        "frame_index": 201,
+        "interp_dx": -4.375,
+        "interp_dy": -6.75,
+        "t": 40.2
+      },
+      {
+        "frame_index": 202,
+        "interp_dx": -8.75,
+        "interp_dy": -13.5,
+        "t": 40.4
+      },
+      {
+        "frame_index": 203,
+        "interp_dx": -13.125,
+        "interp_dy": -20.25,
+        "t": 40.6
+      },
+      {
+        "frame_index": 204,
+        "interp_dx": -17.5,
+        "interp_dy": -27.0,
+        "t": 40.8
+      },
+      {
+        "frame_index": 205,
+        "interp_dx": -21.875,
+        "interp_dy": -33.75,
+        "t": 41.0
+      },
+      {
+        "frame_index": 206,
+        "interp_dx": -26.25,
+        "interp_dy": -40.5,
+        "t": 41.2
+      },
+      {
+        "frame_index": 207,
+        "interp_dx": -30.625,
+        "interp_dy": -47.25,
+        "t": 41.4
+      },
+      {
+        "frame_index": 208,
+        "interp_dx": -35.0,
+        "interp_dy": -54.0,
+        "t": 41.6
+      },
+      {
+        "frame_index": 209,
+        "interp_dx": 18.5,
+        "interp_dy": -52.25,
+        "t": 41.8
+      },
+      {
+        "frame_index": 210,
+        "interp_dx": 72.0,
+        "interp_dy": -50.5,
+        "t": 42.0
+      },
+      {
+        "frame_index": 211,
+        "interp_dx": 125.5,
+        "interp_dy": -48.75,
+        "t": 42.2
+      },
+      {
+        "frame_index": 212,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 42.4
+      },
+      {
+        "frame_index": 213,
+        "interp_dx": -8.0,
+        "interp_dy": -3.375,
+        "t": 42.6
+      },
+      {
+        "frame_index": 214,
+        "interp_dx": -16.0,
+        "interp_dy": -6.75,
+        "t": 42.8
+      },
+      {
+        "frame_index": 215,
+        "interp_dx": -24.0,
+        "interp_dy": -10.125,
+        "t": 43.0
+      },
+      {
+        "frame_index": 216,
+        "interp_dx": -32.0,
+        "interp_dy": -13.5,
+        "t": 43.2
+      },
+      {
+        "frame_index": 217,
+        "interp_dx": -40.0,
+        "interp_dy": -16.875,
+        "t": 43.4
+      },
+      {
+        "frame_index": 218,
+        "interp_dx": -48.0,
+        "interp_dy": -20.25,
+        "t": 43.6
+      },
+      {
+        "frame_index": 219,
+        "interp_dx": -56.0,
+        "interp_dy": -23.625,
+        "t": 43.8
+      },
+      {
+        "frame_index": 220,
+        "interp_dx": -64.0,
+        "interp_dy": -27.0,
+        "t": 44.0
+      },
+      {
+        "frame_index": 221,
+        "interp_dx": -173.3333,
+        "interp_dy": -74.3333,
+        "t": 44.2
+      },
+      {
+        "frame_index": 222,
+        "interp_dx": -282.6667,
+        "interp_dy": -121.6667,
+        "t": 44.4
+      },
+      {
+        "frame_index": 223,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 44.6
+      },
+      {
+        "frame_index": 224,
+        "interp_dx": 42.4,
+        "interp_dy": 22.4,
+        "t": 44.8
+      },
+      {
+        "frame_index": 225,
+        "interp_dx": 84.8,
+        "interp_dy": 44.8,
+        "t": 45.0
+      },
+      {
+        "frame_index": 226,
+        "interp_dx": 127.2,
+        "interp_dy": 67.2,
+        "t": 45.2
+      },
+      {
+        "frame_index": 227,
+        "interp_dx": 169.6,
+        "interp_dy": 89.6,
+        "t": 45.4
+      },
+      {
+        "frame_index": 228,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 45.6
+      },
+      {
+        "frame_index": 229,
+        "interp_dx": -7.6667,
+        "interp_dy": 13.3333,
+        "t": 45.8
+      },
+      {
+        "frame_index": 230,
+        "interp_dx": -15.3333,
+        "interp_dy": 26.6667,
+        "t": 46.0
+      },
+      {
+        "frame_index": 231,
+        "interp_dx": -23.0,
+        "interp_dy": 40.0,
+        "t": 46.2
+      },
+      {
+        "frame_index": 232,
+        "interp_dx": -30.6667,
+        "interp_dy": 53.3333,
+        "t": 46.4
+      },
+      {
+        "frame_index": 233,
+        "interp_dx": -38.3333,
+        "interp_dy": 66.6667,
+        "t": 46.6
+      },
+      {
+        "frame_index": 234,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 46.8
+      },
+      {
+        "frame_index": 235,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 47.0
+      },
+      {
+        "frame_index": 236,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 47.2
+      },
+      {
+        "frame_index": 237,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 47.4
+      },
+      {
+        "frame_index": 238,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 47.6
+      },
+      {
+        "frame_index": 239,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 47.8
+      },
+      {
+        "frame_index": 240,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 48.0
+      },
+      {
+        "frame_index": 241,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 48.2
+      },
+      {
+        "frame_index": 242,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 48.4
+      },
+      {
+        "frame_index": 243,
+        "interp_dx": -21.3333,
+        "interp_dy": -2.6667,
+        "t": 48.6
+      },
+      {
+        "frame_index": 244,
+        "interp_dx": -42.6667,
+        "interp_dy": -5.3333,
+        "t": 48.8
+      },
+      {
+        "frame_index": 245,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 49.0
+      },
+      {
+        "frame_index": 246,
+        "interp_dx": 2.0,
+        "interp_dy": 0.0,
+        "t": 49.2
+      },
+      {
+        "frame_index": 247,
+        "interp_dx": 4.0,
+        "interp_dy": 0.0,
+        "t": 49.4
+      },
+      {
+        "frame_index": 248,
+        "interp_dx": 6.0,
+        "interp_dy": 0.0,
+        "t": 49.6
+      },
+      {
+        "frame_index": 249,
+        "interp_dx": 8.0,
+        "interp_dy": 0.0,
+        "t": 49.8
+      },
+      {
+        "frame_index": 250,
+        "interp_dx": 10.0,
+        "interp_dy": 0.0,
+        "t": 50.0
+      },
+      {
+        "frame_index": 251,
+        "interp_dx": 12.0,
+        "interp_dy": 0.0,
+        "t": 50.2
+      },
+      {
+        "frame_index": 252,
+        "interp_dx": 14.0,
+        "interp_dy": 0.0,
+        "t": 50.4
+      },
+      {
+        "frame_index": 253,
+        "interp_dx": 16.0,
+        "interp_dy": 0.0,
+        "t": 50.6
+      },
+      {
+        "frame_index": 254,
+        "interp_dx": -17.3333,
+        "interp_dy": 32.0,
+        "t": 50.8
+      },
+      {
+        "frame_index": 255,
+        "interp_dx": -50.6667,
+        "interp_dy": 64.0,
+        "t": 51.0
+      },
+      {
+        "frame_index": 256,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 51.2
+      },
+      {
+        "frame_index": 257,
+        "interp_dx": 0.0,
+        "interp_dy": -1.0,
+        "t": 51.4
+      },
+      {
+        "frame_index": 258,
+        "interp_dx": 0.0,
+        "interp_dy": -2.0,
+        "t": 51.6
+      },
+      {
+        "frame_index": 259,
+        "interp_dx": 0.0,
+        "interp_dy": -3.0,
+        "t": 51.8
+      },
+      {
+        "frame_index": 260,
+        "interp_dx": 0.0,
+        "interp_dy": -4.0,
+        "t": 52.0
+      },
+      {
+        "frame_index": 261,
+        "interp_dx": 0.0,
+        "interp_dy": -5.0,
+        "t": 52.2
+      },
+      {
+        "frame_index": 262,
+        "interp_dx": 0.0,
+        "interp_dy": -6.0,
+        "t": 52.4
+      },
+      {
+        "frame_index": 263,
+        "interp_dx": 0.0,
+        "interp_dy": -7.0,
+        "t": 52.6
+      },
+      {
+        "frame_index": 264,
+        "interp_dx": 0.0,
+        "interp_dy": -8.0,
+        "t": 52.8
+      },
+      {
+        "frame_index": 265,
+        "interp_dx": -40.0,
+        "interp_dy": -11.6667,
+        "t": 53.0
+      },
+      {
+        "frame_index": 266,
+        "interp_dx": -80.0,
+        "interp_dy": -15.3333,
+        "t": 53.2
+      },
+      {
+        "frame_index": 267,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 53.4
+      },
+      {
+        "frame_index": 268,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 53.6
+      },
+      {
+        "frame_index": 269,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 53.8
+      },
+      {
+        "frame_index": 270,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 54.0
+      },
+      {
+        "frame_index": 271,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 54.2
+      },
+      {
+        "frame_index": 272,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 54.4
+      },
+      {
+        "frame_index": 273,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 54.6
+      },
+      {
+        "frame_index": 274,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 54.8
+      },
+      {
+        "frame_index": 275,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 55.0
+      },
+      {
+        "frame_index": 276,
+        "interp_dx": -12.0,
+        "interp_dy": -8.0,
+        "t": 55.2
+      },
+      {
+        "frame_index": 277,
+        "interp_dx": -24.0,
+        "interp_dy": -16.0,
+        "t": 55.4
+      },
+      {
+        "frame_index": 278,
+        "interp_dx": -36.0,
+        "interp_dy": -24.0,
+        "t": 55.6
+      },
+      {
+        "frame_index": 279,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 55.8
+      },
+      {
+        "frame_index": 280,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 56.0
+      },
+      {
+        "frame_index": 281,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 56.2
+      },
+      {
+        "frame_index": 282,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 56.4
+      },
+      {
+        "frame_index": 283,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 56.6
+      },
+      {
+        "frame_index": 284,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 56.8
+      },
+      {
+        "frame_index": 285,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 57.0
+      },
+      {
+        "frame_index": 286,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 57.2
+      },
+      {
+        "frame_index": 287,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 57.4
+      },
+      {
+        "frame_index": 288,
+        "interp_dx": -63.6667,
+        "interp_dy": 26.6667,
+        "t": 57.6
+      },
+      {
+        "frame_index": 289,
+        "interp_dx": -127.3333,
+        "interp_dy": 53.3333,
+        "t": 57.8
+      },
+      {
+        "frame_index": 290,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 58.0
+      },
+      {
+        "frame_index": 291,
+        "interp_dx": 0.0,
+        "interp_dy": -5.0,
+        "t": 58.2
+      },
+      {
+        "frame_index": 292,
+        "interp_dx": 0.0,
+        "interp_dy": -10.0,
+        "t": 58.4
+      },
+      {
+        "frame_index": 293,
+        "interp_dx": 0.0,
+        "interp_dy": -15.0,
+        "t": 58.6
+      },
+      {
+        "frame_index": 294,
+        "interp_dx": 0.0,
+        "interp_dy": -20.0,
+        "t": 58.8
+      },
+      {
+        "frame_index": 295,
+        "interp_dx": 0.0,
+        "interp_dy": -25.0,
+        "t": 59.0
+      },
+      {
+        "frame_index": 296,
+        "interp_dx": 0.0,
+        "interp_dy": -30.0,
+        "t": 59.2
+      },
+      {
+        "frame_index": 297,
+        "interp_dx": 0.0,
+        "interp_dy": -35.0,
+        "t": 59.4
+      },
+      {
+        "frame_index": 298,
+        "interp_dx": 0.0,
+        "interp_dy": -40.0,
+        "t": 59.6
+      },
+      {
+        "frame_index": 299,
+        "interp_dx": -2.6667,
+        "interp_dy": -27.3333,
+        "t": 59.8
+      },
+      {
+        "frame_index": 300,
+        "interp_dx": -5.3333,
+        "interp_dy": -14.6667,
+        "t": 60.0
+      },
+      {
+        "frame_index": 301,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 60.2
+      },
+      {
+        "frame_index": 302,
+        "interp_dx": -7.375,
+        "interp_dy": 0.0,
+        "t": 60.4
+      },
+      {
+        "frame_index": 303,
+        "interp_dx": -14.75,
+        "interp_dy": 0.0,
+        "t": 60.6
+      },
+      {
+        "frame_index": 304,
+        "interp_dx": -22.125,
+        "interp_dy": 0.0,
+        "t": 60.8
+      },
+      {
+        "frame_index": 305,
+        "interp_dx": -29.5,
+        "interp_dy": 0.0,
+        "t": 61.0
+      },
+      {
+        "frame_index": 306,
+        "interp_dx": -36.875,
+        "interp_dy": 0.0,
+        "t": 61.2
+      },
+      {
+        "frame_index": 307,
+        "interp_dx": -44.25,
+        "interp_dy": 0.0,
+        "t": 61.4
+      },
+      {
+        "frame_index": 308,
+        "interp_dx": -51.625,
+        "interp_dy": 0.0,
+        "t": 61.6
+      },
+      {
+        "frame_index": 309,
+        "interp_dx": -59.0,
+        "interp_dy": 0.0,
+        "t": 61.8
+      },
+      {
+        "frame_index": 310,
+        "interp_dx": -30.0,
+        "interp_dy": -8.25,
+        "t": 62.0
+      },
+      {
+        "frame_index": 311,
+        "interp_dx": -1.0,
+        "interp_dy": -16.5,
+        "t": 62.2
+      },
+      {
+        "frame_index": 312,
+        "interp_dx": 28.0,
+        "interp_dy": -24.75,
+        "t": 62.4
+      },
+      {
+        "frame_index": 313,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 62.6
+      },
+      {
+        "frame_index": 314,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 62.8
+      },
+      {
+        "frame_index": 315,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 63.0
+      },
+      {
+        "frame_index": 316,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 63.2
+      },
+      {
+        "frame_index": 317,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 63.4
+      },
+      {
+        "frame_index": 318,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 63.6
+      },
+      {
+        "frame_index": 319,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 63.8
+      },
+      {
+        "frame_index": 320,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 64.0
+      },
+      {
+        "frame_index": 321,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 64.2
+      },
+      {
+        "frame_index": 322,
+        "interp_dx": -91.0,
+        "interp_dy": 32.0,
+        "t": 64.4
+      },
+      {
+        "frame_index": 323,
+        "interp_dx": -182.0,
+        "interp_dy": 64.0,
+        "t": 64.6
+      },
+      {
+        "frame_index": 324,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 64.8
+      },
+      {
+        "frame_index": 325,
+        "interp_dx": 4.0,
+        "interp_dy": 0.0,
+        "t": 65.0
+      },
+      {
+        "frame_index": 326,
+        "interp_dx": 8.0,
+        "interp_dy": 0.0,
+        "t": 65.2
+      },
+      {
+        "frame_index": 327,
+        "interp_dx": 12.0,
+        "interp_dy": 0.0,
+        "t": 65.4
+      },
+      {
+        "frame_index": 328,
+        "interp_dx": 16.0,
+        "interp_dy": 0.0,
+        "t": 65.6
+      },
+      {
+        "frame_index": 329,
+        "interp_dx": 20.0,
+        "interp_dy": 0.0,
+        "t": 65.8
+      },
+      {
+        "frame_index": 330,
+        "interp_dx": 24.0,
+        "interp_dy": 0.0,
+        "t": 66.0
+      },
+      {
+        "frame_index": 331,
+        "interp_dx": 28.0,
+        "interp_dy": 0.0,
+        "t": 66.2
+      },
+      {
+        "frame_index": 332,
+        "interp_dx": 32.0,
+        "interp_dy": 0.0,
+        "t": 66.4
+      },
+      {
+        "frame_index": 333,
+        "interp_dx": 16.0,
+        "interp_dy": -53.3333,
+        "t": 66.6
+      },
+      {
+        "frame_index": 334,
+        "interp_dx": 0.0,
+        "interp_dy": -106.6667,
+        "t": 66.8
+      },
+      {
+        "frame_index": 335,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 67.0
+      },
+      {
+        "frame_index": 336,
+        "interp_dx": 2.0,
+        "interp_dy": 0.0,
+        "t": 67.2
+      },
+      {
+        "frame_index": 337,
+        "interp_dx": 4.0,
+        "interp_dy": 0.0,
+        "t": 67.4
+      },
+      {
+        "frame_index": 338,
+        "interp_dx": 6.0,
+        "interp_dy": 0.0,
+        "t": 67.6
+      },
+      {
+        "frame_index": 339,
+        "interp_dx": 8.0,
+        "interp_dy": 0.0,
+        "t": 67.8
+      },
+      {
+        "frame_index": 340,
+        "interp_dx": 10.0,
+        "interp_dy": 0.0,
+        "t": 68.0
+      },
+      {
+        "frame_index": 341,
+        "interp_dx": 12.0,
+        "interp_dy": 0.0,
+        "t": 68.2
+      },
+      {
+        "frame_index": 342,
+        "interp_dx": 14.0,
+        "interp_dy": 0.0,
+        "t": 68.4
+      },
+      {
+        "frame_index": 343,
+        "interp_dx": 16.0,
+        "interp_dy": 0.0,
+        "t": 68.6
+      },
+      {
+        "frame_index": 344,
+        "interp_dx": -1.3333,
+        "interp_dy": -34.6667,
+        "t": 68.8
+      },
+      {
+        "frame_index": 345,
+        "interp_dx": -18.6667,
+        "interp_dy": -69.3333,
+        "t": 69.0
+      },
+      {
+        "frame_index": 346,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 69.2
+      },
+      {
+        "frame_index": 347,
+        "interp_dx": 3.5,
+        "interp_dy": 0.0,
+        "t": 69.4
+      },
+      {
+        "frame_index": 348,
+        "interp_dx": 7.0,
+        "interp_dy": 0.0,
+        "t": 69.6
+      },
+      {
+        "frame_index": 349,
+        "interp_dx": 10.5,
+        "interp_dy": 0.0,
+        "t": 69.8
+      },
+      {
+        "frame_index": 350,
+        "interp_dx": 14.0,
+        "interp_dy": 0.0,
+        "t": 70.0
+      },
+      {
+        "frame_index": 351,
+        "interp_dx": 17.5,
+        "interp_dy": 0.0,
+        "t": 70.2
+      },
+      {
+        "frame_index": 352,
+        "interp_dx": 21.0,
+        "interp_dy": 0.0,
+        "t": 70.4
+      },
+      {
+        "frame_index": 353,
+        "interp_dx": 24.5,
+        "interp_dy": 0.0,
+        "t": 70.6
+      },
+      {
+        "frame_index": 354,
+        "interp_dx": 28.0,
+        "interp_dy": 0.0,
+        "t": 70.8
+      },
+      {
+        "frame_index": 355,
+        "interp_dx": 4.0,
+        "interp_dy": 0.0,
+        "t": 71.0
+      },
+      {
+        "frame_index": 356,
+        "interp_dx": -20.0,
+        "interp_dy": 0.0,
+        "t": 71.2
+      },
+      {
+        "frame_index": 357,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 71.4
+      },
+      {
+        "frame_index": 358,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 71.6
+      },
+      {
+        "frame_index": 359,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 71.8
+      },
+      {
+        "frame_index": 360,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 72.0
+      },
+      {
+        "frame_index": 361,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 72.2
+      },
+      {
+        "frame_index": 362,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 72.4
+      },
+      {
+        "frame_index": 363,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 72.6
+      },
+      {
+        "frame_index": 364,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 72.8
+      },
+      {
+        "frame_index": 365,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 73.0
+      },
+      {
+        "frame_index": 366,
+        "interp_dx": 48.0,
+        "interp_dy": -8.0,
+        "t": 73.2
+      },
+      {
+        "frame_index": 367,
+        "interp_dx": 96.0,
+        "interp_dy": -16.0,
+        "t": 73.4
+      },
+      {
+        "frame_index": 368,
+        "interp_dx": 144.0,
+        "interp_dy": -24.0,
+        "t": 73.6
+      },
+      {
+        "frame_index": 369,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 73.8
+      },
+      {
+        "frame_index": 370,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 74.0
+      },
+      {
+        "frame_index": 371,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 74.2
+      },
+      {
+        "frame_index": 372,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 74.4
+      },
+      {
+        "frame_index": 373,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 74.6
+      },
+      {
+        "frame_index": 374,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 74.8
+      },
+      {
+        "frame_index": 375,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 75.0
+      },
+      {
+        "frame_index": 376,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 75.2
+      },
+      {
+        "frame_index": 377,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 75.4
+      },
+      {
+        "frame_index": 378,
+        "interp_dx": -42.6667,
+        "interp_dy": 8.3333,
+        "t": 75.6
+      },
+      {
+        "frame_index": 379,
+        "interp_dx": -85.3333,
+        "interp_dy": 16.6667,
+        "t": 75.8
+      },
+      {
+        "frame_index": 380,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 76.0
+      },
+      {
+        "frame_index": 381,
+        "interp_dx": 0.0,
+        "interp_dy": -2.75,
+        "t": 76.2
+      },
+      {
+        "frame_index": 382,
+        "interp_dx": 0.0,
+        "interp_dy": -5.5,
+        "t": 76.4
+      },
+      {
+        "frame_index": 383,
+        "interp_dx": 0.0,
+        "interp_dy": -8.25,
+        "t": 76.6
+      },
+      {
+        "frame_index": 384,
+        "interp_dx": 0.0,
+        "interp_dy": -11.0,
+        "t": 76.8
+      },
+      {
+        "frame_index": 385,
+        "interp_dx": 0.0,
+        "interp_dy": -13.75,
+        "t": 77.0
+      },
+      {
+        "frame_index": 386,
+        "interp_dx": 0.0,
+        "interp_dy": -16.5,
+        "t": 77.2
+      },
+      {
+        "frame_index": 387,
+        "interp_dx": 0.0,
+        "interp_dy": -19.25,
+        "t": 77.4
+      },
+      {
+        "frame_index": 388,
+        "interp_dx": 0.0,
+        "interp_dy": -22.0,
+        "t": 77.6
+      },
+      {
+        "frame_index": 389,
+        "interp_dx": -44.6667,
+        "interp_dy": -26.0,
+        "t": 77.8
+      },
+      {
+        "frame_index": 390,
+        "interp_dx": -89.3333,
+        "interp_dy": -30.0,
+        "t": 78.0
+      },
+      {
+        "frame_index": 391,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 78.2
+      },
+      {
+        "frame_index": 392,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 78.4
+      },
+      {
+        "frame_index": 393,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 78.6
+      },
+      {
+        "frame_index": 394,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 78.8
+      },
+      {
+        "frame_index": 395,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 79.0
+      },
+      {
+        "frame_index": 396,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 79.2
+      },
+      {
+        "frame_index": 397,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 79.4
+      },
+      {
+        "frame_index": 398,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 79.6
+      },
+      {
+        "frame_index": 399,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 79.8
+      },
+      {
+        "frame_index": 400,
+        "interp_dx": 28.0,
+        "interp_dy": 10.0,
+        "t": 80.0
+      },
+      {
+        "frame_index": 401,
+        "interp_dx": 56.0,
+        "interp_dy": 20.0,
+        "t": 80.2
+      },
+      {
+        "frame_index": 402,
+        "interp_dx": 84.0,
+        "interp_dy": 30.0,
+        "t": 80.4
+      },
+      {
+        "frame_index": 403,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 80.6
+      },
+      {
+        "frame_index": 404,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 80.8
+      },
+      {
+        "frame_index": 405,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 81.0
+      },
+      {
+        "frame_index": 406,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 81.2
+      },
+      {
+        "frame_index": 407,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 81.4
+      },
+      {
+        "frame_index": 408,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 81.6
+      },
+      {
+        "frame_index": 409,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 81.8
+      },
+      {
+        "frame_index": 410,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 82.0
+      },
+      {
+        "frame_index": 411,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 82.2
+      },
+      {
+        "frame_index": 412,
+        "interp_dx": 106.6667,
+        "interp_dy": -56.0,
+        "t": 82.4
+      },
+      {
+        "frame_index": 413,
+        "interp_dx": 213.3333,
+        "interp_dy": -112.0,
+        "t": 82.6
+      },
+      {
+        "frame_index": 414,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 82.8
+      },
+      {
+        "frame_index": 415,
+        "interp_dx": 2.5,
+        "interp_dy": -2.0,
+        "t": 83.0
+      },
+      {
+        "frame_index": 416,
+        "interp_dx": 5.0,
+        "interp_dy": -4.0,
+        "t": 83.2
+      },
+      {
+        "frame_index": 417,
+        "interp_dx": 7.5,
+        "interp_dy": -6.0,
+        "t": 83.4
+      },
+      {
+        "frame_index": 418,
+        "interp_dx": 10.0,
+        "interp_dy": -8.0,
+        "t": 83.6
+      },
+      {
+        "frame_index": 419,
+        "interp_dx": 12.5,
+        "interp_dy": -10.0,
+        "t": 83.8
+      },
+      {
+        "frame_index": 420,
+        "interp_dx": 15.0,
+        "interp_dy": -12.0,
+        "t": 84.0
+      },
+      {
+        "frame_index": 421,
+        "interp_dx": 17.5,
+        "interp_dy": -14.0,
+        "t": 84.2
+      },
+      {
+        "frame_index": 422,
+        "interp_dx": 20.0,
+        "interp_dy": -16.0,
+        "t": 84.4
+      },
+      {
+        "frame_index": 423,
+        "interp_dx": 22.5,
+        "interp_dy": -18.5,
+        "t": 84.6
+      },
+      {
+        "frame_index": 424,
+        "interp_dx": 25.0,
+        "interp_dy": -21.0,
+        "t": 84.8
+      },
+      {
+        "frame_index": 425,
+        "interp_dx": 27.5,
+        "interp_dy": -23.5,
+        "t": 85.0
+      },
+      {
+        "frame_index": 426,
+        "interp_dx": 30.0,
+        "interp_dy": -26.0,
+        "t": 85.2
+      },
+      {
+        "frame_index": 427,
+        "interp_dx": 32.5,
+        "interp_dy": -28.5,
+        "t": 85.4
+      },
+      {
+        "frame_index": 428,
+        "interp_dx": 35.0,
+        "interp_dy": -31.0,
+        "t": 85.6
+      },
+      {
+        "frame_index": 429,
+        "interp_dx": 37.5,
+        "interp_dy": -33.5,
+        "t": 85.8
+      },
+      {
+        "frame_index": 430,
+        "interp_dx": 40.0,
+        "interp_dy": -36.0,
+        "t": 86.0
+      },
+      {
+        "frame_index": 431,
+        "interp_dx": 67.0,
+        "interp_dy": -19.6667,
+        "t": 86.2
+      },
+      {
+        "frame_index": 432,
+        "interp_dx": 94.0,
+        "interp_dy": -3.3333,
+        "t": 86.4
+      },
+      {
+        "frame_index": 433,
+        "interp_dx": 121.0,
+        "interp_dy": 13.0,
+        "t": 86.6
+      },
+      {
+        "frame_index": 434,
+        "interp_dx": 148.0,
+        "interp_dy": 29.3333,
+        "t": 86.8
+      },
+      {
+        "frame_index": 435,
+        "interp_dx": 175.0,
+        "interp_dy": 45.6667,
+        "t": 87.0
+      },
+      {
+        "frame_index": 436,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 87.2
+      },
+      {
+        "frame_index": 437,
+        "interp_dx": -1.0,
+        "interp_dy": 0.0,
+        "t": 87.4
+      },
+      {
+        "frame_index": 438,
+        "interp_dx": -2.0,
+        "interp_dy": 0.0,
+        "t": 87.6
+      },
+      {
+        "frame_index": 439,
+        "interp_dx": -3.0,
+        "interp_dy": 0.0,
+        "t": 87.8
+      },
+      {
+        "frame_index": 440,
+        "interp_dx": -4.0,
+        "interp_dy": 0.0,
+        "t": 88.0
+      },
+      {
+        "frame_index": 441,
+        "interp_dx": -5.0,
+        "interp_dy": 0.0,
+        "t": 88.2
+      },
+      {
+        "frame_index": 442,
+        "interp_dx": -6.0,
+        "interp_dy": 0.0,
+        "t": 88.4
+      },
+      {
+        "frame_index": 443,
+        "interp_dx": -7.0,
+        "interp_dy": 0.0,
+        "t": 88.6
+      },
+      {
+        "frame_index": 444,
+        "interp_dx": -8.0,
+        "interp_dy": 0.0,
+        "t": 88.8
+      },
+      {
+        "frame_index": 445,
+        "interp_dx": -99.6667,
+        "interp_dy": -24.0,
+        "t": 89.0
+      },
+      {
+        "frame_index": 446,
+        "interp_dx": -191.3333,
+        "interp_dy": -48.0,
+        "t": 89.2
+      },
+      {
+        "frame_index": 447,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 89.4
+      },
+      {
+        "frame_index": 448,
+        "interp_dx": 0.0,
+        "interp_dy": -3.0,
+        "t": 89.6
+      },
+      {
+        "frame_index": 449,
+        "interp_dx": 0.0,
+        "interp_dy": -6.0,
+        "t": 89.8
+      },
+      {
+        "frame_index": 450,
+        "interp_dx": 0.0,
+        "interp_dy": -9.0,
+        "t": 90.0
+      },
+      {
+        "frame_index": 451,
+        "interp_dx": 0.0,
+        "interp_dy": -12.0,
+        "t": 90.2
+      },
+      {
+        "frame_index": 452,
+        "interp_dx": 0.0,
+        "interp_dy": -15.0,
+        "t": 90.4
+      },
+      {
+        "frame_index": 453,
+        "interp_dx": 0.0,
+        "interp_dy": -18.0,
+        "t": 90.6
+      },
+      {
+        "frame_index": 454,
+        "interp_dx": 0.0,
+        "interp_dy": -21.0,
+        "t": 90.8
+      },
+      {
+        "frame_index": 455,
+        "interp_dx": 0.0,
+        "interp_dy": -24.0,
+        "t": 91.0
+      },
+      {
+        "frame_index": 456,
+        "interp_dx": 0.0,
+        "interp_dy": -66.0,
+        "t": 91.2
+      },
+      {
+        "frame_index": 457,
+        "interp_dx": 0.0,
+        "interp_dy": -108.0,
+        "t": 91.4
+      },
+      {
+        "frame_index": 458,
+        "interp_dx": 0.0,
+        "interp_dy": -150.0,
+        "t": 91.6
+      },
+      {
+        "frame_index": 459,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 91.8
+      },
+      {
+        "frame_index": 460,
+        "interp_dx": 0.0,
+        "interp_dy": -0.875,
+        "t": 92.0
+      },
+      {
+        "frame_index": 461,
+        "interp_dx": 0.0,
+        "interp_dy": -1.75,
+        "t": 92.2
+      },
+      {
+        "frame_index": 462,
+        "interp_dx": 0.0,
+        "interp_dy": -2.625,
+        "t": 92.4
+      },
+      {
+        "frame_index": 463,
+        "interp_dx": 0.0,
+        "interp_dy": -3.5,
+        "t": 92.6
+      },
+      {
+        "frame_index": 464,
+        "interp_dx": 0.0,
+        "interp_dy": -4.375,
+        "t": 92.8
+      },
+      {
+        "frame_index": 465,
+        "interp_dx": 0.0,
+        "interp_dy": -5.25,
+        "t": 93.0
+      },
+      {
+        "frame_index": 466,
+        "interp_dx": 0.0,
+        "interp_dy": -6.125,
+        "t": 93.2
+      },
+      {
+        "frame_index": 467,
+        "interp_dx": 0.0,
+        "interp_dy": -7.0,
+        "t": 93.4
+      },
+      {
+        "frame_index": 468,
+        "interp_dx": -40.0,
+        "interp_dy": 33.0,
+        "t": 93.6
+      },
+      {
+        "frame_index": 469,
+        "interp_dx": -80.0,
+        "interp_dy": 73.0,
+        "t": 93.8
+      },
+      {
+        "frame_index": 470,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 94.0
+      },
+      {
+        "frame_index": 471,
+        "interp_dx": -2.0,
+        "interp_dy": 0.0,
+        "t": 94.2
+      },
+      {
+        "frame_index": 472,
+        "interp_dx": -4.0,
+        "interp_dy": 0.0,
+        "t": 94.4
+      },
+      {
+        "frame_index": 473,
+        "interp_dx": -6.0,
+        "interp_dy": 0.0,
+        "t": 94.6
+      },
+      {
+        "frame_index": 474,
+        "interp_dx": -8.0,
+        "interp_dy": 0.0,
+        "t": 94.8
+      },
+      {
+        "frame_index": 475,
+        "interp_dx": -10.0,
+        "interp_dy": 0.0,
+        "t": 95.0
+      },
+      {
+        "frame_index": 476,
+        "interp_dx": -12.0,
+        "interp_dy": 0.0,
+        "t": 95.2
+      },
+      {
+        "frame_index": 477,
+        "interp_dx": -14.0,
+        "interp_dy": 0.0,
+        "t": 95.4
+      },
+      {
+        "frame_index": 478,
+        "interp_dx": -16.0,
+        "interp_dy": 0.0,
+        "t": 95.6
+      },
+      {
+        "frame_index": 479,
+        "interp_dx": -39.5,
+        "interp_dy": -20.0,
+        "t": 95.8
+      },
+      {
+        "frame_index": 480,
+        "interp_dx": -63.0,
+        "interp_dy": -40.0,
+        "t": 96.0
+      },
+      {
+        "frame_index": 481,
+        "interp_dx": -86.5,
+        "interp_dy": -60.0,
+        "t": 96.2
+      },
+      {
+        "frame_index": 482,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 96.4
+      },
+      {
+        "frame_index": 483,
+        "interp_dx": -2.0,
+        "interp_dy": 0.0,
+        "t": 96.6
+      },
+      {
+        "frame_index": 484,
+        "interp_dx": -4.0,
+        "interp_dy": 0.0,
+        "t": 96.8
+      },
+      {
+        "frame_index": 485,
+        "interp_dx": -6.0,
+        "interp_dy": 0.0,
+        "t": 97.0
+      },
+      {
+        "frame_index": 486,
+        "interp_dx": -8.0,
+        "interp_dy": 0.0,
+        "t": 97.2
+      },
+      {
+        "frame_index": 487,
+        "interp_dx": -10.0,
+        "interp_dy": 0.0,
+        "t": 97.4
+      },
+      {
+        "frame_index": 488,
+        "interp_dx": -12.0,
+        "interp_dy": 0.0,
+        "t": 97.6
+      },
+      {
+        "frame_index": 489,
+        "interp_dx": -14.0,
+        "interp_dy": 0.0,
+        "t": 97.8
+      },
+      {
+        "frame_index": 490,
+        "interp_dx": -16.0,
+        "interp_dy": 0.0,
+        "t": 98.0
+      },
+      {
+        "frame_index": 491,
+        "interp_dx": 65.3333,
+        "interp_dy": -45.3333,
+        "t": 98.2
+      },
+      {
+        "frame_index": 492,
+        "interp_dx": 146.6667,
+        "interp_dy": -90.6667,
+        "t": 98.4
+      },
+      {
+        "frame_index": 493,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 98.6
+      },
+      {
+        "frame_index": 494,
+        "interp_dx": -0.25,
+        "interp_dy": -4.0,
+        "t": 98.8
+      },
+      {
+        "frame_index": 495,
+        "interp_dx": -0.5,
+        "interp_dy": -8.0,
+        "t": 99.0
+      },
+      {
+        "frame_index": 496,
+        "interp_dx": -0.75,
+        "interp_dy": -12.0,
+        "t": 99.2
+      },
+      {
+        "frame_index": 497,
+        "interp_dx": -1.0,
+        "interp_dy": -16.0,
+        "t": 99.4
+      },
+      {
+        "frame_index": 498,
+        "interp_dx": -1.25,
+        "interp_dy": -20.0,
+        "t": 99.6
+      },
+      {
+        "frame_index": 499,
+        "interp_dx": -1.5,
+        "interp_dy": -24.0,
+        "t": 99.8
+      },
+      {
+        "frame_index": 500,
+        "interp_dx": -1.75,
+        "interp_dy": -28.0,
+        "t": 100.0
+      },
+      {
+        "frame_index": 501,
+        "interp_dx": -2.0,
+        "interp_dy": -32.0,
+        "t": 100.2
+      },
+      {
+        "frame_index": 502,
+        "interp_dx": 35.0,
+        "interp_dy": -15.0,
+        "t": 100.4
+      },
+      {
+        "frame_index": 503,
+        "interp_dx": 72.0,
+        "interp_dy": 2.0,
+        "t": 100.6
+      },
+      {
+        "frame_index": 504,
+        "interp_dx": 109.0,
+        "interp_dy": 19.0,
+        "t": 100.8
+      },
+      {
+        "frame_index": 505,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 101.0
+      },
+      {
+        "frame_index": 506,
+        "interp_dx": 2.0,
+        "interp_dy": -3.0,
+        "t": 101.2
+      },
+      {
+        "frame_index": 507,
+        "interp_dx": 4.0,
+        "interp_dy": -6.0,
+        "t": 101.4
+      },
+      {
+        "frame_index": 508,
+        "interp_dx": 6.0,
+        "interp_dy": -9.0,
+        "t": 101.6
+      },
+      {
+        "frame_index": 509,
+        "interp_dx": 8.0,
+        "interp_dy": -12.0,
+        "t": 101.8
+      },
+      {
+        "frame_index": 510,
+        "interp_dx": 10.0,
+        "interp_dy": -15.0,
+        "t": 102.0
+      },
+      {
+        "frame_index": 511,
+        "interp_dx": 12.0,
+        "interp_dy": -18.0,
+        "t": 102.2
+      },
+      {
+        "frame_index": 512,
+        "interp_dx": 14.0,
+        "interp_dy": -21.0,
+        "t": 102.4
+      },
+      {
+        "frame_index": 513,
+        "interp_dx": 16.0,
+        "interp_dy": -24.0,
+        "t": 102.6
+      },
+      {
+        "frame_index": 514,
+        "interp_dx": 54.6667,
+        "interp_dy": 19.3333,
+        "t": 102.8
+      },
+      {
+        "frame_index": 515,
+        "interp_dx": 93.3333,
+        "interp_dy": 62.6667,
+        "t": 103.0
+      },
+      {
+        "frame_index": 516,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 103.2
+      },
+      {
+        "frame_index": 517,
+        "interp_dx": -11.75,
+        "interp_dy": 4.125,
+        "t": 103.4
+      },
+      {
+        "frame_index": 518,
+        "interp_dx": -23.5,
+        "interp_dy": 8.25,
+        "t": 103.6
+      },
+      {
+        "frame_index": 519,
+        "interp_dx": -35.25,
+        "interp_dy": 12.375,
+        "t": 103.8
+      },
+      {
+        "frame_index": 520,
+        "interp_dx": -47.0,
+        "interp_dy": 16.5,
+        "t": 104.0
+      },
+      {
+        "frame_index": 521,
+        "interp_dx": -58.75,
+        "interp_dy": 20.625,
+        "t": 104.2
+      },
+      {
+        "frame_index": 522,
+        "interp_dx": -70.5,
+        "interp_dy": 24.75,
+        "t": 104.4
+      },
+      {
+        "frame_index": 523,
+        "interp_dx": -82.25,
+        "interp_dy": 28.875,
+        "t": 104.6
+      },
+      {
+        "frame_index": 524,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 104.8
+      },
+      {
+        "frame_index": 525,
+        "interp_dx": 0.0,
+        "interp_dy": -2.375,
+        "t": 105.0
+      },
+      {
+        "frame_index": 526,
+        "interp_dx": 0.0,
+        "interp_dy": -4.75,
+        "t": 105.2
+      },
+      {
+        "frame_index": 527,
+        "interp_dx": 0.0,
+        "interp_dy": -7.125,
+        "t": 105.4
+      },
+      {
+        "frame_index": 528,
+        "interp_dx": 0.0,
+        "interp_dy": -9.5,
+        "t": 105.6
+      },
+      {
+        "frame_index": 529,
+        "interp_dx": 0.0,
+        "interp_dy": -11.875,
+        "t": 105.8
+      },
+      {
+        "frame_index": 530,
+        "interp_dx": 0.0,
+        "interp_dy": -14.25,
+        "t": 106.0
+      },
+      {
+        "frame_index": 531,
+        "interp_dx": 0.0,
+        "interp_dy": -16.625,
+        "t": 106.2
+      },
+      {
+        "frame_index": 532,
+        "interp_dx": 0.0,
+        "interp_dy": -19.0,
+        "t": 106.4
+      },
+      {
+        "frame_index": 533,
+        "interp_dx": 31.0,
+        "interp_dy": -4.125,
+        "t": 106.6
+      },
+      {
+        "frame_index": 534,
+        "interp_dx": 62.0,
+        "interp_dy": 10.75,
+        "t": 106.8
+      },
+      {
+        "frame_index": 535,
+        "interp_dx": 93.0,
+        "interp_dy": 25.625,
+        "t": 107.0
+      },
+      {
+        "frame_index": 536,
+        "interp_dx": 124.0,
+        "interp_dy": 40.5,
+        "t": 107.2
+      },
+      {
+        "frame_index": 537,
+        "interp_dx": 155.0,
+        "interp_dy": 55.375,
+        "t": 107.4
+      },
+      {
+        "frame_index": 538,
+        "interp_dx": 186.0,
+        "interp_dy": 70.25,
+        "t": 107.6
+      },
+      {
+        "frame_index": 539,
+        "interp_dx": 217.0,
+        "interp_dy": 85.125,
+        "t": 107.8
+      },
+      {
+        "frame_index": 540,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 108.0
+      },
+      {
+        "frame_index": 541,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 108.2
+      },
+      {
+        "frame_index": 542,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 108.4
+      },
+      {
+        "frame_index": 543,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 108.6
+      },
+      {
+        "frame_index": 544,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 108.8
+      },
+      {
+        "frame_index": 545,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 109.0
+      },
+      {
+        "frame_index": 546,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 109.2
+      },
+      {
+        "frame_index": 547,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 109.4
+      },
+      {
+        "frame_index": 548,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 109.6
+      },
+      {
+        "frame_index": 549,
+        "interp_dx": -61.3333,
+        "interp_dy": -45.6667,
+        "t": 109.8
+      },
+      {
+        "frame_index": 550,
+        "interp_dx": -122.6667,
+        "interp_dy": -91.3333,
+        "t": 110.0
+      },
+      {
+        "frame_index": 551,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 110.2
+      },
+      {
+        "frame_index": 552,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 110.4
+      },
+      {
+        "frame_index": 553,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 110.6
+      },
+      {
+        "frame_index": 554,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 110.8
+      },
+      {
+        "frame_index": 555,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 111.0
+      },
+      {
+        "frame_index": 556,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 111.2
+      },
+      {
+        "frame_index": 557,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 111.4
+      },
+      {
+        "frame_index": 558,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 111.6
+      },
+      {
+        "frame_index": 559,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 111.8
+      },
+      {
+        "frame_index": 560,
+        "interp_dx": 24.0,
+        "interp_dy": 48.0,
+        "t": 112.0
+      },
+      {
+        "frame_index": 561,
+        "interp_dx": 48.0,
+        "interp_dy": 96.0,
+        "t": 112.2
+      },
+      {
+        "frame_index": 562,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 112.4
+      },
+      {
+        "frame_index": 563,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 112.6
+      },
+      {
+        "frame_index": 564,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 112.8
+      },
+      {
+        "frame_index": 565,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 113.0
+      },
+      {
+        "frame_index": 566,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 113.2
+      },
+      {
+        "frame_index": 567,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 113.4
+      },
+      {
+        "frame_index": 568,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 113.6
+      },
+      {
+        "frame_index": 569,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 113.8
+      },
+      {
+        "frame_index": 570,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 114.0
+      },
+      {
+        "frame_index": 571,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 114.2
+      },
+      {
+        "frame_index": 572,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 114.4
+      },
+      {
+        "frame_index": 573,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 114.6
+      },
+      {
+        "frame_index": 574,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 114.8
+      },
+      {
+        "frame_index": 575,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 115.0
+      },
+      {
+        "frame_index": 576,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 115.2
+      },
+      {
+        "frame_index": 577,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 115.4
+      },
+      {
+        "frame_index": 578,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 115.6
+      },
+      {
+        "frame_index": 579,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 115.8
+      },
+      {
+        "frame_index": 580,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 116.0
+      },
+      {
+        "frame_index": 581,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 116.2
+      },
+      {
+        "frame_index": 582,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 116.4
+      },
+      {
+        "frame_index": 583,
+        "interp_dx": -72.0,
+        "interp_dy": 0.0,
+        "t": 116.6
+      },
+      {
+        "frame_index": 584,
+        "interp_dx": -144.0,
+        "interp_dy": 0.0,
+        "t": 116.8
+      },
+      {
+        "frame_index": 585,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 117.0
+      },
+      {
+        "frame_index": 586,
+        "interp_dx": 9.625,
+        "interp_dy": -3.875,
+        "t": 117.2
+      },
+      {
+        "frame_index": 587,
+        "interp_dx": 19.25,
+        "interp_dy": -7.75,
+        "t": 117.4
+      },
+      {
+        "frame_index": 588,
+        "interp_dx": 28.875,
+        "interp_dy": -11.625,
+        "t": 117.6
+      },
+      {
+        "frame_index": 589,
+        "interp_dx": 38.5,
+        "interp_dy": -15.5,
+        "t": 117.8
+      },
+      {
+        "frame_index": 590,
+        "interp_dx": 48.125,
+        "interp_dy": -19.375,
+        "t": 118.0
+      },
+      {
+        "frame_index": 591,
+        "interp_dx": 57.75,
+        "interp_dy": -23.25,
+        "t": 118.2
+      },
+      {
+        "frame_index": 592,
+        "interp_dx": 67.375,
+        "interp_dy": -27.125,
+        "t": 118.4
+      },
+      {
+        "frame_index": 593,
+        "interp_dx": 77.0,
+        "interp_dy": -31.0,
+        "t": 118.6
+      },
+      {
+        "frame_index": 594,
+        "interp_dx": 86.0,
+        "interp_dy": -27.5,
+        "t": 118.8
+      },
+      {
+        "frame_index": 595,
+        "interp_dx": 95.0,
+        "interp_dy": -24.0,
+        "t": 119.0
+      },
+      {
+        "frame_index": 596,
+        "interp_dx": 104.0,
+        "interp_dy": -20.5,
+        "t": 119.2
+      },
+      {
+        "frame_index": 597,
+        "interp_dx": 113.0,
+        "interp_dy": -17.0,
+        "t": 119.4
+      },
+      {
+        "frame_index": 598,
+        "interp_dx": 122.0,
+        "interp_dy": -13.5,
+        "t": 119.6
+      },
+      {
+        "frame_index": 599,
+        "interp_dx": 131.0,
+        "interp_dy": -10.0,
+        "t": 119.8
+      },
+      {
+        "frame_index": 600,
+        "interp_dx": 140.0,
+        "interp_dy": -6.5,
+        "t": 120.0
+      },
+      {
+        "frame_index": 601,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 120.2
+      },
+      {
+        "frame_index": 602,
+        "interp_dx": 2.75,
+        "interp_dy": -1.0,
+        "t": 120.4
+      },
+      {
+        "frame_index": 603,
+        "interp_dx": 5.5,
+        "interp_dy": -2.0,
+        "t": 120.6
+      },
+      {
+        "frame_index": 604,
+        "interp_dx": 8.25,
+        "interp_dy": -3.0,
+        "t": 120.8
+      },
+      {
+        "frame_index": 605,
+        "interp_dx": 11.0,
+        "interp_dy": -4.0,
+        "t": 121.0
+      },
+      {
+        "frame_index": 606,
+        "interp_dx": 13.75,
+        "interp_dy": -5.0,
+        "t": 121.2
+      },
+      {
+        "frame_index": 607,
+        "interp_dx": 16.5,
+        "interp_dy": -6.0,
+        "t": 121.4
+      },
+      {
+        "frame_index": 608,
+        "interp_dx": 19.25,
+        "interp_dy": -7.0,
+        "t": 121.6
+      },
+      {
+        "frame_index": 609,
+        "interp_dx": 22.0,
+        "interp_dy": -8.0,
+        "t": 121.8
+      },
+      {
+        "frame_index": 610,
+        "interp_dx": 24.25,
+        "interp_dy": -9.0,
+        "t": 122.0
+      },
+      {
+        "frame_index": 611,
+        "interp_dx": 26.5,
+        "interp_dy": -10.0,
+        "t": 122.2
+      },
+      {
+        "frame_index": 612,
+        "interp_dx": 28.75,
+        "interp_dy": -11.0,
+        "t": 122.4
+      },
+      {
+        "frame_index": 613,
+        "interp_dx": 31.0,
+        "interp_dy": -12.0,
+        "t": 122.6
+      },
+      {
+        "frame_index": 614,
+        "interp_dx": 33.25,
+        "interp_dy": -13.0,
+        "t": 122.8
+      },
+      {
+        "frame_index": 615,
+        "interp_dx": 35.5,
+        "interp_dy": -14.0,
+        "t": 123.0
+      },
+      {
+        "frame_index": 616,
+        "interp_dx": 37.75,
+        "interp_dy": -15.0,
+        "t": 123.2
+      },
+      {
+        "frame_index": 617,
+        "interp_dx": 40.0,
+        "interp_dy": -16.0,
+        "t": 123.4
+      },
+      {
+        "frame_index": 618,
+        "interp_dx": 34.0,
+        "interp_dy": 2.0,
+        "t": 123.6
+      },
+      {
+        "frame_index": 619,
+        "interp_dx": 28.0,
+        "interp_dy": 20.0,
+        "t": 123.8
+      },
+      {
+        "frame_index": 620,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 124.0
+      },
+      {
+        "frame_index": 621,
+        "interp_dx": 2.625,
+        "interp_dy": -0.625,
+        "t": 124.2
+      },
+      {
+        "frame_index": 622,
+        "interp_dx": 5.25,
+        "interp_dy": -1.25,
+        "t": 124.4
+      },
+      {
+        "frame_index": 623,
+        "interp_dx": 7.875,
+        "interp_dy": -1.875,
+        "t": 124.6
+      },
+      {
+        "frame_index": 624,
+        "interp_dx": 10.5,
+        "interp_dy": -2.5,
+        "t": 124.8
+      },
+      {
+        "frame_index": 625,
+        "interp_dx": 13.125,
+        "interp_dy": -3.125,
+        "t": 125.0
+      },
+      {
+        "frame_index": 626,
+        "interp_dx": 15.75,
+        "interp_dy": -3.75,
+        "t": 125.2
+      },
+      {
+        "frame_index": 627,
+        "interp_dx": 18.375,
+        "interp_dy": -4.375,
+        "t": 125.4
+      },
+      {
+        "frame_index": 628,
+        "interp_dx": 21.0,
+        "interp_dy": -5.0,
+        "t": 125.6
+      },
+      {
+        "frame_index": 629,
+        "interp_dx": 121.0,
+        "interp_dy": -1.0,
+        "t": 125.8
+      },
+      {
+        "frame_index": 630,
+        "interp_dx": 221.0,
+        "interp_dy": 3.0,
+        "t": 126.0
+      },
+      {
+        "frame_index": 631,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 126.2
+      },
+      {
+        "frame_index": 632,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 126.4
+      },
+      {
+        "frame_index": 633,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 126.6
+      },
+      {
+        "frame_index": 634,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 126.8
+      },
+      {
+        "frame_index": 635,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 127.0
+      },
+      {
+        "frame_index": 636,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 127.2
+      },
+      {
+        "frame_index": 637,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 127.4
+      },
+      {
+        "frame_index": 638,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 127.6
+      },
+      {
+        "frame_index": 639,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 127.8
+      },
+      {
+        "frame_index": 640,
+        "interp_dx": 52.0,
+        "interp_dy": -2.0,
+        "t": 128.0
+      },
+      {
+        "frame_index": 641,
+        "interp_dx": 104.0,
+        "interp_dy": -4.0,
+        "t": 128.2
+      },
+      {
+        "frame_index": 642,
+        "interp_dx": 156.0,
+        "interp_dy": -6.0,
+        "t": 128.4
+      },
+      {
+        "frame_index": 643,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 128.6
+      },
+      {
+        "frame_index": 644,
+        "interp_dx": 3.375,
+        "interp_dy": -2.0,
+        "t": 128.8
+      },
+      {
+        "frame_index": 645,
+        "interp_dx": 6.75,
+        "interp_dy": -4.0,
+        "t": 129.0
+      },
+      {
+        "frame_index": 646,
+        "interp_dx": 10.125,
+        "interp_dy": -6.0,
+        "t": 129.2
+      },
+      {
+        "frame_index": 647,
+        "interp_dx": 13.5,
+        "interp_dy": -8.0,
+        "t": 129.4
+      },
+      {
+        "frame_index": 648,
+        "interp_dx": 16.875,
+        "interp_dy": -10.0,
+        "t": 129.6
+      },
+      {
+        "frame_index": 649,
+        "interp_dx": 20.25,
+        "interp_dy": -12.0,
+        "t": 129.8
+      },
+      {
+        "frame_index": 650,
+        "interp_dx": 23.625,
+        "interp_dy": -14.0,
+        "t": 130.0
+      },
+      {
+        "frame_index": 651,
+        "interp_dx": 27.0,
+        "interp_dy": -16.0,
+        "t": 130.2
+      },
+      {
+        "frame_index": 652,
+        "interp_dx": 83.0,
+        "interp_dy": -22.6667,
+        "t": 130.4
+      },
+      {
+        "frame_index": 653,
+        "interp_dx": 139.0,
+        "interp_dy": -29.3333,
+        "t": 130.6
+      },
+      {
+        "frame_index": 654,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 130.8
+      },
+      {
+        "frame_index": 655,
+        "interp_dx": 6.0,
+        "interp_dy": -1.625,
+        "t": 131.0
+      },
+      {
+        "frame_index": 656,
+        "interp_dx": 12.0,
+        "interp_dy": -3.25,
+        "t": 131.2
+      },
+      {
+        "frame_index": 657,
+        "interp_dx": 18.0,
+        "interp_dy": -4.875,
+        "t": 131.4
+      },
+      {
+        "frame_index": 658,
+        "interp_dx": 24.0,
+        "interp_dy": -6.5,
+        "t": 131.6
+      },
+      {
+        "frame_index": 659,
+        "interp_dx": 30.0,
+        "interp_dy": -8.125,
+        "t": 131.8
+      },
+      {
+        "frame_index": 660,
+        "interp_dx": 36.0,
+        "interp_dy": -9.75,
+        "t": 132.0
+      },
+      {
+        "frame_index": 661,
+        "interp_dx": 42.0,
+        "interp_dy": -11.375,
+        "t": 132.2
+      },
+      {
+        "frame_index": 662,
+        "interp_dx": 48.0,
+        "interp_dy": -13.0,
+        "t": 132.4
+      },
+      {
+        "frame_index": 663,
+        "interp_dx": 30.0,
+        "interp_dy": -5.75,
+        "t": 132.6
+      },
+      {
+        "frame_index": 664,
+        "interp_dx": 12.0,
+        "interp_dy": 1.5,
+        "t": 132.8
+      },
+      {
+        "frame_index": 665,
+        "interp_dx": -6.0,
+        "interp_dy": 8.75,
+        "t": 133.0
+      },
+      {
+        "frame_index": 666,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 133.2
+      },
+      {
+        "frame_index": 667,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 133.4
+      },
+      {
+        "frame_index": 668,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 133.6
+      },
+      {
+        "frame_index": 669,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 133.8
+      },
+      {
+        "frame_index": 670,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 134.0
+      },
+      {
+        "frame_index": 671,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 134.2
+      },
+      {
+        "frame_index": 672,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 134.4
+      },
+      {
+        "frame_index": 673,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 134.6
+      },
+      {
+        "frame_index": 674,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 134.8
+      },
+      {
+        "frame_index": 675,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 135.0
+      },
+      {
+        "frame_index": 676,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 135.2
+      },
+      {
+        "frame_index": 677,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 135.4
+      },
+      {
+        "frame_index": 678,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 135.6
+      },
+      {
+        "frame_index": 679,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 135.8
+      },
+      {
+        "frame_index": 680,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 136.0
+      },
+      {
+        "frame_index": 681,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 136.2
+      },
+      {
+        "frame_index": 682,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 136.4
+      },
+      {
+        "frame_index": 683,
+        "interp_dx": 0.0,
+        "interp_dy": 0.0,
+        "t": 136.6
+      }
+    ],
+    "method": {
+      "classification": "rule-based-deterministic",
+      "interpolation": "linear-between-anchor-cumulative-motion",
+      "motion_estimation": "phase-correlation-global-shift",
+      "shot_boundary": "frame-diff-robust-threshold"
+    },
+    "shot_boundaries": [
+      0,
+      34,
+      39,
+      55,
+      66,
+      76,
+      88,
+      99,
+      110,
+      133,
+      140,
+      155,
+      167,
+      178,
+      189,
+      200,
+      212,
+      223,
+      228,
+      234,
+      245,
+      256,
+      267,
+      279,
+      290,
+      301,
+      313,
+      324,
+      335,
+      346,
+      357,
+      369,
+      380,
+      391,
+      403,
+      414,
+      436,
+      447,
+      459,
+      470,
+      482,
+      493,
+      505,
+      516,
+      524,
+      540,
+      551,
+      562,
+      574,
+      585,
+      601,
+      620,
+      631,
+      643,
+      654,
+      666,
+      683
+    ],
+    "shots": [
+      {
+        "anchor_frames": [
+          0,
+          17,
+          34
+        ],
+        "duration_s": 6.8,
+        "end_frame": 34,
+        "end_t": 6.8,
+        "mean_dx": 0.4118,
+        "mean_dy": -1.5882,
+        "mean_motion_mag": 1.6417,
+        "median_frame_diff": 16.3768,
+        "movement_confidence": 0.25,
+        "movement_type": "static",
+        "shot_id": 1,
+        "start_frame": 0,
+        "start_t": 0.0
+      },
+      {
+        "anchor_frames": [
+          34,
+          36,
+          39
+        ],
+        "duration_s": 1.0,
+        "end_frame": 39,
+        "end_t": 7.8,
+        "mean_dx": 0.0,
+        "mean_dy": 0.0,
+        "mean_motion_mag": 0.0,
+        "median_frame_diff": 26.0857,
+        "movement_confidence": 0.261,
+        "movement_type": "static",
+        "shot_id": 2,
+        "start_frame": 34,
+        "start_t": 6.8
+      },
+      {
+        "anchor_frames": [
+          39,
+          47,
+          55
+        ],
+        "duration_s": 3.2,
+        "end_frame": 55,
+        "end_t": 11.0,
+        "mean_dx": 8.5,
+        "mean_dy": -13.375,
+        "mean_motion_mag": 16.2764,
+        "median_frame_diff": 19.9026,
+        "movement_confidence": 0.26,
+        "movement_type": "handheld",
+        "shot_id": 3,
+        "start_frame": 39,
+        "start_t": 7.8
+      },
+      {
+        "anchor_frames": [
+          55,
+          60,
+          66
+        ],
+        "duration_s": 2.2,
+        "end_frame": 66,
+        "end_t": 13.2,
+        "mean_dx": -8.7273,
+        "mean_dy": -14.5455,
+        "mean_motion_mag": 16.9628,
+        "median_frame_diff": 10.492,
+        "movement_confidence": 0.327,
+        "movement_type": "static",
+        "shot_id": 4,
+        "start_frame": 55,
+        "start_t": 11.0
+      },
+      {
+        "anchor_frames": [
+          66,
+          71,
+          76
+        ],
+        "duration_s": 2.0,
+        "end_frame": 76,
+        "end_t": 15.2,
+        "mean_dx": -16.9,
+        "mean_dy": -16.0,
+        "mean_motion_mag": 24.6277,
+        "median_frame_diff": 10.2002,
+        "movement_confidence": 0.415,
+        "movement_type": "truck",
+        "shot_id": 5,
+        "start_frame": 66,
+        "start_t": 13.2
+      },
+      {
+        "anchor_frames": [
+          76,
+          82,
+          88
+        ],
+        "duration_s": 2.4,
+        "end_frame": 88,
+        "end_t": 17.6,
+        "mean_dx": -0.9167,
+        "mean_dy": -2.5833,
+        "mean_motion_mag": 10.1217,
+        "median_frame_diff": 20.9012,
+        "movement_confidence": 0.32,
+        "movement_type": "tilt",
+        "shot_id": 6,
+        "start_frame": 76,
+        "start_t": 15.2
+      },
+      {
+        "anchor_frames": [
+          88,
+          93,
+          99
+        ],
+        "duration_s": 2.2,
+        "end_frame": 99,
+        "end_t": 19.8,
+        "mean_dx": 12.0,
+        "mean_dy": 10.1818,
+        "mean_motion_mag": 16.8854,
+        "median_frame_diff": 23.7438,
+        "movement_confidence": 0.33,
+        "movement_type": "pan",
+        "shot_id": 7,
+        "start_frame": 88,
+        "start_t": 17.6
+      },
+      {
+        "anchor_frames": [
+          99,
+          104,
+          110
+        ],
+        "duration_s": 2.2,
+        "end_frame": 110,
+        "end_t": 22.0,
+        "mean_dx": -11.0909,
+        "mean_dy": -4.3636,
+        "mean_motion_mag": 20.0657,
+        "median_frame_diff": 15.9649,
+        "movement_confidence": 0.441,
+        "movement_type": "truck",
+        "shot_id": 8,
+        "start_frame": 99,
+        "start_t": 19.8
+      },
+      {
+        "anchor_frames": [
+          110,
+          121,
+          133
+        ],
+        "duration_s": 4.6,
+        "end_frame": 133,
+        "end_t": 26.6,
+        "mean_dx": -4.1739,
+        "mean_dy": -3.0435,
+        "mean_motion_mag": 5.8261,
+        "median_frame_diff": 8.7724,
+        "movement_confidence": 0.355,
+        "movement_type": "tilt",
+        "shot_id": 9,
+        "start_frame": 110,
+        "start_t": 22.0
+      },
+      {
+        "anchor_frames": [
+          133,
+          136,
+          140
+        ],
+        "duration_s": 1.4,
+        "end_frame": 140,
+        "end_t": 28.0,
+        "mean_dx": -0.1429,
+        "mean_dy": 5.8571,
+        "mean_motion_mag": 5.8713,
+        "median_frame_diff": 20.37,
+        "movement_confidence": 0.354,
+        "movement_type": "tilt",
+        "shot_id": 10,
+        "start_frame": 133,
+        "start_t": 26.6
+      },
+      {
+        "anchor_frames": [
+          140,
+          147,
+          155
+        ],
+        "duration_s": 3.0,
+        "end_frame": 155,
+        "end_t": 31.0,
+        "mean_dx": -9.6667,
+        "mean_dy": 1.6667,
+        "mean_motion_mag": 34.7662,
+        "median_frame_diff": 12.3229,
+        "movement_confidence": 0.393,
+        "movement_type": "tilt",
+        "shot_id": 11,
+        "start_frame": 140,
+        "start_t": 28.0
+      },
+      {
+        "anchor_frames": [
+          155,
+          161,
+          167
+        ],
+        "duration_s": 2.4,
+        "end_frame": 167,
+        "end_t": 33.4,
+        "mean_dx": 4.6667,
+        "mean_dy": 4.8333,
+        "mean_motion_mag": 9.0781,
+        "median_frame_diff": 11.7685,
+        "movement_confidence": 0.366,
+        "movement_type": "truck",
+        "shot_id": 12,
+        "start_frame": 155,
+        "start_t": 31.0
+      },
+      {
+        "anchor_frames": [
+          167,
+          172,
+          178
+        ],
+        "duration_s": 2.2,
+        "end_frame": 178,
+        "end_t": 35.6,
+        "mean_dx": -27.6364,
+        "mean_dy": 0.7273,
+        "mean_motion_mag": 27.6459,
+        "median_frame_diff": 4.7397,
+        "movement_confidence": 0.365,
+        "movement_type": "static",
+        "shot_id": 13,
+        "start_frame": 167,
+        "start_t": 33.4
+      },
+      {
+        "anchor_frames": [
+          178,
+          183,
+          189
+        ],
+        "duration_s": 2.2,
+        "end_frame": 189,
+        "end_t": 37.8,
+        "mean_dx": 18.1818,
+        "mean_dy": 2.1818,
+        "mean_motion_mag": 18.3123,
+        "median_frame_diff": 6.3195,
+        "movement_confidence": 0.264,
+        "movement_type": "static",
+        "shot_id": 14,
+        "start_frame": 178,
+        "start_t": 35.6
+      },
+      {
+        "anchor_frames": [
+          189,
+          194,
+          200
+        ],
+        "duration_s": 2.2,
+        "end_frame": 200,
+        "end_t": 40.0,
+        "mean_dx": 3.8182,
+        "mean_dy": 16.0,
+        "mean_motion_mag": 16.5898,
+        "median_frame_diff": 6.6717,
+        "movement_confidence": 0.256,
+        "movement_type": "static",
+        "shot_id": 15,
+        "start_frame": 189,
+        "start_t": 37.8
+      },
+      {
+        "anchor_frames": [
+          200,
+          206,
+          212
+        ],
+        "duration_s": 2.4,
+        "end_frame": 212,
+        "end_t": 42.4,
+        "mean_dx": 14.9167,
+        "mean_dy": -3.9167,
+        "mean_motion_mag": 28.1174,
+        "median_frame_diff": 17.6091,
+        "movement_confidence": 0.345,
+        "movement_type": "tilt",
+        "shot_id": 16,
+        "start_frame": 200,
+        "start_t": 40.0
+      },
+      {
+        "anchor_frames": [
+          212,
+          217,
+          223
+        ],
+        "duration_s": 2.2,
+        "end_frame": 223,
+        "end_t": 44.6,
+        "mean_dx": -35.6364,
+        "mean_dy": -15.3636,
+        "mean_motion_mag": 38.8176,
+        "median_frame_diff": 23.5221,
+        "movement_confidence": 0.374,
+        "movement_type": "truck",
+        "shot_id": 17,
+        "start_frame": 212,
+        "start_t": 42.4
+      },
+      {
+        "anchor_frames": [
+          223,
+          225,
+          228
+        ],
+        "duration_s": 1.0,
+        "end_frame": 228,
+        "end_t": 45.6,
+        "mean_dx": 42.4,
+        "mean_dy": 22.4,
+        "mean_motion_mag": 48.0474,
+        "median_frame_diff": 8.7214,
+        "movement_confidence": 0.45,
+        "movement_type": "pan",
+        "shot_id": 18,
+        "start_frame": 223,
+        "start_t": 44.6
+      },
+      {
+        "anchor_frames": [
+          228,
+          231,
+          234
+        ],
+        "duration_s": 1.2,
+        "end_frame": 234,
+        "end_t": 46.8,
+        "mean_dx": -7.6667,
+        "mean_dy": 13.3333,
+        "mean_motion_mag": 17.9421,
+        "median_frame_diff": 7.689,
+        "movement_confidence": 0.446,
+        "movement_type": "pan",
+        "shot_id": 19,
+        "start_frame": 228,
+        "start_t": 45.6
+      },
+      {
+        "anchor_frames": [
+          234,
+          239,
+          245
+        ],
+        "duration_s": 2.2,
+        "end_frame": 245,
+        "end_t": 49.0,
+        "mean_dx": -5.8182,
+        "mean_dy": -0.7273,
+        "mean_motion_mag": 5.8635,
+        "median_frame_diff": 6.9857,
+        "movement_confidence": 0.306,
+        "movement_type": "static",
+        "shot_id": 20,
+        "start_frame": 234,
+        "start_t": 46.8
+      },
+      {
+        "anchor_frames": [
+          245,
+          250,
+          256
+        ],
+        "duration_s": 2.2,
+        "end_frame": 256,
+        "end_t": 51.2,
+        "mean_dx": -7.6364,
+        "mean_dy": 8.7273,
+        "mean_motion_mag": 14.685,
+        "median_frame_diff": 8.9051,
+        "movement_confidence": 0.418,
+        "movement_type": "pan",
+        "shot_id": 21,
+        "start_frame": 245,
+        "start_t": 49.0
+      },
+      {
+        "anchor_frames": [
+          256,
+          261,
+          267
+        ],
+        "duration_s": 2.2,
+        "end_frame": 267,
+        "end_t": 53.4,
+        "mean_dx": -10.9091,
+        "mean_dy": -1.7273,
+        "mean_motion_mag": 11.9333,
+        "median_frame_diff": 7.3516,
+        "movement_confidence": 0.33,
+        "movement_type": "tilt",
+        "shot_id": 22,
+        "start_frame": 256,
+        "start_t": 51.2
+      },
+      {
+        "anchor_frames": [
+          267,
+          273,
+          279
+        ],
+        "duration_s": 2.4,
+        "end_frame": 279,
+        "end_t": 55.8,
+        "mean_dx": -4.0,
+        "mean_dy": -2.6667,
+        "mean_motion_mag": 4.8074,
+        "median_frame_diff": 5.0638,
+        "movement_confidence": 0.404,
+        "movement_type": "static",
+        "shot_id": 23,
+        "start_frame": 267,
+        "start_t": 53.4
+      },
+      {
+        "anchor_frames": [
+          279,
+          284,
+          290
+        ],
+        "duration_s": 2.2,
+        "end_frame": 290,
+        "end_t": 58.0,
+        "mean_dx": -17.3636,
+        "mean_dy": 7.2727,
+        "mean_motion_mag": 18.8252,
+        "median_frame_diff": 7.7765,
+        "movement_confidence": 0.274,
+        "movement_type": "static",
+        "shot_id": 24,
+        "start_frame": 279,
+        "start_t": 55.8
+      },
+      {
+        "anchor_frames": [
+          290,
+          295,
+          301
+        ],
+        "duration_s": 2.2,
+        "end_frame": 301,
+        "end_t": 60.2,
+        "mean_dx": -0.7273,
+        "mean_dy": -0.1818,
+        "mean_motion_mag": 8.9693,
+        "median_frame_diff": 13.6987,
+        "movement_confidence": 0.384,
+        "movement_type": "tilt",
+        "shot_id": 25,
+        "start_frame": 290,
+        "start_t": 58.0
+      },
+      {
+        "anchor_frames": [
+          301,
+          307,
+          313
+        ],
+        "duration_s": 2.4,
+        "end_frame": 313,
+        "end_t": 62.6,
+        "mean_dx": 4.75,
+        "mean_dy": -2.75,
+        "mean_motion_mag": 18.2331,
+        "median_frame_diff": 15.5314,
+        "movement_confidence": 0.397,
+        "movement_type": "truck",
+        "shot_id": 26,
+        "start_frame": 301,
+        "start_t": 60.2
+      },
+      {
+        "anchor_frames": [
+          313,
+          318,
+          324
+        ],
+        "duration_s": 2.2,
+        "end_frame": 324,
+        "end_t": 64.8,
+        "mean_dx": -24.8182,
+        "mean_dy": 8.7273,
+        "mean_motion_mag": 26.3079,
+        "median_frame_diff": 7.301,
+        "movement_confidence": 0.301,
+        "movement_type": "static",
+        "shot_id": 27,
+        "start_frame": 313,
+        "start_t": 62.6
+      },
+      {
+        "anchor_frames": [
+          324,
+          329,
+          335
+        ],
+        "duration_s": 2.2,
+        "end_frame": 335,
+        "end_t": 67.0,
+        "mean_dx": -1.4545,
+        "mean_dy": -14.5455,
+        "mean_motion_mag": 19.047,
+        "median_frame_diff": 7.5792,
+        "movement_confidence": 0.429,
+        "movement_type": "truck",
+        "shot_id": 28,
+        "start_frame": 324,
+        "start_t": 64.8
+      },
+      {
+        "anchor_frames": [
+          335,
+          340,
+          346
+        ],
+        "duration_s": 2.2,
+        "end_frame": 346,
+        "end_t": 69.2,
+        "mean_dx": -3.2727,
+        "mean_dy": -9.4545,
+        "mean_motion_mag": 12.5562,
+        "median_frame_diff": 3.4825,
+        "movement_confidence": 0.443,
+        "movement_type": "pan",
+        "shot_id": 29,
+        "start_frame": 335,
+        "start_t": 67.0
+      },
+      {
+        "anchor_frames": [
+          346,
+          351,
+          357
+        ],
+        "duration_s": 2.2,
+        "end_frame": 357,
+        "end_t": 71.4,
+        "mean_dx": -4.0,
+        "mean_dy": 0.0,
+        "mean_motion_mag": 9.0909,
+        "median_frame_diff": 5.6281,
+        "movement_confidence": 0.402,
+        "movement_type": "truck",
+        "shot_id": 30,
+        "start_frame": 346,
+        "start_t": 69.2
+      },
+      {
+        "anchor_frames": [
+          357,
+          363,
+          369
+        ],
+        "duration_s": 2.4,
+        "end_frame": 369,
+        "end_t": 73.8,
+        "mean_dx": 16.0,
+        "mean_dy": -2.6667,
+        "mean_motion_mag": 16.2207,
+        "median_frame_diff": 1.8428,
+        "movement_confidence": 0.431,
+        "movement_type": "static",
+        "shot_id": 31,
+        "start_frame": 357,
+        "start_t": 71.4
+      },
+      {
+        "anchor_frames": [
+          369,
+          374,
+          380
+        ],
+        "duration_s": 2.2,
+        "end_frame": 380,
+        "end_t": 76.0,
+        "mean_dx": -11.6364,
+        "mean_dy": 2.2727,
+        "mean_motion_mag": 11.8562,
+        "median_frame_diff": 3.829,
+        "movement_confidence": 0.327,
+        "movement_type": "static",
+        "shot_id": 32,
+        "start_frame": 369,
+        "start_t": 73.8
+      },
+      {
+        "anchor_frames": [
+          380,
+          385,
+          391
+        ],
+        "duration_s": 2.2,
+        "end_frame": 391,
+        "end_t": 78.2,
+        "mean_dx": -12.1818,
+        "mean_dy": -3.0909,
+        "mean_motion_mag": 14.8037,
+        "median_frame_diff": 11.3266,
+        "movement_confidence": 0.314,
+        "movement_type": "tilt",
+        "shot_id": 33,
+        "start_frame": 380,
+        "start_t": 76.0
+      },
+      {
+        "anchor_frames": [
+          391,
+          397,
+          403
+        ],
+        "duration_s": 2.4,
+        "end_frame": 403,
+        "end_t": 80.6,
+        "mean_dx": 9.3333,
+        "mean_dy": 3.3333,
+        "mean_motion_mag": 9.9107,
+        "median_frame_diff": 3.8846,
+        "movement_confidence": 0.354,
+        "movement_type": "static",
+        "shot_id": 34,
+        "start_frame": 391,
+        "start_t": 78.2
+      },
+      {
+        "anchor_frames": [
+          403,
+          408,
+          414
+        ],
+        "duration_s": 2.2,
+        "end_frame": 414,
+        "end_t": 82.8,
+        "mean_dx": 29.0909,
+        "mean_dy": -15.2727,
+        "mean_motion_mag": 32.8563,
+        "median_frame_diff": 4.9425,
+        "movement_confidence": 0.306,
+        "movement_type": "static",
+        "shot_id": 35,
+        "start_frame": 403,
+        "start_t": 80.6
+      },
+      {
+        "anchor_frames": [
+          414,
+          425,
+          436
+        ],
+        "duration_s": 4.4,
+        "end_frame": 436,
+        "end_t": 87.2,
+        "mean_dx": 9.1818,
+        "mean_dy": 2.8182,
+        "mean_motion_mag": 11.9032,
+        "median_frame_diff": 16.0287,
+        "movement_confidence": 0.356,
+        "movement_type": "orbit",
+        "shot_id": 36,
+        "start_frame": 414,
+        "start_t": 82.8
+      },
+      {
+        "anchor_frames": [
+          436,
+          441,
+          447
+        ],
+        "duration_s": 2.2,
+        "end_frame": 447,
+        "end_t": 89.4,
+        "mean_dx": -25.7273,
+        "mean_dy": -6.5455,
+        "mean_motion_mag": 26.5759,
+        "median_frame_diff": 14.1552,
+        "movement_confidence": 0.469,
+        "movement_type": "pan",
+        "shot_id": 37,
+        "start_frame": 436,
+        "start_t": 87.2
+      },
+      {
+        "anchor_frames": [
+          447,
+          453,
+          459
+        ],
+        "duration_s": 2.4,
+        "end_frame": 459,
+        "end_t": 91.8,
+        "mean_dx": 0.0,
+        "mean_dy": -16.0,
+        "mean_motion_mag": 16.0,
+        "median_frame_diff": 8.6822,
+        "movement_confidence": 0.456,
+        "movement_type": "tilt",
+        "shot_id": 38,
+        "start_frame": 447,
+        "start_t": 89.4
+      },
+      {
+        "anchor_frames": [
+          459,
+          464,
+          470
+        ],
+        "duration_s": 2.2,
+        "end_frame": 470,
+        "end_t": 94.0,
+        "mean_dx": -10.9091,
+        "mean_dy": 10.2727,
+        "mean_motion_mag": 16.0641,
+        "median_frame_diff": 9.3363,
+        "movement_confidence": 0.306,
+        "movement_type": "handheld",
+        "shot_id": 39,
+        "start_frame": 459,
+        "start_t": 91.8
+      },
+      {
+        "anchor_frames": [
+          470,
+          476,
+          482
+        ],
+        "duration_s": 2.4,
+        "end_frame": 482,
+        "end_t": 96.4,
+        "mean_dx": -9.1667,
+        "mean_dy": -6.6667,
+        "mean_motion_mag": 11.744,
+        "median_frame_diff": 11.5821,
+        "movement_confidence": 0.376,
+        "movement_type": "pan",
+        "shot_id": 40,
+        "start_frame": 470,
+        "start_t": 94.0
+      },
+      {
+        "anchor_frames": [
+          482,
+          487,
+          493
+        ],
+        "duration_s": 2.2,
+        "end_frame": 493,
+        "end_t": 98.6,
+        "mean_dx": 20.7273,
+        "mean_dy": -12.3636,
+        "mean_motion_mag": 27.5312,
+        "median_frame_diff": 4.7915,
+        "movement_confidence": 0.414,
+        "movement_type": "pan",
+        "shot_id": 41,
+        "start_frame": 482,
+        "start_t": 96.4
+      },
+      {
+        "anchor_frames": [
+          493,
+          499,
+          505
+        ],
+        "duration_s": 2.4,
+        "end_frame": 505,
+        "end_t": 101.0,
+        "mean_dx": 12.1667,
+        "mean_dy": 3.0,
+        "mean_motion_mag": 18.0986,
+        "median_frame_diff": 17.1606,
+        "movement_confidence": 0.345,
+        "movement_type": "tilt",
+        "shot_id": 42,
+        "start_frame": 493,
+        "start_t": 98.6
+      },
+      {
+        "anchor_frames": [
+          505,
+          510,
+          516
+        ],
+        "duration_s": 2.2,
+        "end_frame": 516,
+        "end_t": 103.2,
+        "mean_dx": 12.0,
+        "mean_dy": 9.6364,
+        "mean_motion_mag": 19.2943,
+        "median_frame_diff": 14.4179,
+        "movement_confidence": 0.371,
+        "movement_type": "tilt",
+        "shot_id": 43,
+        "start_frame": 505,
+        "start_t": 101.0
+      },
+      {
+        "anchor_frames": [
+          516,
+          520,
+          524
+        ],
+        "duration_s": 1.6,
+        "end_frame": 524,
+        "end_t": 104.8,
+        "mean_dx": -11.75,
+        "mean_dy": 4.125,
+        "mean_motion_mag": 16.7982,
+        "median_frame_diff": 24.985,
+        "movement_confidence": 0.325,
+        "movement_type": "tilt",
+        "shot_id": 44,
+        "start_frame": 516,
+        "start_t": 103.2
+      },
+      {
+        "anchor_frames": [
+          524,
+          532,
+          540
+        ],
+        "duration_s": 3.2,
+        "end_frame": 540,
+        "end_t": 108.0,
+        "mean_dx": 15.5,
+        "mean_dy": 6.25,
+        "mean_motion_mag": 19.9277,
+        "median_frame_diff": 15.0385,
+        "movement_confidence": 0.323,
+        "movement_type": "tilt",
+        "shot_id": 45,
+        "start_frame": 524,
+        "start_t": 104.8
+      },
+      {
+        "anchor_frames": [
+          540,
+          545,
+          551
+        ],
+        "duration_s": 2.2,
+        "end_frame": 551,
+        "end_t": 110.2,
+        "mean_dx": -16.7273,
+        "mean_dy": -12.4545,
+        "mean_motion_mag": 20.8547,
+        "median_frame_diff": 8.0774,
+        "movement_confidence": 0.414,
+        "movement_type": "static",
+        "shot_id": 46,
+        "start_frame": 540,
+        "start_t": 108.0
+      },
+      {
+        "anchor_frames": [
+          551,
+          556,
+          562
+        ],
+        "duration_s": 2.2,
+        "end_frame": 562,
+        "end_t": 112.4,
+        "mean_dx": 6.5455,
+        "mean_dy": 13.0909,
+        "mean_motion_mag": 14.6361,
+        "median_frame_diff": 10.8932,
+        "movement_confidence": 0.316,
+        "movement_type": "static",
+        "shot_id": 47,
+        "start_frame": 551,
+        "start_t": 110.2
+      },
+      {
+        "anchor_frames": [
+          562,
+          568,
+          574
+        ],
+        "duration_s": 2.4,
+        "end_frame": 574,
+        "end_t": 114.8,
+        "mean_dx": 0.0,
+        "mean_dy": 0.0,
+        "mean_motion_mag": 0.0,
+        "median_frame_diff": 7.5853,
+        "movement_confidence": 0.396,
+        "movement_type": "static",
+        "shot_id": 48,
+        "start_frame": 562,
+        "start_t": 112.4
+      },
+      {
+        "anchor_frames": [
+          574,
+          579,
+          585
+        ],
+        "duration_s": 2.2,
+        "end_frame": 585,
+        "end_t": 117.0,
+        "mean_dx": -19.6364,
+        "mean_dy": 0.0,
+        "mean_motion_mag": 19.6364,
+        "median_frame_diff": 4.6191,
+        "movement_confidence": 0.369,
+        "movement_type": "static",
+        "shot_id": 49,
+        "start_frame": 574,
+        "start_t": 114.8
+      },
+      {
+        "anchor_frames": [
+          585,
+          593,
+          601
+        ],
+        "duration_s": 3.2,
+        "end_frame": 601,
+        "end_t": 120.2,
+        "mean_dx": 9.3125,
+        "mean_dy": -0.1875,
+        "mean_motion_mag": 12.1534,
+        "median_frame_diff": 18.6915,
+        "movement_confidence": 0.355,
+        "movement_type": "truck",
+        "shot_id": 50,
+        "start_frame": 585,
+        "start_t": 117.0
+      },
+      {
+        "anchor_frames": [
+          601,
+          610,
+          620
+        ],
+        "duration_s": 3.8,
+        "end_frame": 620,
+        "end_t": 124.0,
+        "mean_dx": 1.1579,
+        "mean_dy": 2.0,
+        "mean_motion_mag": 5.8125,
+        "median_frame_diff": 9.5915,
+        "movement_confidence": 0.365,
+        "movement_type": "truck",
+        "shot_id": 51,
+        "start_frame": 601,
+        "start_t": 120.2
+      },
+      {
+        "anchor_frames": [
+          620,
+          625,
+          631
+        ],
+        "duration_s": 2.2,
+        "end_frame": 631,
+        "end_t": 126.2,
+        "mean_dx": 29.1818,
+        "mean_dy": 0.6364,
+        "mean_motion_mag": 29.5047,
+        "median_frame_diff": 13.1897,
+        "movement_confidence": 0.353,
+        "movement_type": "truck",
+        "shot_id": 52,
+        "start_frame": 620,
+        "start_t": 124.0
+      },
+      {
+        "anchor_frames": [
+          631,
+          637,
+          643
+        ],
+        "duration_s": 2.4,
+        "end_frame": 643,
+        "end_t": 128.6,
+        "mean_dx": 17.3333,
+        "mean_dy": -0.6667,
+        "mean_motion_mag": 17.3461,
+        "median_frame_diff": 14.2102,
+        "movement_confidence": 0.251,
+        "movement_type": "static",
+        "shot_id": 53,
+        "start_frame": 631,
+        "start_t": 126.2
+      },
+      {
+        "anchor_frames": [
+          643,
+          648,
+          654
+        ],
+        "duration_s": 2.2,
+        "end_frame": 654,
+        "end_t": 130.8,
+        "mean_dx": 17.7273,
+        "mean_dy": -3.2727,
+        "mean_motion_mag": 18.2897,
+        "median_frame_diff": 8.438,
+        "movement_confidence": 0.395,
+        "movement_type": "truck",
+        "shot_id": 54,
+        "start_frame": 643,
+        "start_t": 128.6
+      },
+      {
+        "anchor_frames": [
+          654,
+          660,
+          666
+        ],
+        "duration_s": 2.4,
+        "end_frame": 666,
+        "end_t": 133.2,
+        "mean_dx": -2.0,
+        "mean_dy": 1.3333,
+        "mean_motion_mag": 14.8511,
+        "median_frame_diff": 10.2634,
+        "movement_confidence": 0.385,
+        "movement_type": "truck",
+        "shot_id": 55,
+        "start_frame": 654,
+        "start_t": 130.8
+      },
+      {
+        "anchor_frames": [
+          666,
+          674,
+          683
+        ],
+        "duration_s": 3.4,
+        "end_frame": 683,
+        "end_t": 136.6,
+        "mean_dx": 0.0,
+        "mean_dy": 0.0,
+        "mean_motion_mag": 0.0,
+        "median_frame_diff": 4.0944,
+        "movement_confidence": 0.59,
+        "movement_type": "static",
+        "shot_id": 56,
+        "start_frame": 666,
+        "start_t": 133.2
+      }
+    ],
+    "summary": {
+      "avg_shot_duration_s": 2.439,
+      "movement_counts": {
+        "handheld": 2,
+        "orbit": 1,
+        "pan": 8,
+        "static": 20,
+        "tilt": 13,
+        "truck": 12
+      },
+      "shot_count": 56
+    },
+    "version": "posthoc-temporal-v1"
+  },
+  "video": "/Volumes/Charlie/hyperedit-video-intel/all_files/3213 Cliff Drive - Horizontal Branded.mp4"
+}
