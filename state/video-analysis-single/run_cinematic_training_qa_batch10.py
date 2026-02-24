@@ -163,9 +163,61 @@ def audio_pass(video, audio_models):
     return p
 
 def final_synthesis(video, p1, p2, pa):
+    from collections import Counter
+    import re
     vid=video.stem.replace(' ','_')[:120]
     j1=json.loads(p1.read_text()); j2=json.loads(p2.read_text()); ja=json.loads(pa.read_text())
-    md=f"# Final Synthesis\n\nVideo: {video.name}\n\n- Frames: {j1.get('frames_total')}\n- Shots: {j2.get('temporal_post',{}).get('summary',{}).get('shot_count')}\n- BPM: {ja.get('bpm')}\n\n## Notes\n- Two-pass vision complete\n- Audio DSP + LLM summary complete\n"
+
+    shots=j2.get('temporal_post',{}).get('shots',[])
+    movement=Counter(s.get('movement_type','unknown') for s in shots)
+    rooms=Counter(); roles=Counter(); typo=0; total=0
+    for fr in j1.get('per_frame',[]):
+        try:
+            a=json.loads(fr.get('analysis','{}'))
+        except:
+            continue
+        total += 1
+        rooms[str(a.get('room_or_amenity') or 'unknown').strip().lower()] += 1
+        roles[str(a.get('sequence_role') or 'unknown').strip().lower()] += 1
+        if a.get('typography_present') is True:
+            typo += 1
+
+    gemma_summary=''
+    gemma_recs=[]
+    for item in ja.get('audio_semantic_summary',[]):
+        if 'gemma' not in str(item.get('model','')).lower():
+            continue
+        txt=item.get('summary','')
+        m=re.search(r'\{[\s\S]*\}', txt)
+        if not m:
+            continue
+        try:
+            gj=json.loads(m.group(0))
+            gemma_summary=gj.get('summary','')
+            gemma_recs=[r.get('title') for r in gj.get('recommendations',[]) if isinstance(r,dict) and r.get('title')]
+        except:
+            pass
+
+    top_rooms=', '.join([f"{k} ({v})" for k,v in rooms.most_common(8)]) if rooms else 'n/a'
+    top_roles=', '.join([f"{k} ({v})" for k,v in roles.most_common(8)]) if roles else 'n/a'
+    move_mix=', '.join([f"{k}={v}" for k,v in movement.items()]) if movement else 'n/a'
+    typo_pct=(typo/total*100.0) if total else 0.0
+
+    md=(
+        f"# Final Synthesis — {video.name}\n\n"
+        f"## Core Metrics\n"
+        f"- Frames analyzed: **{j1.get('frames_total')}** @ {j1.get('fps')} fps\n"
+        f"- Shot count (temporal pass): **{len(shots)}**\n"
+        f"- Movement mix: **{move_mix}**\n"
+        f"- Typography presence: **{typo}/{total} frames** ({typo_pct:.1f}%)\n"
+        f"- Audio BPM: **{ja.get('bpm')}**\n\n"
+        f"## Room/Amenity Coverage\n{top_rooms}\n\n"
+        f"## Sequence Role Distribution\n{top_roles}\n\n"
+        f"## Audio + Music Fit\n"
+        f"- DSP baseline complete (tempo/onset/energy/brightness).\n"
+        f"- Gemma summary: **{gemma_summary or 'n/a'}**\n"
+        f"- Suggested tracks/styles: {', '.join(gemma_recs) if gemma_recs else 'n/a'}\n"
+    )
     p=OUT_F/f'{vid}_final_synthesis.md'; p.write_text(md)
     (OUT_F/f'{vid}_done.marker').write_text('done\n')
     return p
