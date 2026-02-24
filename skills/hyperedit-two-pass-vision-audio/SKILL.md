@@ -51,15 +51,17 @@ Run one deterministic pipeline:
 
 ### 3) Switch models (required)
 - Unload the two Qwen vision instances.
-- Load the configured audio model via LM Studio model API before analysis.
+- Load the configured audio model(s) via LM Studio model API before analysis.
 
-Default audio model id:
-- `qwen2-audio-7b`
+Default audio model ids:
+- `qwen2-audio-7b` (audio semantics)
+- `gemma-music-recommender` (music fit/recommendation scoring)
 
 Model API sequence:
 1. `POST /api/v1/models/unload` for each active vision instance.
 2. `POST /api/v1/models/load` with `{ "model": "qwen2-audio-7b" }` (or configured override).
-3. Verify load by checking model list and ensuring audio model is active.
+3. `POST /api/v1/models/load` with `{ "model": "gemma-music-recommender" }` (or configured override).
+4. Verify load by checking model list and ensuring required audio models are active.
 
 ### 4) Audio pass (required)
 Use DSP + audio LLM together.
@@ -69,13 +71,11 @@ DSP baseline (must run):
 - `essentia` optional when available; do not block run if unavailable.
 
 Audio LLM semantic pass (must run after load):
-- scene-level sound design interpretation,
-- music/ambience/voice segmentation labels,
-- recommended sound-design event placements,
-- music-fit guidance.
+- `qwen2-audio-7b`: scene-level sound design interpretation, music/ambience/voice segmentation labels, sound-design event placements.
+- `gemma-music-recommender`: music-fit scoring and ranked music recommendations aligned to pacing/energy profile.
 
 Save deterministic audio JSON including both DSP and LLM sections.
-Do not mark run complete if audio LLM step was skipped unless explicitly instructed by user.
+Do not mark run complete if either required audio model step was skipped unless explicitly instructed by user.
 
 ### 5) Final synthesis
 Combine pass1 + pass2 + audio JSON into a full report:
@@ -100,8 +100,8 @@ Combine pass1 + pass2 + audio JSON into a full report:
 - `movement_counts`
 
 ### Audio pass
-- `audio_model_id`
-- `audio_model_loaded` (bool)
+- `audio_models[]` (e.g., `qwen2-audio-7b`, `gemma-music-recommender`)
+- `audio_models_loaded` (bool)
 - `bpm`
 - `beats[]`
 - `onsets[]`
@@ -110,6 +110,8 @@ Combine pass1 + pass2 + audio JSON into a full report:
 - `segments[]` (`music|ambience|voice`)
 - `sound_design_events[]`
 - `audio_semantic_summary`
+- `music_fit_score`
+- `music_recommendations[]`
 
 ## Failure Handling
 - 400/500 from model endpoint: retry bounded attempts with jitter.
