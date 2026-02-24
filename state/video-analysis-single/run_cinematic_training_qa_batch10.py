@@ -175,11 +175,13 @@ def final_synthesis(video, p1, p2, pa):
 
     rooms=Counter(); roles=Counter(); comps=Counter(); grades=Counter(); typo=0; total=0
     timeline=[]
+    frame_meta={}
     for fr in j1.get('per_frame',[]):
         try:
             a=json.loads(fr.get('analysis','{}'))
         except:
             continue
+        idx=int(fr.get('frame_index') or 0)
         total += 1
         room=str(a.get('room_or_amenity') or 'unknown').strip().lower()
         role=str(a.get('sequence_role') or 'unknown').strip().lower()
@@ -189,11 +191,11 @@ def final_synthesis(video, p1, p2, pa):
         roles[role] += 1
         comps[comp] += 1
         grades[grade] += 1
+        frame_meta[idx]={'room':room,'role':role,'typ':bool(a.get('typography_present'))}
         timeline.append({'t': float(fr.get('t') or 0), 'room': room, 'role': role, 'typ': bool(a.get('typography_present'))})
         if a.get('typography_present') is True:
             typo += 1
 
-    # Opening title-window estimate (continuous from head while role indicates intro/title or typography present)
     opening_end=0.0
     for row in timeline:
         r=row['role']
@@ -202,7 +204,6 @@ def final_synthesis(video, p1, p2, pa):
             continue
         break
 
-    # Room transition count
     transitions=0
     prev=None
     for row in timeline:
@@ -227,54 +228,110 @@ def final_synthesis(video, p1, p2, pa):
         except:
             pass
 
-    top_rooms='\n'.join([f"- {k}: {v} frames" for k,v in rooms.most_common(10)]) if rooms else '- n/a'
-    top_roles='\n'.join([f"- {k}: {v} frames" for k,v in roles.most_common(10)]) if roles else '- n/a'
-    top_comps='\n'.join([f"- {k}: {v} frames" for k,v in comps.most_common(8)]) if comps else '- n/a'
-    top_grades='\n'.join([f"- {k}: {v} frames" for k,v in grades.most_common(8)]) if grades else '- n/a'
+    def top_lines(counter,n):
+        return '\n'.join([f"- {k}: {v} frames" for k,v in counter.most_common(n)]) if counter else '- n/a'
+
     move_mix=', '.join([f"{k}={v}" for k,v in movement.items()]) if movement else 'n/a'
     typo_pct=(typo/total*100.0) if total else 0.0
-
     avg_shot=(statistics.mean(shot_durs) if shot_durs else 0.0)
     med_shot=(statistics.median(shot_durs) if shot_durs else 0.0)
     p90=(statistics.quantiles(shot_durs, n=10)[8] if len(shot_durs)>=10 else med_shot)
-    longest=sorted(shots, key=lambda s: float(s.get('duration_sec') or 0), reverse=True)[:8]
-    longest_md='\n'.join([
-        f"- Shot {s.get('shot_id')}: {float(s.get('start_frame',0))/fps:.1f}s → {float(s.get('end_frame',0))/fps:.1f}s ({float(s.get('duration_sec') or 0):.2f}s, {s.get('movement_type')})"
-        for s in longest
-    ]) if longest else '- n/a'
+
+    # Chapter map by 8-shot windows
+    chapters=[]
+    chunk=8
+    for i in range(0, len(shots), chunk):
+        part=shots[i:i+chunk]
+        if not part:
+            continue
+        s0=part[0]; s1=part[-1]
+        start=int(s0.get('start_frame') or 0); end=int(s1.get('end_frame') or start)
+        c_rooms=Counter(); c_moves=Counter()
+        for f in range(start, end+1):
+            meta=frame_meta.get(f)
+            if meta:
+                c_rooms[meta['room']] += 1
+        for s in part:
+            c_moves[str(s.get('movement_type') or 'unknown')] += 1
+        chapters.append({
+            'idx': len(chapters)+1,
+            'start_t': start/fps,
+            'end_t': end/fps,
+            'dominant_room': (c_rooms.most_common(1)[0][0] if c_rooms else 'unknown'),
+            'movement_mix': ', '.join([f"{k}:{v}" for k,v in c_moves.items()]) if c_moves else 'n/a'
+        })
+    chapter_md='\n'.join([f"- Chapter {c['idx']}: {c['start_t']:.1f}s → {c['end_t']:.1f}s | room={c['dominant_room']} | movement={c['movement_mix']}" for c in chapters]) if chapters else '- n/a'
+
+    # Music cue map from beat positions
+    cue_md='- n/a'
+    beats=ja.get('beats') or []
+    if beats:
+        cues=[]
+        # librosa beat frames -> seconds approximation using hop_length=512, sr=22050
+        for b in beats[:12]:
+            try:
+                sec=(float(b)*512.0)/22050.0
+                cues.append(sec)
+            except:
+                pass
+        cue_md='\n'.join([f"- Cue {i+1}: {t:.2f}s — align transition/accent" for i,t in enumerate(cues)]) if cues else '- n/a'
+
+    # full shot table (forensic)
+    rows=[]
+    for s in shots:
+        st=int(s.get('start_frame') or 0); en=int(s.get('end_frame') or st)
+        room_c=Counter(); role_c=Counter()
+        for f in range(st,en+1):
+            meta=frame_meta.get(f)
+            if not meta:
+                continue
+            room_c[meta['room']] += 1
+            role_c[meta['role']] += 1
+        d_room=room_c.most_common(1)[0][0] if room_c else 'unknown'
+        d_role=role_c.most_common(1)[0][0] if role_c else 'unknown'
+        rows.append(
+            f"| {s.get('shot_id')} | {st/fps:.2f} | {en/fps:.2f} | {float(s.get('duration_sec') or 0):.2f} | {s.get('movement_type')} | {float(s.get('confidence') or 0):.2f} | {d_room} | {d_role} |"
+        )
+    shot_table='\n'.join(rows) if rows else '| n/a |'
 
     music_notes='\n'.join([f"- {r}" for r in gemma_recs]) if gemma_recs else '- n/a'
 
     md=(
         f"# Final Synthesis — {video.name}\n\n"
         f"## Executive Summary\n"
-        f"This cut presents a branding-heavy opening, then shifts into fast-cycle property coverage. Temporal segmentation is currently over-sensitive (high shot count), which compresses perceived pacing and likely overstates motion change frequency. Audio tempo is mid-up (~{ja.get('bpm'):.1f} BPM), but current recommendation output still needs luxury-real-estate domain alignment.\n\n"
+        f"This cut opens branding-heavy and then moves into fast-cycle property coverage. Temporal segmentation is still oversensitive, so this forensic view prioritizes shot-level structure over high-level prose. Audio tempo is ~{ja.get('bpm'):.1f} BPM and currently needs domain-constrained recommendation logic for luxury RE.\n\n"
         f"## Core Metrics\n"
         f"- Frames analyzed: **{j1.get('frames_total')}** @ {fps:g} fps\n"
-        f"- Shot count (temporal pass): **{len(shots)}**\n"
+        f"- Shot count: **{len(shots)}**\n"
         f"- Shot duration stats: avg **{avg_shot:.2f}s**, median **{med_shot:.2f}s**, p90 **{p90:.2f}s**\n"
         f"- Movement mix: **{move_mix}**\n"
-        f"- Typography presence: **{typo}/{total} frames** ({typo_pct:.1f}%)\n"
-        f"- Estimated opening title window: **0.0s → {opening_end:.1f}s**\n"
-        f"- Room/amenity transitions: **{transitions}**\n"
+        f"- Typography: **{typo}/{total} frames** ({typo_pct:.1f}%)\n"
+        f"- Opening title window estimate: **0.0s → {opening_end:.1f}s**\n"
+        f"- Room transitions: **{transitions}**\n"
         f"- Audio BPM: **{ja.get('bpm')}**\n\n"
-        f"## Shot Structure (Longest Holds)\n{longest_md}\n\n"
-        f"## Room/Amenity Coverage\n{top_rooms}\n\n"
-        f"## Sequence Role Distribution\n{top_roles}\n\n"
-        f"## Composition Signals\n{top_comps}\n\n"
-        f"## Color/Grade Signals\n{top_grades}\n\n"
+        f"## Chapter Timeline\n{chapter_md}\n\n"
+        f"## Coverage Distributions\n"
+        f"### Room/Amenity\n{top_lines(rooms,10)}\n\n"
+        f"### Sequence Role\n{top_lines(roles,10)}\n\n"
+        f"### Composition\n{top_lines(comps,8)}\n\n"
+        f"### Color/Grade\n{top_lines(grades,8)}\n\n"
         f"## Audio + Music Fit\n"
         f"- DSP baseline complete (tempo/onset/energy/brightness).\n"
         f"- Gemma summary: **{gemma_summary or 'n/a'}**\n"
         f"- Suggested tracks/styles:\n{music_notes}\n\n"
+        f"## Music Cue Map (Beat-Anchored)\n{cue_md}\n\n"
+        f"## Forensic Shot Table\n"
+        f"| Shot | Start(s) | End(s) | Dur(s) | Movement | Conf | Dominant Room | Dominant Role |\n"
+        f"|---:|---:|---:|---:|---|---:|---|---|\n"
+        f"{shot_table}\n\n"
         f"## QA Flags\n"
-        f"1. Shot fragmentation likely too high for premium RE readability.\n"
-        f"2. Intro/title phase runs long versus property reveal objective.\n"
-        f"3. Music recommendations are generic and need domain-constrained ranking.\n\n"
+        f"1. Shot fragmentation is likely too high for premium readability.\n"
+        f"2. Intro/title phase is longer than ideal for immediate property immersion.\n"
+        f"3. Music recommendations remain generic and require domain priors.\n\n"
         f"## Edit Direction (Actionable)\n"
-        f"- Raise temporal cut threshold + min-shot floor (e.g., 1.2–1.5s) for cleaner rhythm.\n"
-        f"- Limit title-card/opening overlay window unless brand-led brief explicitly requires it.\n"
-        f"- Constrain recommender to cinematic/lounge/organic-house/piano-led libraries for luxury listings.\n"
+        f"- Increase temporal threshold + enforce 1.2–1.5s min shot duration.\n"
+        f"- Cap intro/title overlay duration unless brand-first brief is explicit.\n"
+        f"- Re-rank music candidates against luxury-RE style buckets (cinematic/lounge/organic-house/piano-led).\n"
     )
     p=OUT_F/f'{vid}_final_synthesis.md'; p.write_text(md)
     (OUT_F/f'{vid}_done.marker').write_text('done\n')
