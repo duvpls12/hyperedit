@@ -27,6 +27,7 @@ Run one deterministic pipeline:
 - `state/video-analysis-single/<video_id>_vision_pass2_temporal.json`
 - `state/audio-analysis/<video_id>_audio_pass.json`
 - `state/final-analysis/<video_id>_final_synthesis.md`
+- `state/final-analysis/<video_id>_done.marker`
 
 ## Runtime Sequence
 
@@ -84,6 +85,13 @@ Combine pass1 + pass2 + audio JSON into a full report:
 - composition/amenity coverage,
 - sound design/music recommendations,
 - edit blueprint.
+
+### 6) Done-folder workflow (required)
+After a video completes all passes:
+1. Write done marker artifact.
+2. Move source video from `.../all_files/` to `.../done/`.
+3. Immediately continue with the next pending video.
+4. Default batch target: process 10 videos per run unless overridden.
 
 ## Deterministic JSON Keys (minimum)
 
