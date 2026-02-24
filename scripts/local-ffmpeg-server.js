@@ -1,8 +1,7 @@
 import http from 'http';
 import { spawn, execSync } from 'child_process';
 import { createWriteStream, createReadStream, unlinkSync, mkdirSync, existsSync, writeFileSync, readFileSync, readdirSync, statSync } from 'fs';
-import { join } from 'path';
-import { tmpdir } from 'os';
+import { join, resolve } from 'path';
 import { randomUUID } from 'crypto';
 import formidable from 'formidable';
 import { GoogleGenAI } from '@google/genai';
@@ -34,18 +33,85 @@ if (process.env.FAL_API_KEY && !process.env.FAL_KEY) {
 }
 
 const PORT = 3333;
-const TEMP_DIR = join(tmpdir(), 'hyperedit-ffmpeg');
+const DATA_ROOT = process.env.HYPEREDIT_DATA_DIR
+  ? resolve(process.env.HYPEREDIT_DATA_DIR)
+  : join(process.cwd(), 'state', 'local-ffmpeg');
+const TEMP_DIR = DATA_ROOT;
 const SESSIONS_DIR = join(TEMP_DIR, 'sessions');
+const HEARTBEAT_FILENAME = 'heartbeat.json';
+const HEARTBEAT_INTERVAL_MS = 30 * 1000;
+const STALE_THRESHOLD_MS = 120 * 1000;
 
 // Active video sessions - keeps videos on disk between edits
 const sessions = new Map();
 
-// Ensure temp directories exist
+// Ensure data directories exist
 if (!existsSync(TEMP_DIR)) {
   mkdirSync(TEMP_DIR, { recursive: true });
 }
 if (!existsSync(SESSIONS_DIR)) {
   mkdirSync(SESSIONS_DIR, { recursive: true });
+}
+
+function getHeartbeatPath(sessionId) {
+  return join(SESSIONS_DIR, sessionId, HEARTBEAT_FILENAME);
+}
+
+function updateSessionHeartbeat(session, source) {
+  if (!session?.id) return;
+  const nowIso = new Date().toISOString();
+  const heartbeatPath = getHeartbeatPath(session.id);
+
+  try {
+    writeFileSync(heartbeatPath, JSON.stringify({
+      sessionId: session.id,
+      lastSeen: nowIso,
+      source,
+    }, null, 2));
+  } catch (e) {
+    console.warn(`[Session] Could not write heartbeat for ${session.id}: ${e.message}`);
+  }
+}
+
+function readSessionLastSeen(sessionId) {
+  const heartbeatPath = getHeartbeatPath(sessionId);
+  if (!existsSync(heartbeatPath)) {
+    return null;
+  }
+
+  try {
+    const heartbeat = JSON.parse(readFileSync(heartbeatPath, 'utf-8'));
+    if (typeof heartbeat.lastSeen !== 'string') {
+      return null;
+    }
+
+    const lastSeen = Date.parse(heartbeat.lastSeen);
+    return Number.isNaN(lastSeen) ? null : lastSeen;
+  } catch (e) {
+    console.warn(`[Session] Could not read heartbeat for ${sessionId}: ${e.message}`);
+    return null;
+  }
+}
+
+function getSessionContinuity() {
+  const checkedAtMs = Date.now();
+  const staleSessionIds = [];
+
+  for (const sessionId of sessions.keys()) {
+    const lastSeen = readSessionLastSeen(sessionId);
+    if (lastSeen === null || (checkedAtMs - lastSeen) > STALE_THRESHOLD_MS) {
+      staleSessionIds.push(sessionId);
+    }
+  }
+
+  return {
+    dataRoot: DATA_ROOT,
+    sessionsDir: SESSIONS_DIR,
+    activeSessionCount: sessions.size,
+    staleSessionCount: staleSessionIds.length,
+    staleSessionIds,
+    checkedAt: new Date(checkedAtMs).toISOString(),
+  };
 }
 
 // Restore sessions from disk on server start
@@ -174,6 +240,7 @@ function restoreSessionsFromDisk() {
     };
 
     sessions.set(sessionId, session);
+    updateSessionHeartbeat(session, 'restore');
     console.log(`[Session] Restored: ${sessionId} (${assets.size} assets)`);
   }
 
@@ -258,6 +325,7 @@ function createSession(originalName) {
     transcriptCache: new Map(), // assetId -> { text, words, cachedAt }
   };
   sessions.set(sessionId, session);
+  updateSessionHeartbeat(session, 'create');
   console.log(`[Session] Created: ${sessionId}`);
   return session;
 }
@@ -279,6 +347,12 @@ function cleanupSession(sessionId) {
     }
   }
 }
+
+setInterval(() => {
+  for (const session of sessions.values()) {
+    updateSessionHeartbeat(session, 'interval');
+  }
+}, HEARTBEAT_INTERVAL_MS);
 
 // Clean up old sessions (older than 2 hours)
 setInterval(() => {
@@ -7802,6 +7876,9 @@ const server = http.createServer(async (req, res) => {
     await handleRemoveDeadAir(req, res);
   } else if (req.method === 'POST' && path === '/generate-chapters') {
     await handleGenerateChapters(req, res);
+  } else if (req.method === 'GET' && path === '/session-continuity') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(getSessionContinuity()));
   } else if (req.method === 'GET' && path === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ status: 'ok', ffmpeg: 'native', sessions: sessions.size }));
@@ -7841,5 +7918,6 @@ server.listen(PORT, () => {
   console.log(`   POST /session/:id/analyze-for-animation - Analyze video, return concept for approval`);
   console.log(`   POST /session/:id/generate-contextual-animation - Content-aware animation (transcribes video first)`);
   console.log(`   POST /session/:id/process-asset - Apply FFmpeg command to an asset`);
+  console.log(`\n   GET /session-continuity - Session persistence + heartbeat status`);
   console.log(`\n   GET /health - Health check\n`);
 });

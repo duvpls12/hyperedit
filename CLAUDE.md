@@ -83,8 +83,9 @@ Key endpoints on `localhost:3333`:
 - `POST /session/{id}/generate-image` - Picasso image generation
 - `POST /session/{id}/giphy/*` - GIPHY search/trending/add proxy
 - `POST /session/{id}/create-gif` - Animated GIF from image with motion effects
+- `GET /session-continuity` - Session persistence/heartbeat continuity status
 
-Sessions persist to `/tmp/hyperedit-ffmpeg/sessions/{sessionId}/` with assets, renders, project.json, and assets-meta.json (stores `aiGenerated`, `duration`, `editCount`).
+Sessions persist to `state/local-ffmpeg/sessions/{sessionId}/` by default (override root with `HYPEREDIT_DATA_DIR`). Each session also writes `heartbeat.json` (`lastSeen`) on create/restore and every 30s. Stale sessions are `lastSeen > 120s`, exposed by `/session-continuity`.
 
 ## TypeScript Configuration
 
