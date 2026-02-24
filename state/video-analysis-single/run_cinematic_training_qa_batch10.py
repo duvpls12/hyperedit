@@ -37,10 +37,22 @@ def chat(model,messages,max_tokens=250,timeout=120):
     return req('/v1/chat/completions',{'model':model,'messages':messages,'temperature':0,'max_tokens':max_tokens},timeout=timeout)['choices'][0]['message'].get('content','')
 
 def list_loaded():
-    try: d=req('/api/v1/models',None,'GET',30).get('data',[])
-    except: d=[]
     ids=[]
-    for m in d:
+    try:
+        raw=req('/api/v1/models',None,'GET',30)
+    except:
+        raw={}
+    # LM Studio may return either {data:[...]} or {models:[...]}.
+    models=raw.get('data') or raw.get('models') or []
+    for m in models:
+        # Newer shape: loaded_instances under each model
+        li=m.get('loaded_instances') or []
+        if li:
+            for inst in li:
+                iid=inst.get('identifier') or inst.get('id')
+                if iid: ids.append(iid)
+            continue
+        # Older shape: flat entries
         i=m.get('id') or m.get('instance_id')
         if i: ids.append(i)
     return ids
