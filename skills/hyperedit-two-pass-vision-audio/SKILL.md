@@ -1,9 +1,9 @@
 ---
-name: hyperedit-two-pass-vision-audio
+name: cinematic-training-and-qa
 description: Use when running HyperEdit end-to-end in two vision passes plus audio pass with strict two-instance Qwen limits, deterministic JSON artifacts, and final full-dataset synthesis.
 ---
 
-# HyperEdit Two-Pass Vision + Audio Skill
+# Cinematic Training and QA Skill
 
 ## Goal
 Run one deterministic pipeline:
