@@ -157,3 +157,36 @@ The segment-based approach (extract + concat) is required — single-pass filter
 - Vite config uses `@cloudflare/vite-plugin` and `@getmocha/vite-plugins`. `chunkSizeWarningLimit: 5000` due to Remotion's size.
 - `wrangler.json` app name is a UUID (Mocha app ID). SPA routing via `not_found_handling: "single-page-application"`.
 - No tests exist in the codebase. No testing framework is configured.
+
+## Deterministic Execution Contract (HyperEdit Agent Runs)
+
+### Project Context
+- Repository: HyperEdit / ClipWise
+- Worktree scope: run only in the assigned worktree path
+- Objective: complete exactly the requested documentation/code change without side quests
+
+### Task (Single Scope)
+- Execute one explicitly defined task per run.
+- If additional work is discovered, report it separately instead of expanding scope.
+
+### Files allowed
+- Only edit files explicitly listed in the task prompt.
+- If a required file is outside the allowlist, stop and report BLOCKED.
+
+### Definition of done
+- Requested file edits are present and complete.
+- Required validation command(s) execute and show expected markers.
+- A local commit is created with the exact requested commit message.
+
+### Validation commands
+- Run only the validation commands specified in the task prompt.
+- Include command output in final report.
+
+### Output format
+- BLOCKED: <reason>
+- DONE: files changed + validation output + commit hash
+
+### Git rule
+- Do NOT push.
+- Local commits only unless explicitly instructed otherwise.
+
