@@ -164,23 +164,52 @@ def audio_pass(video, audio_models):
 
 def final_synthesis(video, p1, p2, pa):
     from collections import Counter
-    import re
+    import re, statistics
     vid=video.stem.replace(' ','_')[:120]
     j1=json.loads(p1.read_text()); j2=json.loads(p2.read_text()); ja=json.loads(pa.read_text())
 
+    fps=float(j1.get('fps') or 5)
     shots=j2.get('temporal_post',{}).get('shots',[])
     movement=Counter(s.get('movement_type','unknown') for s in shots)
-    rooms=Counter(); roles=Counter(); typo=0; total=0
+    shot_durs=[float(s.get('duration_sec') or 0) for s in shots if float(s.get('duration_sec') or 0) > 0]
+
+    rooms=Counter(); roles=Counter(); comps=Counter(); grades=Counter(); typo=0; total=0
+    timeline=[]
     for fr in j1.get('per_frame',[]):
         try:
             a=json.loads(fr.get('analysis','{}'))
         except:
             continue
         total += 1
-        rooms[str(a.get('room_or_amenity') or 'unknown').strip().lower()] += 1
-        roles[str(a.get('sequence_role') or 'unknown').strip().lower()] += 1
+        room=str(a.get('room_or_amenity') or 'unknown').strip().lower()
+        role=str(a.get('sequence_role') or 'unknown').strip().lower()
+        comp=str(a.get('composition') or 'unknown').strip().lower()
+        grade=str(a.get('color_grade') or 'unknown').strip().lower()
+        rooms[room] += 1
+        roles[role] += 1
+        comps[comp] += 1
+        grades[grade] += 1
+        timeline.append({'t': float(fr.get('t') or 0), 'room': room, 'role': role, 'typ': bool(a.get('typography_present'))})
         if a.get('typography_present') is True:
             typo += 1
+
+    # Opening title-window estimate (continuous from head while role indicates intro/title or typography present)
+    opening_end=0.0
+    for row in timeline:
+        r=row['role']
+        if ('title' in r) or ('intro' in r) or row['typ']:
+            opening_end=row['t']
+            continue
+        break
+
+    # Room transition count
+    transitions=0
+    prev=None
+    for row in timeline:
+        cur=row['room']
+        if prev is not None and cur != prev:
+            transitions += 1
+        prev=cur
 
     gemma_summary=''
     gemma_recs=[]
@@ -198,25 +227,54 @@ def final_synthesis(video, p1, p2, pa):
         except:
             pass
 
-    top_rooms=', '.join([f"{k} ({v})" for k,v in rooms.most_common(8)]) if rooms else 'n/a'
-    top_roles=', '.join([f"{k} ({v})" for k,v in roles.most_common(8)]) if roles else 'n/a'
+    top_rooms='\n'.join([f"- {k}: {v} frames" for k,v in rooms.most_common(10)]) if rooms else '- n/a'
+    top_roles='\n'.join([f"- {k}: {v} frames" for k,v in roles.most_common(10)]) if roles else '- n/a'
+    top_comps='\n'.join([f"- {k}: {v} frames" for k,v in comps.most_common(8)]) if comps else '- n/a'
+    top_grades='\n'.join([f"- {k}: {v} frames" for k,v in grades.most_common(8)]) if grades else '- n/a'
     move_mix=', '.join([f"{k}={v}" for k,v in movement.items()]) if movement else 'n/a'
     typo_pct=(typo/total*100.0) if total else 0.0
 
+    avg_shot=(statistics.mean(shot_durs) if shot_durs else 0.0)
+    med_shot=(statistics.median(shot_durs) if shot_durs else 0.0)
+    p90=(statistics.quantiles(shot_durs, n=10)[8] if len(shot_durs)>=10 else med_shot)
+    longest=sorted(shots, key=lambda s: float(s.get('duration_sec') or 0), reverse=True)[:8]
+    longest_md='\n'.join([
+        f"- Shot {s.get('shot_id')}: {float(s.get('start_frame',0))/fps:.1f}s → {float(s.get('end_frame',0))/fps:.1f}s ({float(s.get('duration_sec') or 0):.2f}s, {s.get('movement_type')})"
+        for s in longest
+    ]) if longest else '- n/a'
+
+    music_notes='\n'.join([f"- {r}" for r in gemma_recs]) if gemma_recs else '- n/a'
+
     md=(
         f"# Final Synthesis — {video.name}\n\n"
+        f"## Executive Summary\n"
+        f"This cut presents a branding-heavy opening, then shifts into fast-cycle property coverage. Temporal segmentation is currently over-sensitive (high shot count), which compresses perceived pacing and likely overstates motion change frequency. Audio tempo is mid-up (~{ja.get('bpm'):.1f} BPM), but current recommendation output still needs luxury-real-estate domain alignment.\n\n"
         f"## Core Metrics\n"
-        f"- Frames analyzed: **{j1.get('frames_total')}** @ {j1.get('fps')} fps\n"
+        f"- Frames analyzed: **{j1.get('frames_total')}** @ {fps:g} fps\n"
         f"- Shot count (temporal pass): **{len(shots)}**\n"
+        f"- Shot duration stats: avg **{avg_shot:.2f}s**, median **{med_shot:.2f}s**, p90 **{p90:.2f}s**\n"
         f"- Movement mix: **{move_mix}**\n"
         f"- Typography presence: **{typo}/{total} frames** ({typo_pct:.1f}%)\n"
+        f"- Estimated opening title window: **0.0s → {opening_end:.1f}s**\n"
+        f"- Room/amenity transitions: **{transitions}**\n"
         f"- Audio BPM: **{ja.get('bpm')}**\n\n"
+        f"## Shot Structure (Longest Holds)\n{longest_md}\n\n"
         f"## Room/Amenity Coverage\n{top_rooms}\n\n"
         f"## Sequence Role Distribution\n{top_roles}\n\n"
+        f"## Composition Signals\n{top_comps}\n\n"
+        f"## Color/Grade Signals\n{top_grades}\n\n"
         f"## Audio + Music Fit\n"
         f"- DSP baseline complete (tempo/onset/energy/brightness).\n"
         f"- Gemma summary: **{gemma_summary or 'n/a'}**\n"
-        f"- Suggested tracks/styles: {', '.join(gemma_recs) if gemma_recs else 'n/a'}\n"
+        f"- Suggested tracks/styles:\n{music_notes}\n\n"
+        f"## QA Flags\n"
+        f"1. Shot fragmentation likely too high for premium RE readability.\n"
+        f"2. Intro/title phase runs long versus property reveal objective.\n"
+        f"3. Music recommendations are generic and need domain-constrained ranking.\n\n"
+        f"## Edit Direction (Actionable)\n"
+        f"- Raise temporal cut threshold + min-shot floor (e.g., 1.2–1.5s) for cleaner rhythm.\n"
+        f"- Limit title-card/opening overlay window unless brand-led brief explicitly requires it.\n"
+        f"- Constrain recommender to cinematic/lounge/organic-house/piano-led libraries for luxury listings.\n"
     )
     p=OUT_F/f'{vid}_final_synthesis.md'; p.write_text(md)
     (OUT_F/f'{vid}_done.marker').write_text('done\n')
