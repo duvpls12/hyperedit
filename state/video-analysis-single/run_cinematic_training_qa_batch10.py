@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, json, base64, shutil, subprocess, urllib.request
+import os, json, base64, shutil, subprocess, urllib.request, atexit
 from pathlib import Path
 import numpy as np
 
@@ -18,6 +18,7 @@ QWEN='qwen/qwen3-vl-8b'
 AUDIO_MODELS=['qwen2-audio-7b','gemma-music-recommender']
 FPS=5
 MAX_VIDEOS=10
+LOCK_FILE=Path('/Users/davideby/hyperedit/state/video-analysis-single/.batch10.lock')
 
 key=''
 for l in Path('/Users/davideby/hyperedit/.env').read_text().splitlines():
@@ -59,12 +60,15 @@ def list_loaded():
 
 def ensure_two_qwen():
     ids=list_loaded()
-    q=[i for i in ids if i.startswith('qwen/qwen3-vl-8b')]
+    q=sorted([i for i in ids if i.startswith('qwen/qwen3-vl-8b')])
     if len(q)>2:
         raise RuntimeError(f'More than 2 qwen instances loaded: {q}')
     while len(q)<2:
-        r=req('/api/v1/models/load',{'model':QWEN},'POST',240)
-        q.append(r.get('instance_id') or r.get('id') or QWEN)
+        req('/api/v1/models/load',{'model':QWEN},'POST',240)
+        # Re-read after each load; fail closed if cap is exceeded.
+        q=sorted([i for i in list_loaded() if i.startswith('qwen/qwen3-vl-8b')])
+        if len(q)>2:
+            raise RuntimeError(f'Cap exceeded after load: {q}')
     return q[:2]
 
 def unload_instances(ids):
@@ -167,23 +171,42 @@ def final_synthesis(video, p1, p2, pa):
     return p
 
 
+def acquire_lock():
+    if LOCK_FILE.exists():
+        raise RuntimeError(f'Batch runner lock exists: {LOCK_FILE}. Another run is active or previous run crashed.')
+    LOCK_FILE.write_text(str(os.getpid()) + '\n')
+
+
+def release_lock():
+    try:
+        if LOCK_FILE.exists():
+            LOCK_FILE.unlink()
+    except:
+        pass
+
+
 def main():
-    vids=sorted([p for p in ALL.iterdir() if p.is_file() and p.suffix.lower() in ['.mp4','.mov','.mkv','.webm','.m4v']])[:MAX_VIDEOS]
-    print('TARGET_VIDEOS',len(vids))
-    for v in vids:
-        print('START',v.name)
-        q=ensure_two_qwen()
-        p1, frame_dir, frames = vision_pass1(v, q)
-        p2 = temporal_post(v, p1, frames)
-        unload_instances(q)
-        am = load_audio_models()
-        pa = audio_pass(v, am)
-        final_synthesis(v, p1, p2, pa)
-        unload_instances(am)
-        dest=DONE/v.name
-        shutil.move(str(v), str(dest))
-        print('DONE',v.name,'->',dest)
-    print('BATCH_DONE')
+    acquire_lock()
+    atexit.register(release_lock)
+    try:
+        vids=sorted([p for p in ALL.iterdir() if p.is_file() and p.suffix.lower() in ['.mp4','.mov','.mkv','.webm','.m4v']])[:MAX_VIDEOS]
+        print('TARGET_VIDEOS',len(vids))
+        for v in vids:
+            print('START',v.name)
+            q=ensure_two_qwen()
+            p1, frame_dir, frames = vision_pass1(v, q)
+            p2 = temporal_post(v, p1, frames)
+            unload_instances(q)
+            am = load_audio_models()
+            pa = audio_pass(v, am)
+            final_synthesis(v, p1, p2, pa)
+            unload_instances(am)
+            dest=DONE/v.name
+            shutil.move(str(v), str(dest))
+            print('DONE',v.name,'->',dest)
+        print('BATCH_DONE')
+    finally:
+        release_lock()
 
 if __name__=='__main__':
     main()
