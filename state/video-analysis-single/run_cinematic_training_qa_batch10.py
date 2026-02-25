@@ -15,7 +15,11 @@ OUT_F = Path('/Users/davideby/hyperedit/state/final-analysis')
 for p in (OUT_V, OUT_A, OUT_F): p.mkdir(parents=True, exist_ok=True)
 
 HOST='http://192.168.1.242:6759'
-QWEN='qwen/qwen3-vl-8b'
+VISION_MODELS=[
+    os.getenv('VISION_MODEL_11B','mlx-community/Llama-3.2-11B-Vision-Instruct-8bit'),
+    os.getenv('VISION_MODEL_8B','qwen/qwen3-vl-8b'),
+    os.getenv('VISION_MODEL_4B','qwen/qwen2.5-vl-4b-instruct')
+]
 AUDIO_MODELS=['qwen2-audio-7b','gemma-music-recommender']
 FPS=5
 MAX_VIDEOS=10
@@ -60,20 +64,55 @@ def list_loaded():
         if i: ids.append(i)
     return ids
 
-def validate_qwen_instance_count(count):
+def _model_markers(model_id):
+    m=(model_id or '').lower()
+    tail=m.split('/')[-1]
+    return {m, tail}
+
+
+def _is_managed_vision_instance(instance_id):
+    iid=(instance_id or '').lower()
+    markers=set()
+    for m in VISION_MODELS:
+        markers |= _model_markers(m)
+    return any(mark and mark in iid for mark in markers)
+
+
+def validate_vision_instance_count(count):
     if count != 1:
-        raise RuntimeError(f'Vision instance policy violation: expected exactly 1 qwen instance, found {count}')
+        raise RuntimeError(f'Vision instance policy violation: expected exactly 1 managed vision instance, found {count}')
     return True
 
 
-def ensure_one_qwen():
+def ensure_single_vision_instance(model_id):
     ids=list_loaded()
-    q=sorted([i for i in ids if i.startswith('qwen/qwen3-vl-8b')])
-    if len(q)==0:
-        req('/api/v1/models/load',{'model':QWEN},'POST',240)
-        q=sorted([i for i in list_loaded() if i.startswith('qwen/qwen3-vl-8b')])
-    validate_qwen_instance_count(len(q))
-    return q[0]
+    managed=[i for i in ids if _is_managed_vision_instance(i)]
+    if len(managed) > 1:
+        raise RuntimeError(f'Vision instance policy violation before load: {managed}')
+    if len(managed) == 1:
+        unload_instances(managed)
+
+    req('/api/v1/models/load',{'model':model_id},'POST',240)
+    ids=list_loaded()
+    managed=[i for i in ids if _is_managed_vision_instance(i)]
+    validate_vision_instance_count(len(managed))
+    return managed[0]
+
+
+def resolve_vision_model_with_fallback():
+    failures=[]
+    for model_id in VISION_MODELS:
+        try:
+            instance_id=ensure_single_vision_instance(model_id)
+            return model_id, instance_id, failures
+        except Exception as e:
+            failures.append({'model':model_id,'error':str(e)})
+            try:
+                ids=[i for i in list_loaded() if _is_managed_vision_instance(i)]
+                unload_instances(ids)
+            except:
+                pass
+    raise RuntimeError('All vision model fallbacks failed: ' + json.dumps(failures))
 
 def unload_instances(ids):
     for i in ids:
@@ -455,17 +494,39 @@ def main():
         print('TARGET_VIDEOS',len(vids))
         for v in vids:
             print('START',v.name)
-            q=ensure_one_qwen()
-            p1, frame_dir, frames = vision_pass1(v, q)
-            p2 = temporal_post(v, p1, frames)
-            unload_instances([q])
-            am = load_audio_models()
-            pa = audio_pass(v, am)
-            final_synthesis(v, p1, p2, pa)
-            unload_instances(am)
-            dest=DONE/v.name
-            shutil.move(str(v), str(dest))
-            print('DONE',v.name,'->',dest)
+            vid=v.stem.replace(' ','_')[:120]
+            try:
+                vision_model, vision_instance, vision_failures = resolve_vision_model_with_fallback()
+                print('VISION_MODEL_SELECTED', vision_model)
+                if vision_failures:
+                    print('VISION_FALLBACK_CHAIN', json.dumps(vision_failures))
+
+                p1, frame_dir, frames = vision_pass1(v, vision_model)
+                # annotate pass1 with model provenance + fallback chain
+                p1j=json.loads(p1.read_text())
+                p1j['vision_model_used']=vision_model
+                p1j['vision_fallback_chain']=vision_failures
+                p1.write_text(json.dumps(p1j, indent=2))
+
+                p2 = temporal_post(v, p1, frames)
+                unload_instances([vision_instance])
+
+                am = load_audio_models()
+                pa = audio_pass(v, am)
+                final_synthesis(v, p1, p2, pa)
+                unload_instances(am)
+                dest=DONE/v.name
+                shutil.move(str(v), str(dest))
+                print('DONE',v.name,'->',dest)
+            except Exception as e:
+                fail={
+                    'video': str(v),
+                    'error': str(e),
+                    'vision_models_attempted': VISION_MODELS
+                }
+                (OUT_F/f'{vid}_failed.json').write_text(json.dumps(fail, indent=2))
+                print('FAILED', v.name, str(e))
+                continue
         print('BATCH_DONE')
     finally:
         release_lock()

@@ -10,12 +10,18 @@ spec.loader.exec_module(mod)
 
 
 class TestVisionInstanceGuard(unittest.TestCase):
-    def test_validate_qwen_instance_count_enforces_exactly_one(self):
-        self.assertTrue(mod.validate_qwen_instance_count(1))
+    def test_validate_vision_instance_count_enforces_exactly_one(self):
+        self.assertTrue(mod.validate_vision_instance_count(1))
         with self.assertRaises(RuntimeError):
-            mod.validate_qwen_instance_count(0)
+            mod.validate_vision_instance_count(0)
         with self.assertRaises(RuntimeError):
-            mod.validate_qwen_instance_count(2)
+            mod.validate_vision_instance_count(2)
+
+    def test_fallback_order_is_11b_then_8b_then_4b(self):
+        self.assertEqual(len(mod.VISION_MODELS), 3)
+        self.assertIn('11b', mod.VISION_MODELS[0].lower())
+        self.assertIn('8b', mod.VISION_MODELS[1].lower())
+        self.assertIn('4b', mod.VISION_MODELS[2].lower())
 
 
 if __name__ == '__main__':

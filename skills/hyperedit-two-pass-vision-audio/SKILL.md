@@ -9,48 +9,61 @@ description: Use when running HyperEdit with a deterministic two-pass vision plu
 Run one deterministic pipeline per video:
 1) Vision Pass 1 (low-res temporal segmentation),
 2) Vision Pass 2 (high-res semantic deep read),
-3) Unload vision model,
-4) Load audio models + run audio JSON,
-5) Final synthesis,
-6) Move processed video to done.
+3) Optional Pass 2.5 HQ refinement (11B on selected shots),
+4) Vision fusion,
+5) Unload vision model,
+6) Load audio models + run audio JSON,
+7) Final synthesis,
+8) Move processed video to done.
 
 ## Hard Rules
 - Keep vision instance to **one always**.
-- Never run more than **1 loaded `qwen/qwen3-vl-8b` instance**.
-- If one instance already exists, do not load another.
-- If more than one exists, stop and request cleanup confirmation.
+- Production fallback ladder is hard-coded: **11B → 8B → 4B**.
+- If 11B load/infer fails, automatically demote to 8B and restart current video pass from checkpoint.
+- If 8B fails, automatically demote to 4B and restart current video pass from checkpoint.
 - Audio pass is mandatory unless user explicitly waives it.
 - Use deterministic file paths and deterministic JSON schema keys.
+- Write `vision_model_used` + `vision_fallback_chain` into JSON outputs for auditability.
 - Local-only changes/commits unless explicitly instructed to push.
 
 ## Required Artifacts
 - `state/video-analysis-single/<video_id>_vision_pass1.json`
 - `state/video-analysis-single/<video_id>_vision_pass2_semantic.json`
+- `state/video-analysis-single/<video_id>_vision_pass2_5_hq11b.json` (optional/refinement)
 - `state/video-analysis-single/<video_id>_vision_fusion_canonical.json`
 - `state/audio-analysis/<video_id>_audio_pass.json`
 - `state/final-analysis/<video_id>_final_synthesis.md`
 - `state/final-analysis/<video_id>_done.marker`
+- `state/final-analysis/<video_id>_failed.json` (if all fallback models fail)
 
 ## Runtime Sequence
 
-### 0) Preflight guard (vision instance policy)
+### 0) Preflight guard + model fallback resolution
 1. Query loaded models.
-2. Count `qwen/qwen3-vl-8b*` instances.
-3. If count == 0, load one instance.
-4. If count == 1, proceed.
-5. If count > 1, stop and request cleanup confirmation.
+2. Enforce **exactly one managed vision instance** at a time.
+3. Attempt vision model load in this order:
+   - `VISION_MODEL_11B` (default: `mlx-community/Llama-3.2-11B-Vision-Instruct-8bit`)
+   - `VISION_MODEL_8B` (default: `qwen/qwen3-vl-8b`)
+   - `VISION_MODEL_4B` (default: `qwen/qwen2.5-vl-4b-instruct`)
+4. On each failure, unload and demote to next model.
+5. If all fail, write `<video_id>_failed.json` and continue next video.
 
 ### 1) Vision Pass 1 (low-res temporal @ 5 fps)
 - Sample at 5 fps.
 - Use low resolution for temporal structure.
 - Detect shot boundaries, transitions, camera motion states.
-- Produce pass1 JSON and shot list.
+- Produce pass1 JSON + include `vision_model_used` and `vision_fallback_chain`.
 
 ### 2) Vision Pass 2 (high-res semantic @ 1 frame per shot)
 - Use Pass 1 shot list as timeline truth.
 - Analyze one full-resolution keyframe per shot (optionally 2 for long shots).
 - Extract granular scene/object/composition/camera details.
 - Produce pass2 semantic JSON.
+
+### 2.5) Optional HQ refinement (11B)
+- Run only on selected shots: hero shots, low-confidence shots, ambiguous shots.
+- Keep single-instance policy by unloading current model before loading 11B.
+- If 11B fails during refinement, skip HQ refinement and continue with base pass outputs.
 
 ### 3) Vision fusion (required)
 - Merge pass1 + pass2 strictly by `shot_id`.
