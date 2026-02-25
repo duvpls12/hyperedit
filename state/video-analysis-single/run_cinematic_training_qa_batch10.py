@@ -60,18 +60,20 @@ def list_loaded():
         if i: ids.append(i)
     return ids
 
-def ensure_two_qwen():
+def validate_qwen_instance_count(count):
+    if count != 1:
+        raise RuntimeError(f'Vision instance policy violation: expected exactly 1 qwen instance, found {count}')
+    return True
+
+
+def ensure_one_qwen():
     ids=list_loaded()
     q=sorted([i for i in ids if i.startswith('qwen/qwen3-vl-8b')])
-    if len(q)>2:
-        raise RuntimeError(f'More than 2 qwen instances loaded: {q}')
-    while len(q)<2:
+    if len(q)==0:
         req('/api/v1/models/load',{'model':QWEN},'POST',240)
-        # Re-read after each load; fail closed if cap is exceeded.
         q=sorted([i for i in list_loaded() if i.startswith('qwen/qwen3-vl-8b')])
-        if len(q)>2:
-            raise RuntimeError(f'Cap exceeded after load: {q}')
-    return q[:2]
+    validate_qwen_instance_count(len(q))
+    return q[0]
 
 def unload_instances(ids):
     for i in ids:
@@ -127,14 +129,13 @@ def vision_pass1(video, qinst):
         }
 
     results={}
-    max_workers=min(2, max(1, len(qinst)))
+    max_workers=1
     with ThreadPoolExecutor(max_workers=max_workers) as ex:
         inflight=set()
         next_i=0
-        # seed workers
+        # seed worker
         while next_i < len(frames) and len(inflight) < max_workers:
-            model=qinst[next_i % max_workers]
-            inflight.add(ex.submit(infer_frame, next_i, frames[next_i], model))
+            inflight.add(ex.submit(infer_frame, next_i, frames[next_i], qinst))
             next_i += 1
 
         while inflight:
@@ -143,8 +144,7 @@ def vision_pass1(video, qinst):
                 row=fut.result()
                 results[row['frame_index']] = row
                 if next_i < len(frames):
-                    model=qinst[next_i % max_workers]
-                    inflight.add(ex.submit(infer_frame, next_i, frames[next_i], model))
+                    inflight.add(ex.submit(infer_frame, next_i, frames[next_i], qinst))
                     next_i += 1
 
     per=[results[i] for i in sorted(results.keys())]
@@ -455,10 +455,10 @@ def main():
         print('TARGET_VIDEOS',len(vids))
         for v in vids:
             print('START',v.name)
-            q=ensure_two_qwen()
+            q=ensure_one_qwen()
             p1, frame_dir, frames = vision_pass1(v, q)
             p2 = temporal_post(v, p1, frames)
-            unload_instances(q)
+            unload_instances([q])
             am = load_audio_models()
             pa = audio_pass(v, am)
             final_synthesis(v, p1, p2, pa)
