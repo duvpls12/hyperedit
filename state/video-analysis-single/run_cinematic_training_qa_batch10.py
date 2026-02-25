@@ -16,7 +16,7 @@ for p in (OUT_V, OUT_A, OUT_F): p.mkdir(parents=True, exist_ok=True)
 
 HOST='http://192.168.1.242:6759'
 VISION_MODELS=[
-    os.getenv('VISION_MODEL_11B','mlx-community/Llama-3.2-11B-Vision-Instruct-8bit'),
+    os.getenv('VISION_MODEL_11B','mlx-community/llama-3.2-11b-vision-instruct'),
     os.getenv('VISION_MODEL_8B','qwen/qwen3-vl-8b'),
     os.getenv('VISION_MODEL_4B','qwen/qwen2.5-vl-4b-instruct')
 ]

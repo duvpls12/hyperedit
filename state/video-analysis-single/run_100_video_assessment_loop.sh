@@ -2,8 +2,16 @@
 set -euo pipefail
 
 ROOT="/Users/davideby/hyperedit"
+PYTHON_BIN="/opt/homebrew/bin/python3"
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 RUNNER="$ROOT/state/video-analysis-single/run_cinematic_training_qa_batch10.py"
 FINAL_DIR="$ROOT/state/final-analysis"
+LOOP_LOCK_DIR="$ROOT/state/video-analysis-single/.loop_supervisor.lockdir"
+if ! mkdir "$LOOP_LOCK_DIR" 2>/dev/null; then
+  echo "LOOP_ALREADY_RUNNING"
+  exit 0
+fi
+trap 'rmdir "$LOOP_LOCK_DIR" 2>/dev/null || true' EXIT
 ASSESS_DIR="$ROOT/state/final-analysis/assessments"
 LOCK="$ROOT/state/video-analysis-single/.batch10.lock"
 mkdir -p "$ASSESS_DIR"
@@ -14,7 +22,7 @@ count_done() {
 
 run_assessment() {
   local idx="$1"
-  python3 - "$idx" <<'PY'
+  "$PYTHON_BIN" - "$idx" <<'PY'
 import sys, re
 from pathlib import Path
 from collections import Counter
@@ -61,7 +69,7 @@ PY
 }
 
 run_meta_assessment() {
-  python3 - <<'PY'
+  "$PYTHON_BIN" - <<'PY'
 from pathlib import Path
 from collections import Counter
 import re
@@ -110,8 +118,8 @@ while true; do
   echo "START_BATCH done=$done_now"
   (
     cd "$ROOT"
-    export VISION_MODEL_11B='mlx-community/Llama-3.2-11B-Vision-Instruct-8bit'
-    PYTHONUNBUFFERED=1 python3 "$RUNNER"
+    export VISION_MODEL_11B='mlx-community/llama-3.2-11b-vision-instruct'
+    PYTHONUNBUFFERED=1 "$PYTHON_BIN" "$RUNNER"
   ) || true
   sleep 5
 
