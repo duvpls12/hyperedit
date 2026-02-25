@@ -110,7 +110,7 @@ while true; do
   echo "START_BATCH done=$done_now"
   (
     cd "$ROOT"
-    export VISION_MODEL_11B='/Users/davideby/.lmstudio/models/leafspark/Llama-3.2-11B-Vision-Instruct-GGUF/Llama-3.2-11B-Vision-Instruct.Q4_K_M.gguf'
+    export VISION_MODEL_11B='mlx-community/Llama-3.2-11B-Vision-Instruct-8bit'
     PYTHONUNBUFFERED=1 python3 "$RUNNER"
   ) || true
   sleep 5
