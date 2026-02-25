@@ -19,6 +19,7 @@ AUDIO_MODELS=['qwen2-audio-7b','gemma-music-recommender']
 FPS=5
 MAX_VIDEOS=10
 LOCK_FILE=Path('/Users/davideby/hyperedit/state/video-analysis-single/.batch10.lock')
+RULEBOOK_PATH=Path('/Users/davideby/hyperedit/docs/plans/cinematic_training_qa_rulebook_v1.json')
 
 key=''
 for l in Path('/Users/davideby/hyperedit/.env').read_text().splitlines():
@@ -228,6 +229,17 @@ def final_synthesis(video, p1, p2, pa):
         except:
             pass
 
+    # Rulebook-driven QA scoring
+    try:
+        rulebook=json.loads(RULEBOOK_PATH.read_text())
+    except:
+        rulebook={}
+    weights=rulebook.get('weights',{})
+    targets=rulebook.get('targets',{})
+
+    def clamp01(x):
+        return max(0.0, min(1.0, float(x)))
+
     def top_lines(counter,n):
         return '\n'.join([f"- {k}: {v} frames" for k,v in counter.most_common(n)]) if counter else '- n/a'
 
@@ -236,6 +248,43 @@ def final_synthesis(video, p1, p2, pa):
     avg_shot=(statistics.mean(shot_durs) if shot_durs else 0.0)
     med_shot=(statistics.median(shot_durs) if shot_durs else 0.0)
     p90=(statistics.quantiles(shot_durs, n=10)[8] if len(shot_durs)>=10 else med_shot)
+
+    hook_window=float(targets.get('hook_window_sec',3.0))
+    rehook_interval=float(targets.get('rehook_interval_sec',10.0))
+    title_window_max=float(targets.get('title_window_max_sec',4.0))
+
+    # proxy metrics
+    hook_typ_ratio=(sum(1 for r in timeline if r['t']<=hook_window and r['typ']) / max(1,sum(1 for r in timeline if r['t']<=hook_window))) if timeline else 0.0
+    hook_score=clamp01(0.5 + hook_typ_ratio*0.5)
+    video_len=(float(j1.get('frames_total') or 0)/fps) if fps else 0.0
+    expected_rehooks=max(1, int(video_len/rehook_interval))
+    actual_rehooks=max(0, len(shots)//8)
+    rehook_density=clamp01(actual_rehooks/expected_rehooks)
+    motion_continuity=clamp01(1.0 - (movement.get('unknown',0)/max(1,len(shots))))
+    tension_wave=clamp01(1.0 - abs(med_shot-1.3)/1.3)
+    audio_immersion=clamp01((1.0 if ja.get('beats') else 0.0) * (1.0 if ja.get('onsets') else 0.0) * (1.0 if ja.get('spectral_brightness') else 0.0))
+
+    # property/music match proxy
+    txt=(gemma_summary + ' ' + ' '.join(gemma_recs)).lower()
+    music_property_match=0.35
+    for kw in ['cinematic','lounge','organic','piano','house','edm','classical','orchestral','acoustic']:
+        if kw in txt:
+            music_property_match += 0.08
+    music_property_match=clamp01(music_property_match)
+
+    title_penalty=clamp01(1.0 - max(0.0, opening_end-title_window_max)/max(1.0,title_window_max))
+    viral_readiness=clamp01((hook_score*0.35)+(rehook_density*0.35)+(title_penalty*0.30))
+
+    weighted=(
+        hook_score*float(weights.get('hook',0.18)) +
+        rehook_density*float(weights.get('rehook_density',0.14)) +
+        motion_continuity*float(weights.get('motion_continuity',0.17)) +
+        tension_wave*float(weights.get('tension_waveform',0.16)) +
+        audio_immersion*float(weights.get('audio_immersion',0.12)) +
+        music_property_match*float(weights.get('music_property_match',0.13)) +
+        viral_readiness*float(weights.get('viral_readiness',0.10))
+    )
+    overall_score=round(weighted*100,1)
 
     # Chapter map by 8-shot windows
     chapters=[]
@@ -309,6 +358,15 @@ def final_synthesis(video, p1, p2, pa):
         f"- Opening title window estimate: **0.0s → {opening_end:.1f}s**\n"
         f"- Room transitions: **{transitions}**\n"
         f"- Audio BPM: **{ja.get('bpm')}**\n\n"
+        f"## Cinematic QA Scorecard\n"
+        f"- Overall Score: **{overall_score}/100**\n"
+        f"- Hook (0–3s): **{hook_score*100:.1f}**\n"
+        f"- Rehook Density: **{rehook_density*100:.1f}**\n"
+        f"- Motion Continuity: **{motion_continuity*100:.1f}**\n"
+        f"- Tension Waveform: **{tension_wave*100:.1f}**\n"
+        f"- Audio Immersion: **{audio_immersion*100:.1f}**\n"
+        f"- Music-Property Match: **{music_property_match*100:.1f}**\n"
+        f"- Viral Readiness: **{viral_readiness*100:.1f}**\n\n"
         f"## Chapter Timeline\n{chapter_md}\n\n"
         f"## Coverage Distributions\n"
         f"### Room/Amenity\n{top_lines(rooms,10)}\n\n"

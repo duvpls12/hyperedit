@@ -13,6 +13,16 @@ This cut opens branding-heavy and then moves into fast-cycle property coverage. 
 - Room transitions: **112**
 - Audio BPM: **103.359375**
 
+## Cinematic QA Scorecard
+- Overall Score: **77.0/100**
+- Hook (0–3s): **90.6**
+- Rehook Density: **100.0**
+- Motion Continuity: **100.0**
+- Tension Waveform: **15.4**
+- Audio Immersion: **100.0**
+- Music-Property Match: **43.0**
+- Viral Readiness: **96.7**
+
 ## Chapter Timeline
 - Chapter 1: 0.0s → 6.2s | room=fireplace | movement=static:1, pan:7
 - Chapter 2: 6.2s → 8.0s | room=fireplace | movement=pan:8

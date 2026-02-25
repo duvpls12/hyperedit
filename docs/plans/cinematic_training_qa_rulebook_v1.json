@@ -1,0 +1,27 @@
+{
+  "version": "v1",
+  "name": "cinematic-training-and-qa-rulebook",
+  "weights": {
+    "hook": 0.18,
+    "rehook_density": 0.14,
+    "motion_continuity": 0.17,
+    "tension_waveform": 0.16,
+    "audio_immersion": 0.12,
+    "music_property_match": 0.13,
+    "viral_readiness": 0.10
+  },
+  "targets": {
+    "hook_window_sec": 3.0,
+    "rehook_interval_sec": 10.0,
+    "ideal_median_shot_sec_min": 0.9,
+    "ideal_median_shot_sec_max": 2.5,
+    "title_window_max_sec": 4.0,
+    "min_beats_for_cuemap": 8
+  },
+  "music_property_map": {
+    "modern": ["electronic", "edm", "house", "cinematic"],
+    "luxury": ["cinematic", "lounge", "organic", "piano"],
+    "traditional": ["classical", "cinematic", "orchestral"],
+    "family": ["upbeat", "light", "acoustic", "pop"]
+  }
+}
