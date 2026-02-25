@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os, json, base64, shutil, subprocess, urllib.request, atexit
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 import numpy as np
 
 ROOT = Path('/Volumes/Charlie/hyperedit-video-intel')
@@ -103,14 +104,50 @@ def vision_pass1(video, qinst):
     vid=video.stem.replace(' ','_')[:120]
     frame_dir=OUT_V/f'frames_{vid}'
     frames=extract_frames(video, frame_dir)
-    per=[]
-    for i,f in enumerate(frames):
-        model=qinst[i%2]
-        b64=base64.b64encode(f.read_bytes()).decode()
-        msg=[{'role':'system','content':'Return strict JSON only.'},{'role':'user','content':[{'type':'text','text':'Analyze frame and return JSON keys: shot_type, room_or_amenity, typography_present, composition, color_grade, camera_movement, sequence_role.'},{'type':'image_url','image_url':{'url':'data:image/jpeg;base64,'+b64}}]}]
-        try: raw=chat(model,msg,140,80)
-        except Exception as e: raw=json.dumps({'error':str(e)})
-        per.append({'frame_index':i,'t':round(i/FPS,3),'frame':f.name,'analysis':raw,'instance':model})
+
+    def infer_frame(i, fpath, model):
+        b64=base64.b64encode(fpath.read_bytes()).decode()
+        msg=[
+            {'role':'system','content':'Return strict JSON only.'},
+            {'role':'user','content':[
+                {'type':'text','text':'Analyze frame and return JSON keys: shot_type, room_or_amenity, typography_present, composition, color_grade, camera_movement, sequence_role.'},
+                {'type':'image_url','image_url':{'url':'data:image/jpeg;base64,'+b64}}
+            ]}
+        ]
+        try:
+            raw=chat(model,msg,140,80)
+        except Exception as e:
+            raw=json.dumps({'error':str(e)})
+        return {
+            'frame_index':i,
+            't':round(i/FPS,3),
+            'frame':fpath.name,
+            'analysis':raw,
+            'instance':model
+        }
+
+    results={}
+    max_workers=min(2, max(1, len(qinst)))
+    with ThreadPoolExecutor(max_workers=max_workers) as ex:
+        inflight=set()
+        next_i=0
+        # seed workers
+        while next_i < len(frames) and len(inflight) < max_workers:
+            model=qinst[next_i % max_workers]
+            inflight.add(ex.submit(infer_frame, next_i, frames[next_i], model))
+            next_i += 1
+
+        while inflight:
+            done, inflight = wait(inflight, return_when=FIRST_COMPLETED)
+            for fut in done:
+                row=fut.result()
+                results[row['frame_index']] = row
+                if next_i < len(frames):
+                    model=qinst[next_i % max_workers]
+                    inflight.add(ex.submit(infer_frame, next_i, frames[next_i], model))
+                    next_i += 1
+
+    per=[results[i] for i in sorted(results.keys())]
     out={'video':str(video),'fps':FPS,'frames_total':len(frames),'per_frame':per}
     p=OUT_V/f'{vid}_vision_pass1.json'; p.write_text(json.dumps(out,indent=2))
     return p, frame_dir, frames
