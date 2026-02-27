@@ -3,113 +3,199 @@ name: hyperedit-two-pass-vision-audio
 description: Use when running HyperEdit with a deterministic two-pass vision plus audio workflow, enforcing exactly one vision model instance, strict JSON artifacts, and local-only commits.
 ---
 
-# HyperEdit Two-Pass Vision + Audio SOP
+# HyperEdit Deterministic Two-Pass Vision + Audio Pipeline
 
-## Goal
-Run one deterministic pipeline per video:
-1) Vision Pass 1 (low-res temporal segmentation),
-2) Vision Pass 2 (high-res semantic deep read),
-3) Optional Pass 2.5 HQ refinement (11B on selected shots),
-4) Vision fusion,
-5) Unload vision model,
-6) Load audio models + run audio JSON,
-7) Final synthesis,
-8) Move processed video to done.
+## Objective
+Execute one fully deterministic analysis pipeline per video:
+1. Vision Pass 1 — Temporal segmentation (low-res, 5 fps)
+2. Vision Pass 2 — High-res semantic deep read (1 frame per shot)
+3. Optional Pass 2.5 — 11B refinement on selected shots
+4. Vision fusion (canonical merge)
+5. Unload vision model
+6. Load audio models
+7. Audio DSP + semantic pass
+8. Final synthesis
+9. Move source video to `/done`
 
-## Hard Rules
-- Keep vision instance to **one always**.
-- Production fallback ladder is hard-coded: **11B → 8B → 4B**.
-- If 11B load/infer fails, automatically demote to 8B and restart current video pass from checkpoint.
-- If 8B fails, automatically demote to 4B and restart current video pass from checkpoint.
-- Audio pass is mandatory unless user explicitly waives it.
-- Use deterministic file paths and deterministic JSON schema keys.
-- Write `vision_model_used` + `vision_fallback_chain` into JSON outputs for auditability.
-- Local-only changes/commits unless explicitly instructed to push.
+No parallelism. No model overlap. No schema drift.
+
+---
+
+## Core Enforcement Rules
+- Exactly **one vision model instance** may be loaded at any time.
+- Vision fallback ladder is hard-coded:
+  **11B → 8B → 4B**
+- On failure:
+  - Demote model.
+  - Restart the current pass from checkpoint.
+- Audio pass is mandatory unless explicitly waived.
+- All file paths must be deterministic.
+- All JSON keys must match schema exactly.
+- Every vision JSON must include:
+  - `vision_model_used`
+  - `vision_fallback_chain`
+- Local-only commits unless explicitly instructed to push.
+
+---
 
 ## Required Artifacts
+
+### Vision
 - `state/video-analysis-single/<video_id>_vision_pass1.json`
 - `state/video-analysis-single/<video_id>_vision_pass2_semantic.json`
-- `state/video-analysis-single/<video_id>_vision_pass2_5_hq11b.json` (optional/refinement)
+- `state/video-analysis-single/<video_id>_vision_pass2_5_hq11b.json` (optional)
 - `state/video-analysis-single/<video_id>_vision_fusion_canonical.json`
+
+### Audio
 - `state/audio-analysis/<video_id>_audio_pass.json`
+
+### Final
 - `state/final-analysis/<video_id>_final_synthesis.md`
 - `state/final-analysis/<video_id>_done.marker`
-- `state/final-analysis/<video_id>_failed.json` (if all fallback models fail)
+- `state/final-analysis/<video_id>_failed.json` (if all models fail)
 
-## Runtime Sequence
+---
 
-### 0) Preflight guard + model fallback resolution
+## Runtime Execution Sequence
+
+### 0) Preflight + Model Resolution
 1. Query loaded models.
-2. Enforce **exactly one managed vision instance** at a time.
-3. Attempt vision model load in this order:
-   - `VISION_MODEL_11B` (default: `mlx-community/Llama-3.2-11B-Vision-Instruct-8bit`)
-   - `VISION_MODEL_8B` (default: `qwen/qwen3-vl-8b`)
-   - `VISION_MODEL_4B` (default: `qwen/qwen2.5-vl-4b-instruct`)
-4. On each failure, unload and demote to next model.
-5. If all fail, write `<video_id>_failed.json` and continue next video.
+2. Enforce exactly one managed vision instance.
+3. Attempt vision load in order:
+   - `VISION_MODEL_11B`
+     - Default: `mlx-community/Llama-3.2-11B-Vision-Instruct-8bit`
+   - `VISION_MODEL_8B`
+     - Default: `qwen/qwen3-vl-8b`
+   - `VISION_MODEL_4B`
+     - Default: `qwen/qwen2.5-vl-4b-instruct`
+4. On failure:
+   - Unload.
+   - Demote.
+   - Retry current pass.
+5. If all fail:
+   - Write `<video_id>_failed.json`
+   - Continue to next video.
 
-### 1) Vision Pass 1 (low-res temporal @ 5 fps)
+---
+
+### 1) Vision Pass 1 — Low-Res Temporal (5 fps)
+**Purpose:** Structural segmentation, high recall.
 - Sample at 5 fps.
-- Use low resolution for temporal structure.
-- Detect shot boundaries, transitions, camera motion states.
-- Produce pass1 JSON + include `vision_model_used` and `vision_fallback_chain`.
+- Low resolution.
+- Detect:
+  - Shot boundaries
+  - Transitions
+  - Camera motion state
+- Over-segment when uncertain.
 
-### 2) Vision Pass 2 (high-res semantic @ 1 frame per shot)
-- Use Pass 1 shot list as timeline truth.
-- Analyze one full-resolution keyframe per shot (optionally 2 for long shots).
-- Extract granular scene/object/composition/camera details.
-- Produce pass2 semantic JSON.
+**Output:**
+- Strict JSON.
+- Include:
+  - `vision_model_used`
+  - `vision_fallback_chain`
 
-### 2.5) Optional HQ refinement (11B)
-- Run only on selected shots: hero shots, low-confidence shots, ambiguous shots.
-- Keep single-instance policy by unloading current model before loading 11B.
-- If 11B fails during refinement, skip HQ refinement and continue with base pass outputs.
+---
 
-### 3) Vision fusion (required)
-- Merge pass1 + pass2 strictly by `shot_id`.
-- Never alter pass1 boundaries during merge.
-- Preserve missing semantic entries as null with flags.
-- Produce canonical fused JSON.
+### 2) Vision Pass 2 — High-Res Semantic
+**Purpose:** Deep semantic understanding per shot.
+- Use Pass 1 shot list as timeline authority.
+- Analyze exactly 1 keyframe per shot (2 only if long duration).
+- Extract:
+  - Environment
+  - Objects
+  - Spatial layering
+  - Cinematic grammar
+  - Editorial flags
 
-### 4) Switch models (required)
-- Unload vision instance.
-- Load audio model(s) before audio semantic analysis.
+Do not alter shot boundaries.
 
-Default audio models:
-- `qwen2-audio-7b`
-- `gemma-music-recommender`
+---
 
-Model API sequence:
-1. `POST /api/v1/models/unload` for active vision instance.
-2. `POST /api/v1/models/load` with `{ "model": "qwen2-audio-7b" }` (or override).
-3. `POST /api/v1/models/load` with `{ "model": "gemma-music-recommender" }` (or override).
-4. Verify required audio models are active.
+### 2.5) Optional 11B Refinement
+Apply only to:
+- Hero shots
+- Low-confidence shots
+- Ambiguous scenes
 
-### 5) Audio pass (required)
-DSP baseline (must run):
-- `librosa`: BPM/tempo, beat map, onset map, RMS/energy, spectral centroid/brightness.
-- `essentia` optional when available.
+**Rules:**
+- Unload current model before loading 11B.
+- If 11B fails, skip refinement.
+- Do not restart full pipeline for refinement failure.
 
-Audio LLM semantic pass:
-- `qwen2-audio-7b`: scene-level interpretation + segmentation labels + event placements.
-- `gemma-music-recommender`: music-fit scoring + ranked recommendations.
+---
 
-Save deterministic audio JSON.
+### 3) Vision Fusion
+Merge Pass 1 + Pass 2 by `shot_id`.
 
-### 6) Final synthesis
-Combine fusion JSON + audio JSON into report:
-- flow/pacing,
-- shot sequence and movement logic,
-- composition and amenity coverage,
-- sound design and music recommendations,
-- editing blueprint.
+**Rules:**
+- Pass 1 boundaries are authoritative.
+- Never remove a shot.
+- If semantic missing → set null + flag.
+- Preserve all shot IDs.
 
-### 7) Done-folder workflow
+**Output:**
+- Canonical fused JSON.
+- Include summary metrics.
+
+---
+
+### 4) Vision → Audio Model Switch
+Before audio:
+1. `POST /api/v1/models/unload` active vision model
+2. Load:
+   - `qwen2-audio-7b`
+   - `gemma-music-recommender`
+3. Verify both active.
+
+No overlapping vision/audio memory.
+
+---
+
+### 5) Audio Pass
+
+#### DSP Baseline (Mandatory)
+- BPM / tempo
+- Beat map
+- Onset map
+- RMS energy
+- Spectral centroid / brightness
+- Optional: Essentia enhancements
+
+#### LLM Semantic Pass
+- Scene-level interpretation
+- Segmentation labels
+- Event placement
+- Music-fit scoring
+- Ranked recommendations
+
+Persist deterministic audio JSON.
+
+---
+
+### 6) Final Synthesis
+Combine:
+- Vision fusion
+- Audio JSON
+
+Generate structured report covering:
+- Pacing logic
+- Motion distribution
+- Composition patterns
+- Amenity coverage
+- Sound design notes
+- Editing blueprint
+- Music fit assessment
+
+---
+
+### 7) Done Folder Workflow
 After completion:
-1. Write done marker.
-2. Move source video from `.../all_files/` to `.../done/`.
-3. Continue to next pending video.
-4. Default batch target: 10 videos/run unless overridden.
+1. Write `<video_id>_done.marker`
+2. Move source video from `/all_files/` → `/done/`
+3. Continue to next pending video
+4. Default batch size: 10 videos per run unless overridden
+
+---
 
 ## Prompt SOP (deterministic)
 
@@ -154,6 +240,8 @@ JSON SCHEMA
 {
   "video_id": "string",
   "pass": "vision_pass_1_lowres_temporal",
+  "vision_model_used": "string",
+  "vision_fallback_chain": ["string"],
   "fps_sampled": 5,
   "shots": [
     {
@@ -225,6 +313,8 @@ JSON SCHEMA
 {
   "video_id": "string",
   "pass": "vision_pass_2_highres_semantic",
+  "vision_model_used": "string",
+  "vision_fallback_chain": ["string"],
   "shots": [
     {
       "shot_id": "S001",
@@ -302,39 +392,25 @@ OUTPUT
 }
 ```
 
+---
+
 ## Deterministic JSON Keys (minimum)
 
 ### Vision pass 1
-- `video_id`
-- `pass`
-- `fps_sampled`
-- `shots[]`
-- `global_quality`
+- `video_id`, `pass`, `vision_model_used`, `vision_fallback_chain`, `fps_sampled`, `shots[]`, `global_quality`
 
 ### Vision pass 2
-- `video_id`
-- `pass`
-- `shots[]`
+- `video_id`, `pass`, `vision_model_used`, `vision_fallback_chain`, `shots[]`
 
 ### Vision fusion
-- `video_id`
-- `pass`
-- `shots[]`
-- `summary`
+- `video_id`, `pass`, `shots[]`, `summary`
 
 ### Audio pass
-- `audio_models[]`
-- `audio_models_loaded`
-- `bpm`
-- `beats[]`
-- `onsets[]`
-- `energy_curve[]`
-- `spectral_brightness[]`
-- `segments[]`
-- `sound_design_events[]`
-- `audio_semantic_summary`
-- `music_fit_score`
-- `music_recommendations[]`
+- `audio_models[]`, `audio_models_loaded`, `bpm`, `beats[]`, `onsets[]`
+- `energy_curve[]`, `spectral_brightness[]`, `segments[]`, `sound_design_events[]`
+- `audio_semantic_summary`, `music_fit_score`, `music_recommendations[]`
+
+---
 
 ## Failure Handling
 - 400/500 from model endpoint: retry with bounded attempts + jitter.
