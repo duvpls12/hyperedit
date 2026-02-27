@@ -45,13 +45,15 @@ const OLLAMA_HOST = process.env.OLLAMA_HOST || env.OLLAMA_HOST || 'http://localh
 const args = process.argv.slice(2);
 const projectPath = args.find(a => !a.startsWith('--'));
 if (!projectPath) {
-  console.error('Usage: node scripts/run-pipeline-local.js <project-path> [--model <id>] [--concurrency <n>] [--dry-run]');
+  console.error('Usage: node scripts/run-pipeline-local.js <project-path> [--model <id>] [--concurrency <n>] [--dry-run] [--classify-only] [--grade-only]');
   process.exit(1);
 }
 
 const MODEL = args.includes('--model') ? args[args.indexOf('--model') + 1] : 'qwen2.5vl:7b';
 const CONCURRENCY = args.includes('--concurrency') ? parseInt(args[args.indexOf('--concurrency') + 1]) : LM_STUDIO_CONCURRENCY;
 const DRY_RUN = args.includes('--dry-run');
+const CLASSIFY_ONLY = args.includes('--classify-only');  // Vision + sort, skip grading
+const GRADE_ONLY = args.includes('--grade-only');         // Grade from existing catalog, skip vision
 
 const FOOTAGE_DIR = join(projectPath, 'footage');
 const BINS_DIR = join(projectPath, 'bins');
@@ -335,16 +337,41 @@ function applyLut(inputPath, lutPath, outputPath) {
 // ─── Main Pipeline ───────────────────────────────────────────────────────────
 
 async function main() {
+  const mode = CLASSIFY_ONLY ? 'CLASSIFY ONLY (no grading)' : GRADE_ONLY ? 'GRADE ONLY (from catalog)' : DRY_RUN ? 'DRY RUN' : 'FULL';
   console.log(`\n━━━ HyperEdit Auto-Sort Pipeline ━━━`);
   console.log(`Project:     ${projectPath}`);
+  console.log(`Mode:        ${mode}`);
   console.log(`Model:       ${MODEL}`);
   console.log(`Concurrency: ${CONCURRENCY}`);
-  console.log(`Ollama:      ${OLLAMA_HOST}`);
-  console.log(`Dry run:     ${DRY_RUN}\n`);
+  console.log(`Ollama:      ${OLLAMA_HOST}\n`);
 
   // Validate
   if (!existsSync(FOOTAGE_DIR)) { console.error('No footage/ directory found.'); process.exit(1); }
-  if (existsSync(LEDGER_PATH)) { console.log('⚠ run-ledger.json already exists — project already processed. Delete it to re-run.'); process.exit(0); }
+  if (existsSync(LEDGER_PATH) && !CLASSIFY_ONLY && !GRADE_ONLY) { console.log('⚠ run-ledger.json already exists — project already processed. Delete it to re-run.'); process.exit(0); }
+
+  // Grade-only mode: read catalog and grade selected clips
+  if (GRADE_ONLY) {
+    if (!existsSync(CATALOG_PATH)) { console.error('No shot-catalog.json — run classify first.'); process.exit(1); }
+    const catalog = JSON.parse(readFileSync(CATALOG_PATH, 'utf-8'));
+    const entries = Object.entries(catalog).filter(([, v]) => v.colorProfile && !v.type);
+    console.log(`Grading ${entries.length} clips from catalog...\n`);
+    mkdirSync(GRADED_DIR, { recursive: true });
+    let graded = 0, errors = 0;
+    for (let i = 0; i < entries.length; i++) {
+      const [relPath, info] = entries[i];
+      const videoPath = join(projectPath, relPath);
+      const id = basename(videoPath, extname(videoPath));
+      const outPath = join(GRADED_DIR, `${id}_graded${extname(videoPath)}`);
+      if (existsSync(outPath)) { console.log(`[${i+1}/${entries.length}] ${basename(videoPath)} — already graded, skipping`); graded++; continue; }
+      const lutPath = findBestLut(info.colorProfile);
+      if (!lutPath) { console.log(`[${i+1}/${entries.length}] ${basename(videoPath)} — no LUT for ${info.colorProfile}`); continue; }
+      console.log(`[${i+1}/${entries.length}] ${basename(videoPath)} → ${basename(lutPath)}`);
+      if (applyLut(videoPath, lutPath, outPath)) { graded++; } else { errors++; }
+    }
+    console.log(`\nGraded: ${graded}/${entries.length}, Errors: ${errors}`);
+    try { exec(`osascript -e 'display notification "${graded} clips graded" with title "HyperEdit Grading" sound name "Glass"'`); } catch {}
+    process.exit(0);
+  }
 
   // Read brief
   const briefPath = join(projectPath, 'brief.json');
@@ -455,9 +482,11 @@ async function main() {
     sortToBin(videoPath, binName);
     console.log(`  Sorted → bins/${binName}/`);
 
-    // ── Apply LUT ─────────────────────────────────────────────────────────
+    // ── Apply LUT (skipped in classify-only mode) ──────────────────────
     const lutPath = findBestLut(colorProfile);
-    if (lutPath) {
+    if (CLASSIFY_ONLY) {
+      console.log(`  Grading: SKIPPED (classify-only) — LUT=${lutPath ? basename(lutPath) : 'none'}`);
+    } else if (lutPath) {
       const outName = `${id}_graded${extname(videoPath)}`;
       const outPath = join(GRADED_DIR, outName);
       console.log(`  Grading: ${basename(lutPath)} → graded/${outName}`);
@@ -479,6 +508,7 @@ async function main() {
       pass2,
       bin: binName,
       lut: lutPath ? basename(lutPath) : null,
+      lutPath: lutPath || null,
     };
 
     processed++;
