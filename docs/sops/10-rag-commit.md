@@ -30,7 +30,7 @@ Invoked by Orchestrator automatically after each stage completes with `status: "
 1. **Start RAG stack (if not running).**
    ```bash
    cd /Users/davideby/hyperedit/rag-local
-   docker-compose up -d
+   docker compose up -d
    ```
    - Verify: OpenWebUI at `localhost:3000`, Qdrant at `localhost:6333`.
    - Expected output: both services healthy.
@@ -56,11 +56,11 @@ Invoked by Orchestrator automatically after each stage completes with `status: "
    - Expected output: chunks ready for embedding.
 
 4. **Embed and store in Qdrant.**
-   - For each chunk: generate embedding via local model.
-   - Store in Qdrant collection `hyperedit-intelligence` with metadata:
+   - For each chunk: generate embedding via LM Studio at `localhost:1234/v1`, model `text-embedding-nomic-embed-text-v1.5`.
+   - Store in Qdrant collection `hyperedit_knowledge` with metadata:
      ```json
      {
-       "stage": "color-grading",
+       "stage": "color",
        "project_id": "<id>",
        "format_target": "reel",
        "chunk_type": "failure_mode",

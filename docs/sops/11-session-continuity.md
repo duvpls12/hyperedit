@@ -17,7 +17,7 @@ Invoked when:
 | Input | Source | Schema |
 |-------|--------|--------|
 | Project ID | User input or auto-detected from latest run-ledger | — |
-| Run-ledger | `state/run-ledger/<project_id>.json` | `schemas/run_ledger.schema.json` |
+| Run-ledger | `state/run-ledger/<project_id>.json` | `schemas/run-ledger.schema.json` |
 | Existing artifacts | `state/agents/<project_id>/` | Per-stage schemas |
 | FFmpeg session state | `state/local-ffmpeg/sessions/{sessionId}/` | — |
 | FFmpeg heartbeat | `state/local-ffmpeg/sessions/{sessionId}/heartbeat.json` | — |
@@ -32,7 +32,7 @@ Invoked when:
 
 1. **Load run-ledger.**
    - Read `state/run-ledger/<project_id>.json`.
-   - Identify `current_stage` and each stage's `status`: `pending`, `in_progress`, `done`, `blocked`, `gpu_pending`.
+   - Identify `current_stage` and each stage's `status`: `pending`, `in_progress`, `done`, `blocked`, `skipped`.
    - Expected output: run state map.
 
 2. **Audit existing artifacts.**
@@ -53,7 +53,7 @@ Invoked when:
    - Stages with `status: "done"` and valid artifacts: **skip** — do not re-run.
    - Stages with `status: "in_progress"` and partial artifacts: **restart from beginning of that stage** — partial work is not trusted.
    - Stages with `status: "pending"`: run in dependency order.
-   - Stages with `status: "gpu_pending"`: check GPU endpoint availability. If available, dispatch now.
+   - Stages with `status: "skipped"`: check `skip_reason`. If `skip_reason: "awaiting_gpu"`, check GPU endpoint availability and dispatch now.
    - Expected output: resume_from_stage and stage_skip_list.
 
 5. **Re-initialize run-ledger for resume.**
@@ -104,7 +104,7 @@ Invoked when:
 
 ## Skill Cross-Reference
 
-- Skill: `skills/hyperedit-session-restore/SKILL.md`
+- Skill: `skills/hyperedit-session-restore/SKILL.md` _(Wave 4 deliverable — not yet created)_
 - Run-ledger schema: `schemas/run_ledger.schema.json`
 - FFmpeg session state: `state/local-ffmpeg/sessions/`
 - FFmpeg endpoint: `GET /session-continuity` (heartbeat + stale session detection)

@@ -93,5 +93,5 @@ Completing this SOP unblocks:
 ## Skill Cross-Reference
 
 - Skill: `skills/hyperedit-orchestrator/SKILL.md`
-- Procedure matches: `skills/hyperedit-orchestrator/SOP.md` Steps 1–6
+- Procedure matches: `skills/hyperedit-orchestrator/SOP.md` Steps 1–6 _(SOP.md is a Wave 4 deliverable — pending Task #4)_
 - Context: `skills/hyperedit-agent-master-orchestrator/CONTEXT.md`
