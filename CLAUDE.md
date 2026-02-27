@@ -159,6 +159,157 @@ The segment-based approach (extract + concat) is required — single-pass filter
 - `wrangler.json` app name is a UUID (Mocha app ID). SPA routing via `not_found_handling: "single-page-application"`.
 - No tests exist in the codebase. No testing framework is configured.
 
+## HyperEdit Agent Pipeline Infrastructure
+
+This section documents the agent-driven video editing pipeline built on top of ClipWise. Skills live in `skills/` at the repo root.
+
+### Pipeline Order (hard dependency chain)
+
+```
+ORCHESTRATOR (init)
+  → FOOTAGE INTAKE            always
+  → PHOTO-TO-VIDEO            conditional: only if 12_gap_report.has_blocking_gaps == true
+  → AUDIO                     always — must complete BEFORE assembly (beat grid drives all cuts)
+  → ASSEMBLY                  always — reads 30_music_map + 31_radio_edit
+  → COLOR                     always — only after 42_picture_lock is confirmed
+  → TEXT & GRAPHICS           conditional: only if project_brief.caption_required == true
+ORCHESTRATOR (QA & grading)
+```
+
+**Critical rule:** Audio BEFORE assembly. The music map and radio edit are the timeline skeleton — assembly without them produces arbitrary cuts.
+
+### Skills Directory (`skills/`)
+
+Single source of truth for all Claude Code skills. Each skill has `SKILL.md` + optional `SOP.md` + `CONTEXT.md`.
+
+| Skill | Trigger | Purpose |
+|-------|---------|---------|
+| `hyperedit-orchestrator` | `/hyperedit-orchestrator` or `/hyperedit-run` | Full pipeline dispatch, run-ledger init, final QA |
+| `hyperedit-qc-gate` | `/hyperedit-qc-gate <stage>` | Universal quality gate checker between every stage |
+| `hyperedit-agent-footage-intake-sort` | `/hyperedit-footage-intake` | Ingest, tag, sort, shortlist raw clips |
+| `hyperedit-agent-image-to-video` | `/hyperedit-photo-to-video` | Synthetic clips from stills (conditional) |
+| `hyperedit-agent-audio-sound-design` | `/hyperedit-audio` | Music selection, BPM analysis, radio edit |
+| `hyperedit-agent-assembly-editor` | `/hyperedit-assembly` | Timeline from music map → picture lock |
+| `hyperedit-agent-color-pipeline` | `/hyperedit-color` | Correction + grading after picture lock |
+| `hyperedit-agent-graphics-captions` | `/hyperedit-text-graphics` | Captions, lower thirds (conditional) |
+| `hyperedit-agent-master-orchestrator` | legacy | See `hyperedit-orchestrator` |
+| `remotion-best-practices` | `/remotion-best-practices` | Remotion domain knowledge |
+| `comfyui-workflows/` | (dispatch templates) | See ComfyUI section below |
+
+GPU pipeline skills (Pipeline B): `hyperedit-gpu-edited-video-orchestrator`, `hyperedit-gpu-edited-video-pattern-mining`, `hyperedit-gpu-style-benchmark`, `hyperedit-gpu-rag-index-build`, `hyperedit-gpu-agent-training-dataset`.
+
+### Artifact Numbering
+
+Every pipeline stage writes 3 numbered JSON artifacts to `state/agents/<project_id>/`:
+
+| Range | Stage |
+|-------|-------|
+| 00-01 | Orchestrator init |
+| 10-12 | Footage Intake |
+| 20-22 | Photo-to-Video |
+| 30-32 | Audio |
+| 40-42 | Assembly |
+| 50-52 | Color |
+| 60-62 | Text & Graphics |
+| 70-72 | Final QC & Grade |
+
+Every artifact includes required common fields: `status` (pass/warn/fail/pending), `blocking_issues`, `assumptions`, `open_questions`, `source_references`.
+
+### JSON Schemas (`schemas/`)
+
+Formal JSON Schema files for all 24 numbered artifacts plus the run-ledger.
+
+- `schemas/_common.schema.json` — shared required fields for all artifacts
+- `schemas/run-ledger.schema.json` — project execution state schema
+- `schemas/00_project_brief.schema.json` through `schemas/72_publish_checklist.schema.json`
+
+**Validate an artifact:**
+```bash
+node scripts/validate-artifact.js state/agents/<project_id>/10_footage_catalog.json
+# Exit 0 = valid, 1 = invalid, 2 = usage error
+# Schema is auto-inferred from filename prefix; or pass explicit schema as second arg
+```
+
+### Run-Ledger (`state/run-ledger/`)
+
+Durable execution state for each project. Written by the orchestrator at every stage transition. Enables resume from checkpoint, skip completed stages, and retry failed stages.
+
+- Path: `state/run-ledger/<project_id>.json`
+- Schema: `schemas/run-ledger.schema.json`
+- `current_stage`: one of `orchestrator_init | footage_intake | photo_to_video | audio | assembly | color | text_graphics | orchestrator_qc | done | blocked`
+- Stage statuses: `pending | in_progress | done | blocked | skipped`
+
+### ComfyUI Workflow Templates (`skills/comfyui-workflows/`)
+
+Reusable JSON workflow templates dispatched via ComfyUI HTTP API (`POST /prompt`).
+
+| Template | Purpose | Endpoint |
+|----------|---------|---------|
+| `color-correct.json` | LoadImage → EasyColorCorrection → SaveImage | Local Mac `:8188` |
+| `video-combine.json` | VHS_LoadImages + VHS_LoadAudio → VHS_VideoCombine | Local Mac `:8188` |
+| `image-to-video.json` | LTXVideo I2V distilled pipeline | Vast.ai GPU `:8188` |
+| `upscale.json` | video2x CLI wrapper (upscale + interpolate presets) | CLI (not ComfyUI) |
+
+**Hybrid dispatch rule:**
+- **Local Mac** (`localhost:8188`): EasyColorCorrector, VideoHelperSuite — low VRAM, fast
+- **Vast.ai GPU** (remote `:8188`): LTXVideo 19B generation — requires RTX PRO 6000 VRAM
+- Orchestrator checks task type and routes accordingly. Fallback: queue GPU tasks, continue non-GPU stages.
+
+**ComfyUI deps location:** `/Users/davideby/hyperedit-deps/`
+- `ComfyUI/` — core engine (`python main.py` → http://localhost:8188)
+- `ComfyUI-EasyColorCorrector/` — node: `EasyColorCorrection`
+- `ComfyUI-LTXVideo/` — nodes: `LTXVConditioning`, `LTXVGemmaCLIPModelLoader`, etc.
+- `ComfyUI-VideoHelperSuite/` — nodes: `VHS_VideoCombine`, `VHS_LoadVideo`, `VHS_LoadImages`, `VHS_LoadAudio`
+
+### SOPs (`docs/sops/`)
+
+13 dual-format SOPs — human-readable reference docs paired with executable skills.
+
+```
+docs/sops/
+├── 01-project-kickoff.md          → hyperedit-orchestrator
+├── 02-footage-ingest.md           → hyperedit-footage-intake
+├── 03-photo-to-video.md           → hyperedit-photo-to-video
+├── 04-audio-radio-edit.md         → hyperedit-audio
+├── 05-assembly-picture-lock.md    → hyperedit-assembly
+├── 06-color-grading.md            → hyperedit-color
+├── 07-text-graphics-captions.md   → hyperedit-text-graphics
+├── 08-qa-grading.md               → hyperedit-orchestrator (QA phase)
+├── 09-comfyui-setup.md            → operational
+├── 10-rag-commit.md               → hyperedit-rag-commit
+├── 11-session-continuity.md       → hyperedit-session-restore
+├── 12-client-delivery.md          → manual
+├── 13-fallback-escalation.md      → embedded in each skill
+└── templates/
+    ├── project-brief-template.json
+    ├── agent-run-report.md
+    └── qc-checklist.md
+```
+
+### Quality Gates (enforced by `hyperedit-qc-gate`)
+
+| Gate | Threshold | Fail Action |
+|------|-----------|-------------|
+| Hook timing | ≤ 5s from start | Retry assembly |
+| Rehook cadence | Every 5-10s | Warn or retry |
+| Directional continuity | ≥ 0.8 score | Retry assembly |
+| Music-edit alignment | ≥ 80% cuts on beat anchors | Warn |
+| Color after lock | Must be true | FAIL (pipeline order) |
+| Caption safe area | 9:16, 8% padding | Retry graphics |
+| Audio loudness | -14 LUFS ± 2 dB | Warn |
+
+### Validate Script
+
+`scripts/validate-artifact.js` — ES module CLI validator.
+```bash
+node scripts/validate-artifact.js <artifact_path> [schema_name]
+```
+- Auto-infers schema from artifact filename prefix (e.g. `10_...` → `10_footage_catalog.schema.json`)
+- Uses ajv v6 for structural validation
+- Common fields always checked (status, blocking_issues, assumptions, open_questions, source_references)
+
+---
+
 ## Deterministic Execution Contract (HyperEdit Agent Runs)
 
 ### Project Context

@@ -1,0 +1,53 @@
+{
+  "$schema": "../../../schemas/00_project_brief.schema.json",
+  "_comment": "Fill all required fields (*). Optional fields may be omitted.",
+
+  "project_id": "",
+  "_project_id_note": "Unique ID, e.g. '3213_cliff_drive_20260227'",
+
+  "property_address": "",
+  "_property_address_note": "* Required — e.g. '3213 Cliff Drive, Santa Barbara, CA'",
+
+  "client_name": "",
+
+  "footage_directory": "",
+  "_footage_directory_note": "* Required — absolute path to raw video clips directory",
+
+  "stills_directory": "",
+  "_stills_directory_note": "Absolute path to property photos (required only for ai_lot or if synthetic generation may be needed)",
+
+  "target_duration_seconds": 60,
+  "_target_duration_note": "* Required — target final video duration in seconds (e.g. 30, 60, 90)",
+
+  "delivery_format": {
+    "aspect_ratio": "9:16",
+    "_aspect_ratio_options": ["16:9", "9:16", "1:1", "4:5"],
+    "resolution": "1080x1920",
+    "_resolution_options": ["1920x1080", "3840x2160", "1080x1920"],
+    "fps": 30
+  },
+  "_delivery_format_note": "* Required — define output format. Use 9:16 / 1080x1920 for Instagram Reels, 16:9 / 1920x1080 for MLS/YouTube.",
+
+  "music_style": "",
+  "_music_style_note": "Music mood/genre directive, e.g. 'uplifting modern 120-130 BPM' or 'cinematic instrumental'",
+
+  "caption_required": false,
+  "_caption_required_note": "Set true to enable text captions and graphics stage",
+
+  "quality_gates": {
+    "hook_window_seconds": 5,
+    "rehook_interval_seconds": 8,
+    "directional_continuity_min": 0.8,
+    "audio_loudness_lufs": -14
+  },
+  "_quality_gates_note": "Override default gate thresholds if needed. Defaults shown above.",
+
+  "special_instructions": "",
+  "_special_instructions_note": "Any additional directives for the pipeline (e.g. 'feature pool prominently', 'signature cinematic look')",
+
+  "status": "pending",
+  "blocking_issues": [],
+  "assumptions": [],
+  "open_questions": [],
+  "source_references": []
+}

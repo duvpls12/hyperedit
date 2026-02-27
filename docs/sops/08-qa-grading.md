@@ -72,22 +72,27 @@ Dispatched by Orchestrator after all active pipeline stages complete:
    - Categorize: unresolved (still blocking), resolved (addressed in later stage), accepted_warn.
    - Expected output: `blocking_issues_summary`.
 
-9. **Invoke hyperedit-qc-gate skill.**
-   - Pass all collected check results to `skills/hyperedit-qc-gate/` for unified scoring.
-   - QC gate applies rulebook from `state/intel/perfect_video_blueprint.md`.
-   - Expected output: per-gate pass/warn/fail with weighted score.
+9. **Invoke hyperedit-qc-gate skill for final rollup.**
+   - `/hyperedit-qc-gate final` — runs G-99 (all_artifacts_written), G-100 (no_blocking_issues), G-101 (overall_grade) cross-stage rollup.
+   - QC gate reads all stage-specific `_qc_result.json` files written during per-stage checks.
+   - Expected output: `final_qc_result.json` with all gate results and `overall` pass/warn/fail.
 
 10. **Produce letter grade.**
-    - Score each dimension 0–10: `hook_strength`, `pacing`, `directional_continuity`, `color_consistency`, `audio_quality`, `caption_readability` (if applicable).
-    - Map overall score to grade: A = publish ready, B = publish with minor notes, C = review needed, D = rework needed, FAIL = blocked.
-    - Include specific deficiency callouts (dimension, observation, severity) for each non-passing gate.
+    - Grade rubric (from `skills/hyperedit-qc-gate/SOP.md` G-101):
+      - **A**: zero fails, ≤ 2 warns — publish ready.
+      - **B**: zero fails, > 2 warns — publish with noted warnings.
+      - **C**: one fail (non-pipeline-order) — rework needed.
+      - **D**: two fails — rework needed.
+      - **FAIL**: any pipeline-order violation (G-40 color_after_lock) OR ≥ 3 fails — blocked.
+    - Score each dimension 0–10: `hook_strength`, `pacing`, `directional_continuity`, `color_consistency`, `audio_quality`, `caption_readability`.
+    - Include specific deficiency callouts (dimension, observation, severity: `info`/`warning`/`critical`).
     - Expected output: `71_grade_card.json` with dimension scores, overall grade, and callouts.
 
 11. **Publish decision.**
-    - A/B: Publish (B with noted warnings).
-    - C: Rework — identify top 2 failing dimensions, dispatch targeted rework to affected stage only.
-    - D/FAIL: Full rework — surface all deficiencies to user, await direction.
-    - Write `72_publish_checklist.json` with all delivery checklist items and `publish_ready` boolean.
+    - A/B: Publish. Set `72_publish_checklist.delivery_checklist_items` all `true`, `publish_ready: true`.
+    - C: Rework — identify top failing gate, dispatch targeted rework to affected stage only. Do not re-run passing stages.
+    - D/FAIL: Full rework — surface all deficiencies to user with `recommended_actions` list. Await direction.
+    - Write `72_publish_checklist.json` with `delivery_checklist_items` populated.
     - Expected output: `70_final_qc_report.json`, `71_grade_card.json`, `72_publish_checklist.json`.
 
 12. **Write outputs and validate.**
@@ -96,17 +101,22 @@ Dispatched by Orchestrator after all active pipeline stages complete:
 
 ## Quality Gates
 
-| Gate | Pass | Warn | Fail |
-|------|------|------|------|
-| Hook in first 3–5 seconds | ≤ 5s | 5–7s | > 7s |
-| Rehook every 5–10s (social) | All intervals | 1 interval > 10s | >1 interval missed |
-| Directional continuity score | ≥ 0.8 | 0.7–0.79 | < 0.7 |
-| Color applied after picture lock | Timestamp verified | — | Color predates lock |
-| Caption safe area (if applicable) | 100% compliant | — | Any violation |
-| Beat-aligned cuts ≥ 90% | ≥ 90% | 80–89% | < 80% |
-| Speed ramp has audio accent | 100% | — | Any missing |
-| No unresolved blocking issues | 0 unresolved | Accepted warns only | Any unresolved |
-| All required artifacts present | All present | — | Any missing |
+These are the final-stage cross-gate checks (from `skills/hyperedit-qc-gate/SOP.md`):
+
+| Gate ID | Gate | Pass | Warn | Fail |
+|---------|------|------|------|------|
+| G-30 | Hook timing | ≤ 5s | 5–7s | > 7s or no hook |
+| G-31 | Rehook cadence | Adequate | 1 fewer than expected | 2+ fewer |
+| G-32 | Directional continuity | ≥ 0.8 | 0.6–0.79 | < 0.6 |
+| G-33 | Beat-aligned cuts | ≥ 80% with anchor | 60–80% | < 60% |
+| G-40 | Color after lock | `color_applied_after_lock: true` | — | False (critical) |
+| G-41 | Cross-clip consistency | ≥ 0.75 | 0.5–0.74 | < 0.5 |
+| G-42 | No clipping | No clipping | — | Clipping detected |
+| G-50 | Safe area (if applicable) | All compliant | — | Any violation |
+| G-51 | Word count | ≤ 5 words/chunk | — | Any > 5 |
+| G-99 | All artifacts written | All present | — | Any missing |
+| G-100 | No blocking issues | All empty | — | Any present |
+| G-101 | Overall grade | A or B | — | C/D/FAIL |
 
 ## Outputs
 
