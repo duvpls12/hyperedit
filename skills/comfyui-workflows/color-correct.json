@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "title": "HyperEdit Color Correction",
+    "description": "Load image frames → EasyColorCorrection (auto mode) → SaveImage. Used by the COLOR agent for per-frame correction and creative grading.",
+    "comfyui_endpoint": "http://localhost:8188",
+    "dispatch": "POST /prompt  body: { \"prompt\": <this object>, \"client_id\": \"<run_id>\" }",
+    "poll": "GET /history/<prompt_id>",
+    "template_vars": {
+      "INPUT_IMAGE_PATH": "Absolute path to input image or frame (e.g. /tmp/frames/frame_0001.png)",
+      "OUTPUT_PREFIX": "Filename prefix for saved output (e.g. corrected_frame_0001)",
+      "COLOR_MODE": "Auto | Preset | Manual",
+      "PRESET_NAME": "Used when mode=Preset. One of the 30 built-in looks (e.g. Cinematic, Warm, Cold)",
+      "REFERENCE_IMAGE_PATH": "Optional: path to reference image for color matching (leave null to skip)"
+    }
+  },
+  "1": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "INPUT_IMAGE_PATH"
+    }
+  },
+  "2": {
+    "class_type": "EasyColorCorrection",
+    "inputs": {
+      "image": ["1", 0],
+      "mode": "Auto",
+      "preset_name": null,
+      "reference_strength": 0.3,
+      "extract_palette": false,
+      "lock_input_image": false,
+      "ai_analysis": true
+    }
+  },
+  "3": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["2", 0],
+      "filename_prefix": "OUTPUT_PREFIX"
+    }
+  }
+}

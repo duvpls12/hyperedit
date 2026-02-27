@@ -1,0 +1,48 @@
+{
+  "_meta": {
+    "title": "HyperEdit Video Combine",
+    "description": "Load frame sequence directory + audio file → VHS_VideoCombine → export final video. Used by the ASSEMBLER agent to combine graded frame sequences with the audio mix into a picture-locked output.",
+    "comfyui_endpoint": "http://localhost:8188",
+    "dispatch": "POST /prompt  body: { \"prompt\": <this object>, \"client_id\": \"<run_id>\" }",
+    "poll": "GET /history/<prompt_id>",
+    "note": "Light workload — run on local Mac :8188.",
+    "template_vars": {
+      "FRAMES_DIRECTORY": "Absolute path to directory containing PNG frame sequence (e.g. /tmp/project_abc/frames/)",
+      "AUDIO_PATH": "Absolute path to audio file (WAV or MP3, e.g. /tmp/project_abc/30_radio_edit.wav)",
+      "OUTPUT_FPS": "Frame rate for output video (default: 30)",
+      "OUTPUT_PREFIX": "Filename prefix for exported video (e.g. project_abc_picture_lock)",
+      "FORMAT": "Output format: video/h264-mp4 | video/prores-mov (default: video/h264-mp4)"
+    }
+  },
+  "1": {
+    "class_type": "VHS_LoadImages",
+    "inputs": {
+      "directory": "FRAMES_DIRECTORY",
+      "image_load_cap": 0,
+      "skip_first_images": 0,
+      "select_every_nth": 1,
+      "meta_batch": null
+    }
+  },
+  "2": {
+    "class_type": "VHS_LoadAudio",
+    "inputs": {
+      "audio_file": "AUDIO_PATH",
+      "start_time": 0.0,
+      "duration": 0.0
+    }
+  },
+  "3": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": ["1", 0],
+      "audio": ["2", 0],
+      "frame_rate": 30,
+      "loop_count": 0,
+      "filename_prefix": "OUTPUT_PREFIX",
+      "format": "video/h264-mp4",
+      "pingpong": false,
+      "save_output": true
+    }
+  }
+}

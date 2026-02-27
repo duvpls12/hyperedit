@@ -1,0 +1,125 @@
+{
+  "_meta": {
+    "title": "HyperEdit Image-to-Video (LTXVideo I2V)",
+    "description": "Load image → LTXVideo I2V distilled → CreateVideo → SaveVideo. Used by the PHOTO-TO-VIDEO agent to generate synthetic clips from property stills.",
+    "comfyui_endpoint": "http://VAST_AI_HOST:8188",
+    "dispatch": "POST /prompt  body: { \"prompt\": <this object>, \"client_id\": \"<run_id>\" }",
+    "poll": "GET /history/<prompt_id>",
+    "note": "Heavy workload — dispatch to Vast.ai RTX PRO 6000, NOT local Mac.",
+    "template_vars": {
+      "INPUT_IMAGE_PATH": "Absolute path to source property still image",
+      "POSITIVE_PROMPT": "Camera motion description + scene description (e.g. 'slow dolly forward through bright living room, natural light, cinematic')",
+      "NEGATIVE_PROMPT": "What to avoid (e.g. 'shaky, blur, distortion, artifacts, people')",
+      "LORA_MODEL_NAME": "Optional IC-LoRA model for camera control (e.g. 'ltx-video-2b-0.9.5-distilled.safetensors'). Set to null to skip.",
+      "FRAME_COUNT": "Number of frames to generate (default: 121 = ~4s at 30fps)",
+      "FPS": "Output frame rate (default: 30)",
+      "WIDTH": "Output width in pixels (default: 1280)",
+      "HEIGHT": "Output height in pixels (default: 720)",
+      "OUTPUT_PREFIX": "Filename prefix for output video"
+    }
+  },
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "ltx-video-2b-0.9.5-distilled.safetensors"
+    }
+  },
+  "2": {
+    "class_type": "LTXVGemmaCLIPModelLoader",
+    "inputs": {
+      "ckpt_name": "ltxv-2b-0.9.5-distilled-04-25.safetensors"
+    }
+  },
+  "3": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "INPUT_IMAGE_PATH"
+    }
+  },
+  "4": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "POSITIVE_PROMPT",
+      "clip": ["2", 0]
+    }
+  },
+  "5": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "NEGATIVE_PROMPT",
+      "clip": ["2", 0]
+    }
+  },
+  "6": {
+    "class_type": "LTXVConditioning",
+    "inputs": {
+      "positive": ["4", 0],
+      "negative": ["5", 0],
+      "vae": ["1", 2],
+      "width": 1280,
+      "height": 720,
+      "length": 121,
+      "frame_rate": 30
+    }
+  },
+  "7": {
+    "class_type": "LTXVScheduler",
+    "inputs": {
+      "steps": 8,
+      "max_shift": 2.05,
+      "base_shift": 0.95,
+      "stretch": true,
+      "terminal": 0.1
+    }
+  },
+  "8": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": ["9", 0],
+      "guider": ["10", 0],
+      "sampler": ["11", 0],
+      "sigmas": ["7", 0],
+      "latent_image": ["6", 2]
+    }
+  },
+  "9": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 42
+    }
+  },
+  "10": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": ["1", 0],
+      "conditioning": ["6", 0]
+    }
+  },
+  "11": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    }
+  },
+  "12": {
+    "class_type": "VAEDecodeTiled",
+    "inputs": {
+      "samples": ["8", 0],
+      "vae": ["1", 2],
+      "tile_size": 512,
+      "overlap": 64
+    }
+  },
+  "13": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": ["12", 0],
+      "frame_rate": 30,
+      "loop_count": 0,
+      "filename_prefix": "OUTPUT_PREFIX",
+      "format": "video/h264-mp4",
+      "pingpong": false,
+      "save_output": true
+    }
+  }
+}

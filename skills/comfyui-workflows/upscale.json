@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "title": "HyperEdit Upscale (video2x CLI)",
+    "description": "video2x CLI wrapper config for AI upscaling and frame interpolation. NOT a ComfyUI workflow — invoke as CLI. Used by the FOOTAGE INTAKE agent (pre-assembly, upscale low-res clips) or post-assembly enhancement.",
+    "cli_binary": "/Users/davideby/hyperedit-deps/video2x/video2x",
+    "docs": "https://github.com/k4yt3x/video2x",
+    "template_vars": {
+      "INPUT_PATH": "Absolute path to input video file",
+      "OUTPUT_PATH": "Absolute path for upscaled output video",
+      "SCALE_FACTOR": "Integer upscale multiplier: 2 (1080p→4K) | 4 (720p→4K)",
+      "UPSCALER": "real-esrgan | cugan (default: real-esrgan — best for real estate video)",
+      "NOISE_LEVEL": "Noise reduction level 0-3 for cugan, or denoise strength for real-esrgan (default: 0)",
+      "INTERPOLATE_FPS": "Target FPS for frame interpolation via RIFE (set to 0 to skip, e.g. 60 to double 30fps footage)"
+    }
+  },
+  "upscale_preset": {
+    "command": "video2x -i INPUT_PATH -o OUTPUT_PATH -w SCALE_FACTOR -h SCALE_FACTOR --upscaler real-esrgan",
+    "example": "video2x -i /tmp/footage/low_res.mp4 -o /tmp/footage/upscaled_4k.mp4 -w 3840 -h 2160 --upscaler real-esrgan"
+  },
+  "interpolate_preset": {
+    "command": "video2x -i INPUT_PATH -o OUTPUT_PATH --interpolator rife --interpolate-fps INTERPOLATE_FPS",
+    "example": "video2x -i /tmp/footage/30fps.mp4 -o /tmp/footage/60fps.mp4 --interpolator rife --interpolate-fps 60"
+  },
+  "upscale_and_interpolate_preset": {
+    "command": "video2x -i INPUT_PATH -o OUTPUT_PATH -w SCALE_FACTOR -h SCALE_FACTOR --upscaler real-esrgan --interpolator rife --interpolate-fps INTERPOLATE_FPS",
+    "example": "video2x -i /tmp/footage/720p_30fps.mp4 -o /tmp/footage/4k_60fps.mp4 -w 3840 -h 2160 --upscaler real-esrgan --interpolator rife --interpolate-fps 60"
+  },
+  "agent_usage": {
+    "footage_intake": "Run upscale_preset on low-res clips BEFORE assembly to normalize resolution.",
+    "post_assembly": "Run upscale_and_interpolate_preset on picture_lock output for final quality enhancement.",
+    "output_naming": "Append _upscaled or _4k to output filename prefix."
+  }
+}
