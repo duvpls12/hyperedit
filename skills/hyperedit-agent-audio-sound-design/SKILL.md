@@ -1,6 +1,6 @@
 ---
 name: hyperedit-agent-audio-sound-design
-description: Design and mix music, ambience, and effects with platform-aware loudness and clarity.
+description: Select music, detect BPM and beat grid via FFmpeg server, and produce the radio edit structure that drives all timeline cut timing. Runs BEFORE assembly.
 metadata:
   tags: hyperedit,audio,sound-design,mix
 ---
