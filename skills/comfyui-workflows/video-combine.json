@@ -8,7 +8,7 @@
     "note": "Light workload — run on local Mac :8188.",
     "template_vars": {
       "FRAMES_DIRECTORY": "Absolute path to directory containing PNG frame sequence (e.g. /tmp/project_abc/frames/)",
-      "AUDIO_PATH": "Absolute path to audio file (WAV or MP3, e.g. /tmp/project_abc/30_radio_edit.wav)",
+      "AUDIO_PATH": "Absolute path to audio file (WAV or MP3). Source: read `track_path` from `state/agents/<project_id>/30_music_map.json` — this is the selected music track file from the library. Not an artifact number — a real audio file path.",
       "OUTPUT_FPS": "Frame rate for output video (default: 30)",
       "OUTPUT_PREFIX": "Filename prefix for exported video (e.g. project_abc_picture_lock)",
       "FORMAT": "Output format: video/h264-mp4 | video/prores-mov (default: video/h264-mp4)"

@@ -19,10 +19,10 @@ Deliver a complete, publish ready real estate video by coordinating six speciali
 3. Define quality gates in `02_quality_gates.json`.
 4. Dispatch Footage Intake and Sorting.
 5. If gaps exist, dispatch Image to Video Generation for only blocking gaps.
-6. Dispatch Assembly Editor using approved shot pool.
-7. Dispatch Color Pipeline after assembly lock.
-8. Dispatch Graphics and Captions after picture lock.
-9. Dispatch Audio and Sound Design after picture lock; allow minor recut only if audio sync demands it.
+6. Dispatch Audio and Sound Design — must complete BEFORE assembly; audio creates the beat grid and radio edit that assembly uses to time all cuts.
+7. Dispatch Assembly Editor using approved shot pool + music map from Audio agent.
+8. Dispatch Color Pipeline after assembly lock (picture lock must be final before grading).
+9. Dispatch Graphics and Captions after color pass is complete.
 10. Run final cross stage QC and output `70_final_qc_report.json`.
 
 ## Mandatory quality gates
