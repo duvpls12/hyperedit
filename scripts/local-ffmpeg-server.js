@@ -6,6 +6,7 @@ import { randomUUID } from 'crypto';
 import formidable from 'formidable';
 import { GoogleGenAI } from '@google/genai';
 import { fal } from '@fal-ai/client';
+import { ComfyUIClient } from './comfyui-client.js';
 
 // Load environment variables from .dev.vars
 function loadEnvVars() {
@@ -44,6 +45,12 @@ const STALE_THRESHOLD_MS = 120 * 1000;
 
 // Active video sessions - keeps videos on disk between edits
 const sessions = new Map();
+
+// ComfyUI client for dispatching AI workflows
+const comfyui = new ComfyUIClient('http://localhost:8188', null);
+
+// Job tracking for long-running operations (upscale, interpolation, video gen)
+const jobs = new Map(); // jobId -> { status, progress, error, asset, type }
 
 // Ensure data directories exist
 if (!existsSync(TEMP_DIR)) {
@@ -7698,6 +7705,928 @@ async function handleProcessAsset(req, res, sessionId) {
   }
 }
 
+// ============== COMFYUI / COLOR / ENHANCE ENDPOINTS ==============
+
+// GET /comfyui/status — health check
+async function handleComfyUIStatus(req, res) {
+  try {
+    const status = await comfyui.getStatus();
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify(status));
+  } catch (e) {
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: e.message }));
+  }
+}
+
+// GET /session/:id/jobs/:jobId — poll job progress
+function handleJobStatus(req, res, sessionId, jobId) {
+  const job = jobs.get(jobId);
+  if (!job) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Job not found' }));
+    return;
+  }
+  res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+  res.end(JSON.stringify({
+    status: job.status,
+    progress: job.progress || 0,
+    error: job.error || null,
+    asset: job.asset || null,
+  }));
+}
+
+// POST /session/:id/color-correct
+async function handleColorCorrect(req, res, sessionId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+
+  try {
+    const body = await parseBody(req);
+    const { assetId, mode, preset, adjustments } = body;
+
+    if (!assetId || !mode) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'assetId and mode are required' }));
+      return;
+    }
+
+    const sourceAsset = session.assets.get(assetId);
+    if (!sourceAsset) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'Asset not found' }));
+      return;
+    }
+
+    const logId = sessionId.substring(0, 8);
+    console.log(`\n[${logId}] === COLOR CORRECT (${mode}) ===`);
+
+    // Build ComfyUI workflow
+    let workflow = comfyui.loadWorkflow('color-correct');
+
+    const outputPrefix = `color-${randomUUID().substring(0, 8)}`;
+    workflow = comfyui.substituteParams(workflow, {
+      'INPUT_IMAGE_PATH': sourceAsset.path,
+      'OUTPUT_PREFIX': outputPrefix,
+    });
+
+    // Set mode-specific params
+    if (mode === 'auto') {
+      workflow['2'].inputs.mode = 'Auto';
+      workflow['2'].inputs.ai_analysis = true;
+    } else if (mode === 'preset' && preset) {
+      workflow['2'].inputs.mode = 'Preset';
+      workflow['2'].inputs.preset_name = preset;
+    } else if (mode === 'manual' && adjustments) {
+      workflow['2'].inputs.mode = 'Manual';
+      // Pass adjustments as custom parameters
+      if (adjustments.brightness !== undefined) workflow['2'].inputs.brightness = adjustments.brightness;
+      if (adjustments.contrast !== undefined) workflow['2'].inputs.contrast = adjustments.contrast;
+      if (adjustments.saturation !== undefined) workflow['2'].inputs.saturation = adjustments.saturation;
+      if (adjustments.temperature !== undefined) workflow['2'].inputs.temperature = adjustments.temperature;
+      if (adjustments.tint !== undefined) workflow['2'].inputs.tint = adjustments.tint;
+    }
+
+    // Dispatch to ComfyUI
+    const { promptId, targetUrl } = await comfyui.dispatch(workflow);
+    console.log(`[${logId}] ComfyUI prompt dispatched: ${promptId}`);
+
+    const result = await comfyui.waitForResult(promptId, targetUrl);
+    console.log(`[${logId}] ComfyUI result received`);
+
+    // Download output and save as new asset
+    if (result.files.length === 0) {
+      throw new Error('No output files from ComfyUI');
+    }
+
+    const outputFile = result.files[0];
+    const outputBuffer = await comfyui.downloadOutput(targetUrl, outputFile.filename, outputFile.subfolder, outputFile.type);
+
+    const newAssetId = randomUUID();
+    const ext = sourceAsset.type === 'image' ? (sourceAsset.filename.split('.').pop() || 'png') : 'png';
+    const newFilename = `color-${newAssetId.substring(0, 8)}.${ext}`;
+    const newPath = join(session.assetsDir, newFilename);
+    writeFileSync(newPath, outputBuffer);
+
+    // Generate thumbnail
+    const thumbPath = join(session.assetsDir, `${newAssetId}_thumb.jpg`);
+    await generateThumbnail(newPath, thumbPath, true);
+
+    const asset = {
+      id: newAssetId,
+      type: sourceAsset.type,
+      filename: newFilename,
+      path: newPath,
+      thumbPath,
+      size: outputBuffer.length,
+      createdAt: Date.now(),
+      aiGenerated: true,
+      width: sourceAsset.width,
+      height: sourceAsset.height,
+      duration: sourceAsset.duration,
+    };
+
+    session.assets.set(newAssetId, asset);
+    saveAssetMetadata(session);
+
+    console.log(`[${logId}] Color corrected asset saved: ${newAssetId}`);
+
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({
+      asset: {
+        id: newAssetId,
+        type: asset.type,
+        filename: newFilename,
+        thumbnailUrl: `/session/${sessionId}/assets/${newAssetId}/thumbnail`,
+        streamUrl: `/session/${sessionId}/assets/${newAssetId}/stream`,
+        width: asset.width,
+        height: asset.height,
+      },
+    }));
+  } catch (e) {
+    console.error(`[Color Correct] Error:`, e.message);
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: e.message }));
+  }
+}
+
+// POST /session/:id/color-match
+async function handleColorMatch(req, res, sessionId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+
+  try {
+    const body = await parseBody(req);
+    const { sourceAssetId, referenceAssetId, method = 'mkl' } = body;
+
+    if (!sourceAssetId || !referenceAssetId) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'sourceAssetId and referenceAssetId are required' }));
+      return;
+    }
+
+    const sourceAsset = session.assets.get(sourceAssetId);
+    const refAsset = session.assets.get(referenceAssetId);
+
+    if (!sourceAsset || !refAsset) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'Source or reference asset not found' }));
+      return;
+    }
+
+    const logId = sessionId.substring(0, 8);
+    console.log(`\n[${logId}] === COLOR MATCH (${method}) ===`);
+
+    const newAssetId = randomUUID();
+    const ext = sourceAsset.filename.split('.').pop() || 'png';
+    const newFilename = `matched-${newAssetId.substring(0, 8)}.${ext}`;
+    const newPath = join(session.assetsDir, newFilename);
+
+    if (sourceAsset.type === 'image') {
+      // Direct color-matcher call for images
+      const cmd = `python -m color_matcher -s "${sourceAsset.path}" -r "${refAsset.path}" -o "${session.assetsDir}" --method ${method}`;
+      console.log(`[${logId}] Running: ${cmd}`);
+
+      try {
+        execSync(cmd, { encoding: 'utf-8', timeout: 60000, cwd: '/Users/davideby/hyperedit-deps/color-matcher' });
+      } catch (cmdErr) {
+        // color-matcher may output to a default name; try to find it
+        console.log(`[${logId}] color-matcher CLI:`, cmdErr.message);
+      }
+
+      // Find the output — color-matcher outputs to the -o directory with source filename
+      const sourceBasename = sourceAsset.filename.replace(/\.[^/.]+$/, '');
+      const possibleOutputs = readdirSync(session.assetsDir).filter(f =>
+        f.includes(sourceBasename) && f !== sourceAsset.filename && !f.includes('_thumb')
+      );
+
+      if (possibleOutputs.length > 0) {
+        const outputPath = join(session.assetsDir, possibleOutputs[possibleOutputs.length - 1]);
+        // Rename to our desired filename
+        const { renameSync } = await import('fs');
+        renameSync(outputPath, newPath);
+      } else {
+        throw new Error('Color matcher produced no output');
+      }
+    } else {
+      // Video: extract frames, batch process, recombine with FFmpeg
+      const framesDir = join(session.dir, `frames-${newAssetId.substring(0, 8)}`);
+      const matchedDir = join(session.dir, `matched-${newAssetId.substring(0, 8)}`);
+      mkdirSync(framesDir, { recursive: true });
+      mkdirSync(matchedDir, { recursive: true });
+
+      // Extract frames
+      console.log(`[${logId}] Extracting frames...`);
+      execSync(`ffmpeg -y -i "${sourceAsset.path}" -q:v 2 "${join(framesDir, 'frame_%04d.png')}"`, { encoding: 'utf-8', timeout: 120000 });
+
+      // Batch color match
+      console.log(`[${logId}] Batch color matching...`);
+      const batchCmd = `python -m color_matcher -s "${framesDir}" -r "${refAsset.path}" -o "${matchedDir}" --method ${method}`;
+      execSync(batchCmd, { encoding: 'utf-8', timeout: 300000, cwd: '/Users/davideby/hyperedit-deps/color-matcher' });
+
+      // Recombine with FFmpeg (preserve audio)
+      console.log(`[${logId}] Recombining frames...`);
+      const fps = 30; // Default
+      const recombineArgs = ['-y', '-framerate', String(fps), '-i', join(matchedDir, 'frame_%04d.png')];
+      // Check if source has audio
+      try {
+        const audioCheck = execSync(`ffprobe -v error -select_streams a -show_entries stream=codec_type -of csv=p=0 "${sourceAsset.path}"`, { encoding: 'utf-8' });
+        if (audioCheck.trim()) {
+          recombineArgs.push('-i', sourceAsset.path, '-map', '0:v', '-map', '1:a', '-shortest');
+        }
+      } catch { /* no audio */ }
+      recombineArgs.push('-c:v', 'libx264', '-preset', 'fast', '-crf', '18', '-pix_fmt', 'yuv420p', newPath);
+      execSync(`ffmpeg ${recombineArgs.map(a => a.includes(' ') ? `"${a}"` : a).join(' ')}`, { encoding: 'utf-8', timeout: 300000 });
+
+      // Cleanup temp dirs
+      try {
+        const { rmSync } = await import('fs');
+        rmSync(framesDir, { recursive: true, force: true });
+        rmSync(matchedDir, { recursive: true, force: true });
+      } catch { /* cleanup failure is non-critical */ }
+    }
+
+    // Generate thumbnail
+    const thumbPath = join(session.assetsDir, `${newAssetId}_thumb.jpg`);
+    const isImage = sourceAsset.type === 'image';
+    await generateThumbnail(newPath, thumbPath, isImage);
+
+    const stats = statSync(newPath);
+    const mediaInfo = isImage ? { width: sourceAsset.width, height: sourceAsset.height } : await getMediaInfo(newPath);
+
+    const asset = {
+      id: newAssetId,
+      type: sourceAsset.type,
+      filename: newFilename,
+      path: newPath,
+      thumbPath,
+      size: stats.size,
+      createdAt: Date.now(),
+      aiGenerated: true,
+      width: mediaInfo.width || sourceAsset.width,
+      height: mediaInfo.height || sourceAsset.height,
+      duration: sourceAsset.duration,
+    };
+
+    session.assets.set(newAssetId, asset);
+    saveAssetMetadata(session);
+
+    console.log(`[${logId}] Color matched asset saved: ${newAssetId}`);
+
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({
+      asset: {
+        id: newAssetId,
+        type: asset.type,
+        filename: newFilename,
+        thumbnailUrl: `/session/${sessionId}/assets/${newAssetId}/thumbnail`,
+        streamUrl: `/session/${sessionId}/assets/${newAssetId}/stream`,
+        width: asset.width,
+        height: asset.height,
+      },
+    }));
+  } catch (e) {
+    console.error(`[Color Match] Error:`, e.message);
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: e.message }));
+  }
+}
+
+// POST /session/:id/upscale
+async function handleUpscale(req, res, sessionId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+
+  try {
+    const body = await parseBody(req);
+    const { assetId, scale = 2, model = 'realesrgan' } = body;
+
+    if (!assetId) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'assetId is required' }));
+      return;
+    }
+
+    const sourceAsset = session.assets.get(assetId);
+    if (!sourceAsset) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'Asset not found' }));
+      return;
+    }
+
+    const logId = sessionId.substring(0, 8);
+    const jobId = randomUUID().substring(0, 12);
+
+    console.log(`\n[${logId}] === UPSCALE (${scale}x, ${model}) ===`);
+    console.log(`[${logId}] Job: ${jobId}`);
+
+    // Create job entry
+    jobs.set(jobId, { status: 'processing', progress: 10, type: 'upscale' });
+
+    // Return jobId immediately for polling
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ jobId }));
+
+    // Run upscale in background
+    const newAssetId = randomUUID();
+    const ext = sourceAsset.filename.split('.').pop() || 'mp4';
+    const newFilename = `upscaled-${newAssetId.substring(0, 8)}.${ext}`;
+    const newPath = join(session.assetsDir, newFilename);
+
+    const video2xBin = '/Users/davideby/hyperedit-deps/video2x/video2x';
+    const newW = (sourceAsset.width || 1920) * scale;
+    const newH = (sourceAsset.height || 1080) * scale;
+    const cmd = `"${video2xBin}" -i "${sourceAsset.path}" -o "${newPath}" -w ${newW} -h ${newH} --upscaler ${model}`;
+
+    console.log(`[${logId}] Running: ${cmd}`);
+    jobs.set(jobId, { status: 'processing', progress: 30, type: 'upscale' });
+
+    try {
+      execSync(cmd, { encoding: 'utf-8', timeout: 600000 }); // 10 min max
+      jobs.set(jobId, { status: 'processing', progress: 90, type: 'upscale' });
+
+      // Generate thumbnail
+      const thumbPath = join(session.assetsDir, `${newAssetId}_thumb.jpg`);
+      const isImage = sourceAsset.type === 'image';
+      await generateThumbnail(newPath, thumbPath, isImage);
+
+      const stats = statSync(newPath);
+
+      const asset = {
+        id: newAssetId,
+        type: sourceAsset.type,
+        filename: newFilename,
+        path: newPath,
+        thumbPath,
+        size: stats.size,
+        createdAt: Date.now(),
+        aiGenerated: true,
+        width: newW,
+        height: newH,
+        duration: sourceAsset.duration,
+      };
+
+      session.assets.set(newAssetId, asset);
+      saveAssetMetadata(session);
+
+      console.log(`[${logId}] Upscaled asset saved: ${newAssetId}`);
+
+      jobs.set(jobId, {
+        status: 'complete',
+        progress: 100,
+        type: 'upscale',
+        asset: {
+          id: newAssetId,
+          type: asset.type,
+          filename: newFilename,
+          thumbnailUrl: `/session/${sessionId}/assets/${newAssetId}/thumbnail`,
+          streamUrl: `/session/${sessionId}/assets/${newAssetId}/stream`,
+          width: newW,
+          height: newH,
+        },
+      });
+    } catch (e) {
+      console.error(`[${logId}] Upscale failed:`, e.message);
+      jobs.set(jobId, { status: 'failed', progress: 0, type: 'upscale', error: e.message });
+    }
+  } catch (e) {
+    console.error(`[Upscale] Error:`, e.message);
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: e.message }));
+  }
+}
+
+// POST /session/:id/interpolate
+async function handleInterpolate(req, res, sessionId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+
+  try {
+    const body = await parseBody(req);
+    const { assetId, multiplier = 2 } = body;
+
+    if (!assetId) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'assetId is required' }));
+      return;
+    }
+
+    const sourceAsset = session.assets.get(assetId);
+    if (!sourceAsset || sourceAsset.type !== 'video') {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'Video asset not found' }));
+      return;
+    }
+
+    const logId = sessionId.substring(0, 8);
+    const jobId = randomUUID().substring(0, 12);
+
+    console.log(`\n[${logId}] === FRAME INTERPOLATION (${multiplier}x) ===`);
+    console.log(`[${logId}] Job: ${jobId}`);
+
+    jobs.set(jobId, { status: 'processing', progress: 10, type: 'interpolate' });
+
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ jobId }));
+
+    // Run interpolation in background
+    const newAssetId = randomUUID();
+    const newFilename = `interp-${newAssetId.substring(0, 8)}.mp4`;
+    const newPath = join(session.assetsDir, newFilename);
+
+    const baseFps = 30; // Default assumption
+    const targetFps = baseFps * multiplier;
+    const video2xBin = '/Users/davideby/hyperedit-deps/video2x/video2x';
+    const cmd = `"${video2xBin}" -i "${sourceAsset.path}" -o "${newPath}" --interpolator rife --interpolate-fps ${targetFps}`;
+
+    console.log(`[${logId}] Running: ${cmd}`);
+    jobs.set(jobId, { status: 'processing', progress: 30, type: 'interpolate' });
+
+    try {
+      execSync(cmd, { encoding: 'utf-8', timeout: 600000 });
+      jobs.set(jobId, { status: 'processing', progress: 90, type: 'interpolate' });
+
+      const thumbPath = join(session.assetsDir, `${newAssetId}_thumb.jpg`);
+      await generateThumbnail(newPath, thumbPath, false);
+
+      const stats = statSync(newPath);
+      const mediaInfo = await getMediaInfo(newPath);
+
+      const asset = {
+        id: newAssetId,
+        type: 'video',
+        filename: newFilename,
+        path: newPath,
+        thumbPath,
+        size: stats.size,
+        createdAt: Date.now(),
+        aiGenerated: true,
+        width: sourceAsset.width,
+        height: sourceAsset.height,
+        duration: mediaInfo.duration || sourceAsset.duration,
+      };
+
+      session.assets.set(newAssetId, asset);
+      saveAssetMetadata(session);
+
+      console.log(`[${logId}] Interpolated asset saved: ${newAssetId}`);
+
+      jobs.set(jobId, {
+        status: 'complete',
+        progress: 100,
+        type: 'interpolate',
+        asset: {
+          id: newAssetId,
+          type: 'video',
+          filename: newFilename,
+          thumbnailUrl: `/session/${sessionId}/assets/${newAssetId}/thumbnail`,
+          streamUrl: `/session/${sessionId}/assets/${newAssetId}/stream`,
+          width: sourceAsset.width,
+          height: sourceAsset.height,
+          duration: mediaInfo.duration || sourceAsset.duration,
+        },
+      });
+    } catch (e) {
+      console.error(`[${logId}] Interpolation failed:`, e.message);
+      jobs.set(jobId, { status: 'failed', progress: 0, type: 'interpolate', error: e.message });
+    }
+  } catch (e) {
+    console.error(`[Interpolate] Error:`, e.message);
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: e.message }));
+  }
+}
+
+// POST /session/:id/generate-video-local (LTXVideo via ComfyUI)
+async function handleGenerateVideoLocal(req, res, sessionId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+
+  try {
+    const body = await parseBody(req);
+    const { prompt, imageAssetId, videoAssetId, mode = 'text-to-video', duration = 5, cameraMotion } = body;
+
+    if (!prompt) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'prompt is required' }));
+      return;
+    }
+
+    const logId = sessionId.substring(0, 8);
+    console.log(`\n[${logId}] === LOCAL VIDEO GEN (${mode}) ===`);
+    console.log(`[${logId}] Prompt: ${prompt.substring(0, 80)}...`);
+
+    // Build workflow from template
+    let workflow = comfyui.loadWorkflow('image-to-video');
+    const frameCount = Math.round(duration * 30) + 1; // 30fps
+    const outputPrefix = `local-vid-${randomUUID().substring(0, 8)}`;
+
+    // Build positive prompt with camera motion
+    let positivePrompt = prompt;
+    if (cameraMotion && cameraMotion !== 'none') {
+      positivePrompt = `${cameraMotion} camera movement, ${prompt}`;
+    }
+
+    // Substitute template variables
+    const params = {
+      'POSITIVE_PROMPT': positivePrompt,
+      'NEGATIVE_PROMPT': 'blurry, distorted, low quality, artifacts, watermark',
+      'OUTPUT_PREFIX': outputPrefix,
+    };
+
+    // Set image path if image-to-video
+    if (mode === 'image-to-video' && imageAssetId) {
+      const imageAsset = session.assets.get(imageAssetId);
+      if (!imageAsset) {
+        res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        res.end(JSON.stringify({ error: 'Image asset not found' }));
+        return;
+      }
+      params['INPUT_IMAGE_PATH'] = imageAsset.path;
+    }
+
+    workflow = comfyui.substituteParams(workflow, params);
+
+    // Update frame count in workflow
+    if (workflow['6']?.inputs) {
+      workflow['6'].inputs.length = frameCount;
+    }
+
+    // Dispatch — prefer remote GPU for video gen
+    const { promptId, targetUrl } = await comfyui.dispatch(workflow, true);
+    console.log(`[${logId}] ComfyUI prompt dispatched: ${promptId} to ${targetUrl}`);
+
+    const result = await comfyui.waitForResult(promptId, targetUrl);
+    console.log(`[${logId}] ComfyUI result received`);
+
+    if (result.files.length === 0) {
+      throw new Error('No output from ComfyUI');
+    }
+
+    // Download and save output video
+    const outputFile = result.files[0];
+    const outputBuffer = await comfyui.downloadOutput(targetUrl, outputFile.filename, outputFile.subfolder, outputFile.type);
+
+    const newAssetId = randomUUID();
+    const newFilename = `dicaprio-local-${newAssetId.substring(0, 8)}.mp4`;
+    const newPath = join(session.assetsDir, newFilename);
+    writeFileSync(newPath, outputBuffer);
+
+    const thumbPath = join(session.assetsDir, `${newAssetId}_thumb.jpg`);
+    await generateThumbnail(newPath, thumbPath, false);
+
+    const stats = statSync(newPath);
+    const mediaInfo = await getMediaInfo(newPath);
+
+    const asset = {
+      id: newAssetId,
+      type: 'video',
+      filename: newFilename,
+      path: newPath,
+      thumbPath,
+      size: stats.size,
+      createdAt: Date.now(),
+      aiGenerated: true,
+      width: mediaInfo.width || 1280,
+      height: mediaInfo.height || 720,
+      duration: mediaInfo.duration || duration,
+    };
+
+    session.assets.set(newAssetId, asset);
+    saveAssetMetadata(session);
+
+    console.log(`[${logId}] Local video saved: ${newAssetId}`);
+
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({
+      video: {
+        id: newAssetId,
+        filename: newFilename,
+        thumbnailUrl: `/session/${sessionId}/assets/${newAssetId}/thumbnail`,
+        streamUrl: `/session/${sessionId}/assets/${newAssetId}/stream`,
+        duration: asset.duration,
+        width: asset.width,
+        height: asset.height,
+      },
+    }));
+  } catch (e) {
+    console.error(`[Local Video Gen] Error:`, e.message);
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: e.message }));
+  }
+}
+
+// POST /session/:id/film-emulate
+async function handleFilmEmulate(req, res, sessionId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+
+  try {
+    const body = await parseBody(req);
+    const { assetId, filmStock } = body;
+
+    if (!assetId || !filmStock) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'assetId and filmStock are required' }));
+      return;
+    }
+
+    const sourceAsset = session.assets.get(assetId);
+    if (!sourceAsset) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'Asset not found' }));
+      return;
+    }
+
+    const logId = sessionId.substring(0, 8);
+    console.log(`\n[${logId}] === FILM EMULATION (${filmStock}) ===`);
+
+    let workflow = comfyui.loadWorkflow('film-emulation');
+    const outputPrefix = `film-${randomUUID().substring(0, 8)}`;
+
+    workflow = comfyui.substituteParams(workflow, {
+      'INPUT_IMAGE_PATH': sourceAsset.path,
+      'FILM_STOCK': filmStock,
+      'OUTPUT_PREFIX': outputPrefix,
+    });
+
+    const { promptId, targetUrl } = await comfyui.dispatch(workflow);
+    console.log(`[${logId}] ComfyUI prompt dispatched: ${promptId}`);
+
+    const result = await comfyui.waitForResult(promptId, targetUrl);
+
+    if (result.files.length === 0) {
+      throw new Error('No output from ComfyUI');
+    }
+
+    const outputFile = result.files[0];
+    const outputBuffer = await comfyui.downloadOutput(targetUrl, outputFile.filename, outputFile.subfolder, outputFile.type);
+
+    const newAssetId = randomUUID();
+    const ext = sourceAsset.filename.split('.').pop() || 'png';
+    const newFilename = `film-${filmStock}-${newAssetId.substring(0, 8)}.${ext}`;
+    const newPath = join(session.assetsDir, newFilename);
+    writeFileSync(newPath, outputBuffer);
+
+    const thumbPath = join(session.assetsDir, `${newAssetId}_thumb.jpg`);
+    await generateThumbnail(newPath, thumbPath, true);
+
+    const asset = {
+      id: newAssetId,
+      type: sourceAsset.type,
+      filename: newFilename,
+      path: newPath,
+      thumbPath,
+      size: outputBuffer.length,
+      createdAt: Date.now(),
+      aiGenerated: true,
+      width: sourceAsset.width,
+      height: sourceAsset.height,
+      duration: sourceAsset.duration,
+    };
+
+    session.assets.set(newAssetId, asset);
+    saveAssetMetadata(session);
+
+    console.log(`[${logId}] Film emulated asset saved: ${newAssetId}`);
+
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({
+      asset: {
+        id: newAssetId,
+        type: asset.type,
+        filename: newFilename,
+        thumbnailUrl: `/session/${sessionId}/assets/${newAssetId}/thumbnail`,
+        streamUrl: `/session/${sessionId}/assets/${newAssetId}/stream`,
+        width: asset.width,
+        height: asset.height,
+      },
+    }));
+  } catch (e) {
+    console.error(`[Film Emulate] Error:`, e.message);
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: e.message }));
+  }
+}
+
+// ============== BIN CRUD ==============
+
+function loadBins(session) {
+  const binsPath = join(session.dir, 'bins.json');
+  if (!existsSync(binsPath)) return { bins: [] };
+  return JSON.parse(readFileSync(binsPath, 'utf-8'));
+}
+
+function saveBins(session, data) {
+  const binsPath = join(session.dir, 'bins.json');
+  writeFileSync(binsPath, JSON.stringify(data, null, 2));
+}
+
+function handleListBins(req, res, sessionId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+  res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+  res.end(JSON.stringify(loadBins(session)));
+}
+
+async function handleCreateBin(req, res, sessionId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+  try {
+    const body = await parseBody(req);
+    const { name, parentId = null, icon = '🎬' } = body;
+    if (!name) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'name is required' }));
+      return;
+    }
+    const data = loadBins(session);
+    const bin = { id: randomUUID(), name, icon, parentId, assetIds: [], children: [] };
+    data.bins.push(bin);
+    saveBins(session, data);
+    res.writeHead(201, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify(bin));
+  } catch (e) {
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: e.message }));
+  }
+}
+
+async function handleRenameBin(req, res, sessionId, binId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+  try {
+    const body = await parseBody(req);
+    const { name } = body;
+    if (!name) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'name is required' }));
+      return;
+    }
+    const data = loadBins(session);
+    const bin = data.bins.find(b => b.id === binId);
+    if (!bin) {
+      res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'Bin not found' }));
+      return;
+    }
+    bin.name = name;
+    saveBins(session, data);
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify(bin));
+  } catch (e) {
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: e.message }));
+  }
+}
+
+function handleDeleteBin(req, res, sessionId, binId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+  const data = loadBins(session);
+  const idx = data.bins.findIndex(b => b.id === binId);
+  if (idx === -1) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Bin not found' }));
+    return;
+  }
+  data.bins.splice(idx, 1);
+  saveBins(session, data);
+  res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+  res.end(JSON.stringify({ success: true }));
+}
+
+async function handleAddAssetToBin(req, res, sessionId, binId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+  try {
+    const body = await parseBody(req);
+    const { assetId } = body;
+    if (!assetId) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'assetId is required' }));
+      return;
+    }
+    const data = loadBins(session);
+    const bin = data.bins.find(b => b.id === binId);
+    if (!bin) {
+      res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'Bin not found' }));
+      return;
+    }
+    if (!bin.assetIds.includes(assetId)) bin.assetIds.push(assetId);
+    saveBins(session, data);
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify(bin));
+  } catch (e) {
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: e.message }));
+  }
+}
+
+function handleRemoveAssetFromBin(req, res, sessionId, binId, assetId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+  const data = loadBins(session);
+  const bin = data.bins.find(b => b.id === binId);
+  if (!bin) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Bin not found' }));
+    return;
+  }
+  bin.assetIds = bin.assetIds.filter(id => id !== assetId);
+  saveBins(session, data);
+  res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+  res.end(JSON.stringify(bin));
+}
+
+// ============== RAG QUERY ==============
+
+async function handleRAGQuery(req, res) {
+  try {
+    const body = await parseBody(req);
+    const { query, topK = 8 } = body;
+    if (!query) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'query is required' }));
+      return;
+    }
+    const scriptPath = join(process.cwd(), 'rag-local', 'scripts', 'query_lmstudio_rag.py');
+    await new Promise((resolve, reject) => {
+      const proc = spawn('python3', [scriptPath, query, '--top-k', String(topK), '--json']);
+      let stdout = '';
+      let stderr = '';
+      proc.stdout.on('data', d => { stdout += d; });
+      proc.stderr.on('data', d => { stderr += d; });
+      proc.on('close', code => {
+        if (code !== 0) {
+          reject(new Error(stderr.trim() || `RAG process exited with code ${code}`));
+          return;
+        }
+        try {
+          const result = JSON.parse(stdout.trim());
+          res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+          res.end(JSON.stringify(result));
+          resolve();
+        } catch (e) {
+          reject(new Error(`Failed to parse RAG output: ${e.message}\nOutput: ${stdout.slice(0, 200)}`));
+        }
+      });
+    });
+  } catch (e) {
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: e.message }));
+  }
+}
+
 // ============== SERVER ==============
 
 const server = http.createServer(async (req, res) => {
@@ -7843,6 +8772,34 @@ const server = http.createServer(async (req, res) => {
     else if (req.method === 'POST' && action === 'remove-video-bg') {
       await handleRemoveVideoBg(req, res, sessionId);
     }
+    // Color / Enhance / Local Video endpoints
+    else if (req.method === 'POST' && action === 'color-correct') {
+      await handleColorCorrect(req, res, sessionId);
+    }
+    else if (req.method === 'POST' && action === 'color-match') {
+      await handleColorMatch(req, res, sessionId);
+    }
+    else if (req.method === 'POST' && action === 'upscale') {
+      await handleUpscale(req, res, sessionId);
+    }
+    else if (req.method === 'POST' && action === 'interpolate') {
+      await handleInterpolate(req, res, sessionId);
+    }
+    else if (req.method === 'POST' && action === 'generate-video-local') {
+      await handleGenerateVideoLocal(req, res, sessionId);
+    }
+    else if (req.method === 'POST' && action === 'film-emulate') {
+      await handleFilmEmulate(req, res, sessionId);
+    }
+    else if (action.startsWith('jobs/')) {
+      const jobId = action.substring(5); // Remove 'jobs/'
+      if (req.method === 'GET') {
+        handleJobStatus(req, res, sessionId, jobId);
+      } else {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Job endpoint not found' }));
+      }
+    }
     // GIPHY search endpoints
     else if (req.method === 'GET' && action === 'giphy/search') {
       await handleGiphySearch(req, res, sessionId, url);
@@ -7862,6 +8819,31 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ error: 'Render endpoint not found' }));
       }
     }
+    // Bin CRUD endpoints
+    else if (req.method === 'GET' && action === 'bins') {
+      handleListBins(req, res, sessionId);
+    } else if (req.method === 'POST' && action === 'bins') {
+      await handleCreateBin(req, res, sessionId);
+    } else if (action.startsWith('bins/')) {
+      const binPath = action.substring(5); // Remove 'bins/'
+      const parts = binPath.split('/');
+      const binId = parts[0];
+      const subAction = parts[1];
+      const subId = parts[2];
+
+      if (req.method === 'PUT' && !subAction) {
+        await handleRenameBin(req, res, sessionId, binId);
+      } else if (req.method === 'DELETE' && !subAction) {
+        handleDeleteBin(req, res, sessionId, binId);
+      } else if (req.method === 'POST' && subAction === 'assets') {
+        await handleAddAssetToBin(req, res, sessionId, binId);
+      } else if (req.method === 'DELETE' && subAction === 'assets' && subId) {
+        handleRemoveAssetFromBin(req, res, sessionId, binId, subId);
+      } else {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Bin endpoint not found' }));
+      }
+    }
     else {
       res.writeHead(404, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Session endpoint not found' }));
@@ -7879,9 +8861,13 @@ const server = http.createServer(async (req, res) => {
   } else if (req.method === 'GET' && path === '/session-continuity') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(getSessionContinuity()));
+  } else if (req.method === 'GET' && path === '/comfyui/status') {
+    await handleComfyUIStatus(req, res);
   } else if (req.method === 'GET' && path === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ status: 'ok', ffmpeg: 'native', sessions: sessions.size }));
+  } else if (req.method === 'POST' && path === '/rag/query') {
+    await handleRAGQuery(req, res);
   } else {
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Not found' }));
