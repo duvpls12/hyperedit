@@ -56,6 +56,38 @@ No parallelism. No model overlap. No schema drift.
 
 ---
 
+## GPU Infrastructure
+
+### Vast.ai RTX PRO 6000 Blackwell (96GB VRAM)
+- **SSH:** `ssh -p 29449 root@154.59.156.10 -L 8080:localhost:8080`
+- **SSH Key:** `~/.ssh/id_ed25519` (passphrase-protected, must be loaded via `ssh-add`)
+- **Ollama:** Runs on remote port 11434, tunneled to `localhost:8080`
+- **Vision model:** `qwen2.5vl:7b` (Q4_K_M, 6GB, ~0.4s/frame warm)
+- **Pipeline script:** `node scripts/run-pipeline-local.js <project-path>`
+
+### Setup Sequence
+```bash
+# 1. Load SSH key (passphrase required)
+ssh-add ~/.ssh/id_ed25519
+
+# 2. Start SSH tunnel
+ssh -p 29449 root@154.59.156.10 -N -f -L 8080:localhost:8080
+
+# 3. Verify Ollama
+curl http://localhost:8080/api/tags
+
+# 4. Run pipeline
+node scripts/run-pipeline-local.js /Volumes/Charlie/hyperedit-studio/projects/<project_id>
+```
+
+### Model Loading on Fresh Instance
+```bash
+ssh -p 29449 root@154.59.156.10 "nohup ollama serve > /tmp/ollama.log 2>&1 &"
+ssh -p 29449 root@154.59.156.10 "ollama pull qwen2.5vl:7b"
+```
+
+---
+
 ## Runtime Execution Sequence
 
 ### 0) Preflight + Model Resolution
@@ -68,6 +100,8 @@ No parallelism. No model overlap. No schema drift.
      - Default: `qwen/qwen3-vl-8b`
    - `VISION_MODEL_4B`
      - Default: `qwen/qwen2.5-vl-4b-instruct`
+   - **Vast.ai Ollama (preferred for batch):**
+     - `qwen2.5vl:7b` via `localhost:8080` (SSH tunnel to Vast.ai)
 4. On failure:
    - Unload.
    - Demote.

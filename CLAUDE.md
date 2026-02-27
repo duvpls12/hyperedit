@@ -474,6 +474,26 @@ Full taxonomy documented in `docs/shot-classification-taxonomy.md`.
 
 ---
 
+## Vast.ai GPU Instance (Vision Pipeline)
+
+RTX PRO 6000 Blackwell, 96GB VRAM. Runs Ollama with `qwen2.5vl:7b` for shot classification.
+
+```bash
+# Connect + tunnel
+ssh-add ~/.ssh/id_ed25519
+ssh -p 29449 root@154.59.156.10 -N -f -L 8080:localhost:8080
+
+# Verify
+curl http://localhost:8080/api/tags
+
+# Run auto-sort pipeline
+node scripts/run-pipeline-local.js /Volumes/Charlie/hyperedit-studio/projects/<project_id>
+```
+
+Fresh instance setup: `ollama serve &` then `ollama pull qwen2.5vl:7b`. See `skills/hyperedit-two-pass-vision-audio/SKILL.md` for full GPU infra docs.
+
+---
+
 ## Pipeline Verification
 
 Full end-to-end verification checklist: `docs/hyperedit-pipeline-verification.md`
