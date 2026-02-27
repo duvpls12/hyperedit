@@ -24,6 +24,25 @@ interface PicassoPanelProps {
   onRefreshAssets?: () => void;
 }
 
+// RAG query helper — enriches Picasso prompts with visual reference context.
+// Fails silently if the RAG server is unavailable.
+async function queryRAG(query: string, topK = 5): Promise<string> {
+  try {
+    const res = await fetch('http://localhost:3333/rag/query', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, topK }),
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!res.ok) return '';
+    const data = await res.json();
+    const items: Array<{ text: string }> = data.chunks || data.results || [];
+    return items.map(r => r.text).join('\n\n');
+  } catch {
+    return ''; // RAG is optional
+  }
+}
+
 const QUICK_ACTIONS = [
   { icon: Image, text: 'Generate a landscape background' },
   { icon: Square, text: 'Create a square thumbnail' },
@@ -87,11 +106,17 @@ export default function PicassoPanel({
     setIsGenerating(true);
 
     try {
+      // Enrich prompt with visual reference context from RAG
+      const ragContext = await queryRAG(imagePrompt);
+      const enrichedPrompt = ragContext
+        ? `${imagePrompt}. Visual references: ${ragContext}`
+        : imagePrompt;
+
       const response = await fetch(`http://localhost:3333/session/${sessionId}/generate-image`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: imagePrompt,
+          prompt: enrichedPrompt,
           aspectRatio: ratio,
           resolution: '1K',
           numImages: 1,

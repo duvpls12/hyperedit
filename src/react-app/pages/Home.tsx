@@ -1,19 +1,21 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import VideoPreview, { VideoPreviewHandle } from '@/react-app/components/VideoPreview';
 import Timeline from '@/react-app/components/Timeline';
-import AssetLibrary from '@/react-app/components/AssetLibrary';
+import AssetBinBrowser, { type Bin } from '@/react-app/components/AssetBinBrowser';
 import ClipPropertiesPanel from '@/react-app/components/ClipPropertiesPanel';
 import CaptionPropertiesPanel from '@/react-app/components/CaptionPropertiesPanel';
 import AIPromptPanel from '@/react-app/components/AIPromptPanel';
 import PicassoPanel from '@/react-app/components/PicassoPanel';
 import DiCaprioPanel from '@/react-app/components/DiCaprioPanel';
+import ColorGraderPanel from '@/react-app/components/ColorGraderPanel';
+import EnhancePanel from '@/react-app/components/EnhancePanel';
 import GifSearchPanel from '@/react-app/components/GifSearchPanel';
 import ResizablePanel from '@/react-app/components/ResizablePanel';
 import ResizableVerticalPanel from '@/react-app/components/ResizableVerticalPanel';
 import TimelineTabs from '@/react-app/components/TimelineTabs';
 import { useProject, Asset, TimelineClip, CaptionStyle } from '@/react-app/hooks/useProject';
 import { useVideoSession } from '@/react-app/hooks/useVideoSession';
-import { Sparkles, ListOrdered, Copy, Check, X, Download, Play, Palette, Film } from 'lucide-react';
+import { Sparkles, ListOrdered, Copy, Check, X, Download, Play, Palette, Film, Droplets } from 'lucide-react';
 import type { TemplateId } from '@/remotion/templates';
 
 interface ChapterData {
@@ -33,8 +35,16 @@ export default function Home() {
   const [previewAssetId, setPreviewAssetId] = useState<string | null>(null);
   const [aspectRatio, setAspectRatio] = useState<'16:9' | '9:16'>('16:9');
   const [autoSnap, setAutoSnap] = useState(true); // Ripple delete mode - shift clips when deleting
-  const [activeAgent, setActiveAgent] = useState<'director' | 'picasso' | 'dicaprio'>('director');
+  const [activeAgent, setActiveAgent] = useState<'director' | 'picasso' | 'dicaprio' | 'color' | 'enhance'>('director');
   const [showGifSearch, setShowGifSearch] = useState(false);
+  const [bins, setBins] = useState<Bin[]>([
+    { id: 'bin-wide', name: 'Wide', icon: 'camera', assets: [] },
+    { id: 'bin-tight', name: 'Tight', icon: 'camera', assets: [] },
+    { id: 'bin-detail', name: 'Detail', icon: 'camera', assets: [] },
+    { id: 'bin-drone', name: 'Drone', icon: 'drone', assets: [] },
+    { id: 'bin-agent', name: 'Agent on Camera', icon: 'user', assets: [] },
+    { id: 'bin-photos', name: 'Photos', icon: 'image', assets: [] },
+  ]);
 
   const videoPreviewRef = useRef<VideoPreviewHandle>(null);
   const playbackRef = useRef<number | null>(null);
@@ -107,6 +117,23 @@ export default function Home() {
       loadProject();
     }
   }, [session, loadProject]);
+
+  // Fetch bins from server when session is available (NERVE builds these endpoints)
+  useEffect(() => {
+    if (!session?.sessionId) return;
+    const fetchBins = async () => {
+      try {
+        const res = await fetch(`http://localhost:3333/session/${session.sessionId}/bins`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.bins && Array.isArray(data.bins)) setBins(data.bins);
+        }
+      } catch {
+        // Server endpoint not ready yet — keep default classification bins
+      }
+    };
+    fetchBins();
+  }, [session]);
 
   // Get all clips at the current playhead position as layers
   const getPreviewLayers = useCallback(() => {
@@ -326,6 +353,86 @@ export default function Home() {
     // Clear timeline clip selection
     setSelectedClipId(null);
   }, []);
+
+  // Handle creating a new bin
+  const handleBinCreate = useCallback(async (name: string, parentId?: string) => {
+    if (!session?.sessionId) {
+      // No session yet — add locally with a temp ID
+      setBins(prev => [...prev, { id: `bin-${Date.now()}`, name, icon: 'folder', assets: [] }]);
+      return;
+    }
+    try {
+      await fetch(`http://localhost:3333/session/${session.sessionId}/bins`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, parentId }),
+      });
+      const res = await fetch(`http://localhost:3333/session/${session.sessionId}/bins`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.bins) setBins(data.bins);
+      }
+    } catch {
+      setBins(prev => [...prev, { id: `bin-${Date.now()}`, name, icon: 'folder', assets: [] }]);
+    }
+  }, [session]);
+
+  // Handle moving an asset into a bin
+  const handleAssetMoveToBin = useCallback(async (assetId: string, binId: string) => {
+    if (!session?.sessionId) return;
+    try {
+      await fetch(`http://localhost:3333/session/${session.sessionId}/bins/${binId}/assets`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assetId }),
+      });
+      const res = await fetch(`http://localhost:3333/session/${session.sessionId}/bins`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.bins) setBins(data.bins);
+      }
+    } catch {
+      // Optimistic local update
+      const asset = assets.find(a => a.id === assetId);
+      if (!asset) return;
+      setBins(prev => prev.map(bin =>
+        bin.id === binId
+          ? { ...bin, assets: bin.assets.some(a => a.id === assetId) ? bin.assets : [...bin.assets, asset] }
+          : bin
+      ));
+    }
+  }, [session, assets]);
+
+  // Handle deleting a bin
+  const handleBinDelete = useCallback(async (binId: string) => {
+    if (!session?.sessionId) {
+      setBins(prev => prev.filter(b => b.id !== binId));
+      return;
+    }
+    try {
+      await fetch(`http://localhost:3333/session/${session.sessionId}/bins/${binId}`, {
+        method: 'DELETE',
+      });
+    } catch {
+      // ignore
+    }
+    setBins(prev => prev.filter(b => b.id !== binId));
+  }, [session]);
+
+  // Handle renaming a bin
+  const handleBinRename = useCallback(async (binId: string, name: string) => {
+    setBins(prev => prev.map(b => b.id === binId ? { ...b, name } : b));
+    if (!session?.sessionId) return;
+    try {
+      await fetch(`http://localhost:3333/session/${session.sessionId}/bins/${binId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+      });
+    } catch {
+      // ignore — local update already applied
+    }
+  }, [session]);
 
   // Handle dropping asset onto timeline
   const handleDropAsset = useCallback((asset: Asset, trackId: string, time: number) => {
@@ -1780,13 +1887,19 @@ export default function Home() {
           <div className="flex flex-col h-full">
             {/* Asset Library */}
             <div className={`${selectedClipId ? 'h-1/2' : 'h-full'} overflow-hidden`}>
-              <AssetLibrary
+              <AssetBinBrowser
+                sessionId={session?.sessionId ?? null}
+                bins={bins}
                 assets={assets}
+                selectedAssetId={selectedAssetId}
+                onAssetSelect={handleAssetSelect}
+                onBinCreate={handleBinCreate}
+                onAssetMoveToBin={handleAssetMoveToBin}
+                onBinDelete={handleBinDelete}
+                onBinRename={handleBinRename}
                 onUpload={handleAssetUpload}
                 onDelete={deleteAsset}
                 onDragStart={handleAssetDragStart}
-                onSelect={handleAssetSelect}
-                selectedAssetId={selectedAssetId}
                 uploading={loading}
                 onOpenGifSearch={() => setShowGifSearch(true)}
               />
@@ -1924,6 +2037,28 @@ export default function Home() {
                 <Film className="w-3.5 h-3.5" />
                 DiCaprio
               </button>
+              <button
+                onClick={() => setActiveAgent('color')}
+                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors ${
+                  activeAgent === 'color'
+                    ? 'text-teal-400 border-b-2 border-teal-400 bg-zinc-800/30'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/20'
+                }`}
+              >
+                <Droplets className="w-3.5 h-3.5" />
+                Color
+              </button>
+              <button
+                onClick={() => setActiveAgent('enhance')}
+                className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors ${
+                  activeAgent === 'enhance'
+                    ? 'text-violet-400 border-b-2 border-violet-400 bg-zinc-800/30'
+                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/20'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                Enhance
+              </button>
             </div>
 
             {/* AI Chat Panels - both mounted to preserve state, hidden via CSS */}
@@ -1976,6 +2111,30 @@ export default function Home() {
                   assets={assets}
                   onVideoGenerated={(assetId) => {
                     console.log('Video generated:', assetId);
+                  }}
+                  onRefreshAssets={refreshAssets}
+                />
+              </div>
+              <div className={`absolute inset-0 ${activeAgent === 'color' ? '' : 'hidden'}`}>
+                <ColorGraderPanel
+                  sessionId={session?.sessionId ?? null}
+                  assets={assets}
+                  selectedAssetId={selectedAssetId}
+                  onColorCorrected={(id) => {
+                    refreshAssets();
+                    console.log('Color corrected:', id);
+                  }}
+                  onRefreshAssets={refreshAssets}
+                />
+              </div>
+              <div className={`absolute inset-0 ${activeAgent === 'enhance' ? '' : 'hidden'}`}>
+                <EnhancePanel
+                  sessionId={session?.sessionId ?? null}
+                  assets={assets}
+                  selectedAssetId={selectedAssetId}
+                  onEnhanced={(id) => {
+                    refreshAssets();
+                    console.log('Enhanced:', id);
                   }}
                   onRefreshAssets={refreshAssets}
                 />

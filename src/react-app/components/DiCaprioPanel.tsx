@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Film, Send, Loader2, Video, X, Zap, Plus, Play, Wand2, Eraser, Image as ImageIcon } from 'lucide-react';
+import { Film, Send, Loader2, Video, X, Zap, Plus, Play, Wand2, Eraser, Image as ImageIcon, Cpu, Cloud } from 'lucide-react';
 
-type DiCaprioSkill = 'animate' | 'restyle' | 'remove-bg';
+type DiCaprioSkill = 'animate' | 'restyle' | 'remove-bg' | 'generate-local';
 
 interface AttachedAsset {
   id: string;
@@ -47,6 +47,34 @@ const SKILLS = [
   { id: 'animate' as DiCaprioSkill, label: 'Animate', icon: Play, description: 'Image → Video', requiresType: 'image' },
   { id: 'restyle' as DiCaprioSkill, label: 'Restyle', icon: Wand2, description: 'Transform style', requiresType: 'video' },
   { id: 'remove-bg' as DiCaprioSkill, label: 'Remove BG', icon: Eraser, description: 'Remove background', requiresType: 'video' },
+  { id: 'generate-local' as DiCaprioSkill, label: 'Local Gen', icon: Cpu, description: 'Local GPU gen', requiresType: 'image' },
+];
+
+// RAG query helper — enriches DiCaprio prompts with motion pattern context.
+// Fails silently if the RAG server is unavailable.
+async function queryRAG(query: string, topK = 5): Promise<string> {
+  try {
+    const res = await fetch('http://localhost:3333/rag/query', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, topK }),
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!res.ok) return '';
+    const data = await res.json();
+    const items: Array<{ text: string }> = data.chunks || data.results || [];
+    return items.map(r => r.text).join('\n\n');
+  } catch {
+    return ''; // RAG is optional
+  }
+}
+
+const CAMERA_MOTIONS = [
+  { id: 'none', label: 'None' },
+  { id: 'dolly', label: 'Dolly' },
+  { id: 'jib', label: 'Jib' },
+  { id: 'pan', label: 'Pan' },
+  { id: 'orbit', label: 'Orbit' },
 ];
 
 const QUICK_ACTIONS = [
@@ -70,10 +98,29 @@ export default function DiCaprioPanel({
   const [showAssetPicker, setShowAssetPicker] = useState(false);
   const [attachedAsset, setAttachedAsset] = useState<AttachedAsset | null>(null);
   const [activeSkill, setActiveSkill] = useState<DiCaprioSkill | null>(null);
+  const [useLocalMode, setUseLocalMode] = useState(false);
+  const [comfyuiAvailable, setComfyuiAvailable] = useState(false);
+  const [cameraMotion, setCameraMotion] = useState('none');
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const quickActionsRef = useRef<HTMLDivElement>(null);
   const assetPickerRef = useRef<HTMLDivElement>(null);
+
+  // Poll ComfyUI status
+  useEffect(() => {
+    const checkComfyUI = async () => {
+      try {
+        const res = await fetch('http://localhost:3333/comfyui/status');
+        const data = await res.json();
+        setComfyuiAvailable(data.local?.available || data.remote?.available || false);
+      } catch {
+        setComfyuiAvailable(false);
+      }
+    };
+    checkComfyUI();
+    const interval = setInterval(checkComfyUI, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Get available assets by type
   const imageAssets = assets.filter(a => a.type === 'image');
@@ -169,11 +216,17 @@ export default function DiCaprioPanel({
     setIsGenerating(true);
 
     try {
+      // Enrich prompt with motion pattern context from RAG
+      const ragContext = await queryRAG(videoPrompt);
+      const enrichedPrompt = ragContext
+        ? `${videoPrompt}. Motion patterns: ${ragContext}`
+        : videoPrompt;
+
       const response = await fetch(`http://localhost:3333/session/${sessionId}/generate-video`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: videoPrompt,
+          prompt: enrichedPrompt,
           imageAssetId: imageId,
           duration: parseInt(duration),
         }),
@@ -207,11 +260,17 @@ export default function DiCaprioPanel({
     setIsGenerating(true);
 
     try {
+      // Enrich style prompt with visual reference context from RAG
+      const ragContext = await queryRAG(stylePrompt);
+      const enrichedPrompt = ragContext
+        ? `${stylePrompt}. Style references: ${ragContext}`
+        : stylePrompt;
+
       const response = await fetch(`http://localhost:3333/session/${sessionId}/restyle-video`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: stylePrompt,
+          prompt: enrichedPrompt,
           videoAssetId: videoId,
         }),
       });
@@ -275,6 +334,46 @@ export default function DiCaprioPanel({
     }
   };
 
+  // Generate video locally via ComfyUI + LTXVideo
+  const generateLocalVideo = async (videoPrompt: string, imageId: string) => {
+    setIsGenerating(true);
+
+    try {
+      const response = await fetch(`http://localhost:3333/session/${sessionId}/generate-video-local`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: videoPrompt,
+          imageAssetId: imageId,
+          mode: 'image-to-video',
+          duration: parseInt(duration),
+          cameraMotion: cameraMotion !== 'none' ? cameraMotion : null,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Failed to generate video locally');
+
+      setMessages(prev => [...prev, {
+        type: 'assistant',
+        text: `Your locally generated video is ready!`,
+        video: data.video,
+      }]);
+
+      onRefreshAssets?.();
+      if (data.video?.id) onVideoGenerated?.(data.video.id);
+    } catch (error) {
+      setMessages(prev => [...prev, {
+        type: 'assistant',
+        text: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      }]);
+    } finally {
+      setIsGenerating(false);
+      clearAttachment();
+    }
+  };
+
   // Handle asset selection from picker in message
   const handleAssetSelectFromMessage = (assetId: string, skill: DiCaprioSkill, prompt?: string) => {
     const asset = assets.find(a => a.id === assetId);
@@ -286,8 +385,14 @@ export default function DiCaprioPanel({
         : m
     ));
 
-    if (skill === 'animate') {
-      generateFromImage(prompt || 'cinematic camera movement', assetId);
+    if (skill === 'generate-local') {
+      generateLocalVideo(prompt || 'cinematic camera movement', assetId);
+    } else if (skill === 'animate') {
+      if (useLocalMode) {
+        generateLocalVideo(prompt || 'cinematic camera movement', assetId);
+      } else {
+        generateFromImage(prompt || 'cinematic camera movement', assetId);
+      }
     } else if (skill === 'restyle') {
       restyleVideo(prompt || 'cinematic film style', assetId);
     } else if (skill === 'remove-bg') {
@@ -306,7 +411,11 @@ export default function DiCaprioPanel({
     // If we have an attached asset, execute the appropriate action
     if (attachedAsset) {
       if (attachedAsset.type === 'image') {
-        await generateFromImage(userMessage, attachedAsset.id);
+        if (useLocalMode || activeSkill === 'generate-local') {
+          await generateLocalVideo(userMessage, attachedAsset.id);
+        } else {
+          await generateFromImage(userMessage, attachedAsset.id);
+        }
       } else if (attachedAsset.type === 'video') {
         const detectedSkill = detectSkill(userMessage);
         if (detectedSkill === 'remove-bg') {
@@ -410,6 +519,26 @@ export default function DiCaprioPanel({
         <p className="text-xs text-zinc-400">
           Transform images and videos with AI
         </p>
+        {/* Local/Cloud toggle + ComfyUI status */}
+        <div className="flex items-center gap-2 mt-2">
+          <button
+            onClick={() => setUseLocalMode(!useLocalMode)}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+              useLocalMode
+                ? 'bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/40'
+                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
+            }`}
+          >
+            {useLocalMode ? <Cpu className="w-3 h-3" /> : <Cloud className="w-3 h-3" />}
+            {useLocalMode ? 'Local' : 'Cloud'}
+          </button>
+          <div className="flex items-center gap-1">
+            <div className={`w-1.5 h-1.5 rounded-full ${comfyuiAvailable ? 'bg-emerald-400' : 'bg-red-400'}`} />
+            <span className="text-[10px] text-zinc-500">
+              ComfyUI {comfyuiAvailable ? 'connected' : 'offline'}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Processing overlay */}
@@ -570,6 +699,29 @@ export default function DiCaprioPanel({
             );
           })}
         </div>
+
+        {/* Camera Motion Dropdown (local mode only) */}
+        {useLocalMode && (activeSkill === 'animate' || activeSkill === 'generate-local') && (
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-[10px] text-zinc-500">Camera:</span>
+            <div className="flex gap-1 flex-1">
+              {CAMERA_MOTIONS.map(motion => (
+                <button
+                  key={motion.id}
+                  type="button"
+                  onClick={() => setCameraMotion(motion.id)}
+                  className={`flex-1 px-1.5 py-1 rounded text-[10px] font-medium transition-colors ${
+                    cameraMotion === motion.id
+                      ? 'bg-emerald-500/20 text-emerald-300'
+                      : 'bg-zinc-800 text-zinc-500 hover:text-zinc-300'
+                  }`}
+                >
+                  {motion.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Quick Actions Popover */}
         <div className="relative mb-3" ref={quickActionsRef}>

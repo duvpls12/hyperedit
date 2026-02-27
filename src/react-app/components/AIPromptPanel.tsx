@@ -163,6 +163,25 @@ interface EditTabV1Context {
   aiGenerated?: boolean; // True if this is a Remotion-generated animation
 }
 
+// RAG query helper — enriches agent prompts with project knowledge base context.
+// Fails silently if the RAG server is unavailable.
+async function queryRAG(query: string, topK = 5): Promise<string> {
+  try {
+    const res = await fetch('http://localhost:3333/rag/query', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, topK }),
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!res.ok) return '';
+    const data = await res.json();
+    const items: Array<{ text: string }> = data.chunks || data.results || [];
+    return items.map(r => r.text).join('\n\n');
+  } catch {
+    return ''; // RAG is optional — never break agents if unavailable
+  }
+}
+
 interface AIPromptPanelProps {
   onApplyEdit?: (command: string) => Promise<void>;
   onExtractKeywordsAndAddGifs?: () => Promise<void>;
@@ -2208,11 +2227,17 @@ export default function AIPromptPanel({
     setProcessingStatus('Starting AI...');
 
     try {
-      // Start the job - use fullMessage which includes reference context
+      // Enrich prompt with RAG context from the project knowledge base
+      const ragContext = await queryRAG(userMessage);
+      const promptWithContext = ragContext
+        ? `[Relevant project context:\n${ragContext}]\n\n${fullMessage}`
+        : fullMessage;
+
+      // Start the job - use promptWithContext which includes reference + RAG context
       const startResponse = await fetch('/api/ai-edit/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: fullMessage }),
+        body: JSON.stringify({ prompt: promptWithContext }),
       });
 
       if (!startResponse.ok) {
