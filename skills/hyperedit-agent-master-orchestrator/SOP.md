@@ -16,7 +16,7 @@ Deliver a complete, publish ready real estate video by coordinating six speciali
 
 1. Create project skeleton in `state/agents/<project_id>/`.
 2. Write `00_project_brief.json` with format target (`reel`, `mls`, `signature`).
-3. Define quality gates in `02_quality_gates.json`.
+3. Define quality gates and write `01_orchestration_plan.json` with per-stage gate definitions and dependency order.
 4. Dispatch Footage Intake and Sorting.
 5. If gaps exist, dispatch Image to Video Generation for only blocking gaps.
 6. Dispatch Audio and Sound Design — must complete BEFORE assembly; audio creates the beat grid and radio edit that assembly uses to time all cuts.
@@ -44,6 +44,7 @@ Deliver a complete, publish ready real estate video by coordinating six speciali
 
 ## Outputs
 
-- `01_orchestration_plan.json`
-- `70_final_qc_report.json`
-- `71_publish_checklist.md`
+- `01_orchestration_plan.json` — per-stage gate definitions and dispatch order
+- `70_final_qc_report.json` — cross-stage validation results
+- `71_grade_card.json` — letter grade (A/B/C/D) with deficiency callouts
+- `72_publish_checklist.md` — final delivery state and publish decision
