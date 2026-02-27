@@ -342,3 +342,141 @@ node scripts/validate-artifact.js <artifact_path> [schema_name]
 - Do NOT push.
 - Local commits only unless explicitly instructed otherwise.
 
+---
+
+## MCP Server (HyperEdit Tools)
+
+The HyperEdit MCP server exposes Claude Desktop tools for the auto-sort pipeline. It is a separate Node.js process communicating over stdio.
+
+**Location:** `mcp/server.js` (repo root)
+
+**Start:**
+```bash
+node mcp/server.js
+# Prints: "HyperEdit MCP server listening on stdio"
+```
+
+**Registration:** Add to Claude Desktop MCP config (Claude Desktop → Settings → MCP Servers):
+```json
+{
+  "hyperedit": {
+    "command": "node",
+    "args": ["/Users/davideby/hyperedit/mcp/server.js"]
+  }
+}
+```
+
+**Cowork scheduled task:** `coworkScheduledTasksEnabled: true` is confirmed in Claude Desktop config. See `docs/cowork-auto-sort-task.md` for the exact prompt to register via `/schedule`.
+
+**Available tools:**
+
+| Tool | Purpose |
+|------|---------|
+| `get_project_brief` | Read and validate `brief.json` against schema |
+| `list_project_footage` | Enumerate files in `footage/` |
+| `extract_frame` | Extract middle frame from video → JPEG |
+| `get_file_metadata` | EXIF + container metadata → camera model, color profile |
+| `classify_shot` | Visual analysis → primary + sub-classification tags |
+| `detect_color_profile` | Identify log/LUT profile (D-Log M, S-Log3, etc.) |
+| `sort_to_bin` | Create symlink in `bins/{primary_tag}/` |
+| `list_available_luts` | Return LUT catalog filtered by camera + profile |
+| `apply_lut` | Apply LUT via FFmpeg → write to `graded/` |
+| `notify` | Send macOS notification with processing summary |
+
+---
+
+## Charlie Drive Folder Structure
+
+Charlie drive is mounted at `/Volumes/Charlie/`. The HyperEdit project root is `/Volumes/Charlie/hyperedit-studio/`.
+
+```
+/Volumes/Charlie/hyperedit-studio/
+├── projects/
+│   └── {project_id}/
+│       ├── brief.json          ← pipeline entry point (triggers Cowork task)
+│       ├── run-ledger.json     ← written after auto-sort; marks project as processed
+│       ├── footage/            ← raw clips and stills (read-only)
+│       ├── bins/
+│       │   ├── wide/           ← symlinks to wide shots
+│       │   ├── tight/          ← symlinks to tight shots
+│       │   ├── detail/         ← symlinks to detail shots
+│       │   ├── drone/          ← symlinks to drone shots
+│       │   ├── agent-on-camera/ ← symlinks to agent shots
+│       │   └── photos/         ← symlinks to all stills
+│       └── graded/             ← LUT-applied output files
+└── luts/
+    └── *.cube                  ← LUT library (camera + profile matched)
+```
+
+**Test project:** `/Volumes/Charlie/hyperedit-studio/projects/20260227_Test_Pipeline/` — ready for pipeline verification (brief.json + empty footage/, bins/, graded/).
+
+---
+
+## Auto-Sort Pipeline Overview
+
+The Cowork scheduled task (every 30 min) drives the intake + classify + grade flow:
+
+```
+Cowork polls projects/ every 30 min
+  → Finds folder with brief.json but no run-ledger.json
+  → get_project_brief → list_project_footage
+  → For each video:  extract_frame → get_file_metadata → classify_shot → detect_color_profile → sort_to_bin → list_available_luts → apply_lut
+  → For each still:  get_file_metadata → classify_shot → sort_to_bin (primary bin + photos/)
+  → Initialize run-ledger.json
+  → notify (summary)
+```
+
+After auto-sort completes, the project is ready for the full orchestrator pipeline (`/hyperedit-orchestrator`). The run-ledger gates the orchestrator — it will read `current_stage` and continue from where auto-sort left off.
+
+**Full prompt and schedule config:** `docs/cowork-auto-sort-task.md`
+
+---
+
+## RAG Query Endpoint
+
+The local FFmpeg server exposes a RAG endpoint for agent context retrieval:
+
+```
+POST http://localhost:3333/rag/query
+Content-Type: application/json
+
+{
+  "query": "how to grade DJI Mavic 3 Pro footage",
+  "project_id": "20260227_Test_Pipeline"
+}
+```
+
+Response:
+```json
+{
+  "chunks": [
+    { "text": "...", "source": "...", "score": 0.91 }
+  ]
+}
+```
+
+---
+
+## Shot Classification Taxonomy
+
+Full taxonomy documented in `docs/shot-classification-taxonomy.md`.
+
+**Primary tags** (determine `bins/` sort destination):
+- `wide` → sub: `establishing`, `low-angle`, `high-angle`, `eye-level`
+- `tight` → sub: `close-up`, `medium-close-up`
+- `detail` → sub: `hardware`, `fixture`, `texture`, `architectural`, `landscape`
+- `drone` → sub: `aerial-wide`, `aerial-orbit`, `aerial-reveal`, `aerial-tracking`
+- `agent-on-camera` → sub: `talking-head`, `walk-through`, `stand-up`
+
+**Secondary tags** (stored in catalog, no bin effect): `interior/exterior`, room type, lighting condition.
+
+**Confidence fallback:** If confidence < 0.65, default to `wide/establishing` and flag in `open_questions`.
+
+---
+
+## Pipeline Verification
+
+Full end-to-end verification checklist: `docs/hyperedit-pipeline-verification.md`
+
+10 verification steps covering: MCP server health, frame extraction, camera detection, shot classification, bin sorting, LUT application, full pipeline run, UI bins, RAG query, folder watcher.
+
