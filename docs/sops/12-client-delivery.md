@@ -13,7 +13,7 @@ Invoked by Orchestrator after `08-qa-grading.md` produces a grade of **A** or **
 | Input | Source | Schema |
 |-------|--------|--------|
 | Grade card | `state/agents/<project_id>/71_grade_card.json` | `schemas/71_grade_card.schema.json` |
-| Publish checklist | `state/agents/<project_id>/72_publish_checklist.json` | `schemas/72_publish_checklist.schema.json` |
+| Publish checklist | `state/agents/<project_id>/72_publish_checklist.md` | — |
 | Final video (captioned or graded) | `state/agents/<project_id>/captioned.mp4` or `graded.mp4` | — |
 | Project brief | `state/agents/<project_id>/00_project_brief.json` | `schemas/00_project_brief.schema.json` |
 | Target platform(s) | `brief.delivery_targets[]` | `instagram_reel` \| `youtube` \| `mls_embed` \| `download` |
@@ -73,7 +73,7 @@ Invoked by Orchestrator after `08-qa-grading.md` produces a grade of **A** or **
    - Expected output: `state/agents/<project_id>/delivery/delivery_manifest.json`.
 
 5. **Final delivery review against publish checklist.**
-   - Review `72_publish_checklist.json` — all `delivery_checklist_items` must be `true`:
+   - Review `72_publish_checklist.md` — all `delivery_checklist_items` must be `true`:
      - Hook present in first 5s.
      - No color artifacts.
      - Audio loudness within platform target.
