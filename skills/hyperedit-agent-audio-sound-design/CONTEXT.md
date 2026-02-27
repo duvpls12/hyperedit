@@ -22,9 +22,11 @@ Audio runs BEFORE assembly. The music map and radio edit produced here are the s
 ## Beat grid and anchor mapping
 
 - Strong beats = kick/snare downbeats, prefer bar boundaries for cut points
+- `bar_markers[]` = every 4th beat (bar boundaries) — assembly uses these as primary cut candidates
 - Structural anchors must be confirmed against audio waveform, not assumed from track title
 - `chorus_start` and `drop_start` are highest-priority anchors — assembly agent uses these for major visual transitions
 - Mark all anchors to the nearest beat (within 50ms tolerance)
+- `speed_ramp_markers[]` = timestamps where a drop, tempo shift, or energy spike warrants a visual speed ramp; derive from `first_drop`, `chorus_hits[]`, and `build_peaks[]` in the structural anchors
 
 ## Radio edit rules
 

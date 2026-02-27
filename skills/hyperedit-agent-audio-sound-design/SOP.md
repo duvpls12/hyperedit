@@ -30,7 +30,7 @@ Select music, analyze BPM and beat grid via FFmpeg server, and produce a radio e
    - If target duration requires a cut within the track, mark crossfade point at a beat boundary
    - Validate: `radio_edit_duration` within ±5s of target video duration
 8. **Write artifacts**:
-   - `30_music_map.json`: `{ track_path, bpm, beat_timestamps[], structural_anchors{}, total_track_duration }`
+   - `30_music_map.json`: `{ track_path, bpm, beat_timestamps[], bar_markers[], speed_ramp_markers[], structural_anchors{}, total_track_duration }` — `bar_markers[]` = every 4th beat (bar boundaries); `speed_ramp_markers[]` = timestamps where a drop, tempo shift, or energy spike makes a visual ramp appropriate
    - `31_radio_edit.json`: `{ edit_in_seconds, edit_out_seconds, radio_edit_duration, crossfade_points[], beat_anchors_used[], assumptions[], open_questions[] }`
    - `32_audio_qc.json`: QC result (see Quality Gates)
 
