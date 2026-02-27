@@ -37,6 +37,45 @@ function detectCameraFromFilename(filename) {
   return 'Unknown';
 }
 
+async function detectCameraWithFallback(filePath) {
+  const filenameResult = detectCameraFromFilename(filePath);
+  if (filenameResult !== 'Unknown') return filenameResult;
+
+  // Fallback: probe container brand + exiftool for camera make
+  if (isVideoFile(filePath)) {
+    try {
+      const probe = await runFfprobe(filePath);
+      const brand = (probe.format?.tags?.major_brand || '').toUpperCase();
+      if (brand === 'XAVC' || brand.startsWith('XAVC')) return 'Sony (Alpha/FX series)';
+      if (brand.startsWith('DJMD') || brand.startsWith('DJI')) return 'DJI (drone)';
+
+      // Check encoder tag
+      const videoStream = probe.streams?.find(s => s.codec_type === 'video');
+      const encoder = (videoStream?.tags?.encoder || '').toLowerCase();
+      if (encoder.includes('sony') || encoder.includes('xavc')) return 'Sony (Alpha/FX series)';
+    } catch { /* continue */ }
+  }
+
+  // Try exiftool for camera make
+  try {
+    const { stdout } = await execAsync(`exiftool -Make -Model -j "${filePath}"`);
+    const exif = JSON.parse(stdout)?.[0];
+    const make = (exif?.Make || '').toLowerCase();
+    if (make.includes('sony')) return 'Sony (Alpha/FX series)';
+    if (make.includes('dji')) return 'DJI (drone)';
+    if (make.includes('gopro')) return 'GoPro';
+    if (make.includes('apple')) return 'iPhone / generic';
+    if (make.includes('canon')) return 'Canon';
+    if (make.includes('nikon')) return 'Nikon';
+    if (make.includes('panasonic') || make.includes('lumix')) return 'Panasonic';
+    if (make.includes('fujifilm')) return 'Fujifilm';
+    if (make.includes('ricoh')) return 'Ricoh';
+    if (make) return make;
+  } catch { /* exiftool not available */ }
+
+  return 'Unknown';
+}
+
 function isVideoFile(filePath) {
   return /\.(mp4|mov|mxf|avi|mkv|r3d|braw|m2ts|mts|m4v|webm)$/i.test(filePath);
 }
@@ -162,7 +201,7 @@ server.tool(
   async ({ filePath }) => {
     try {
       const stat = await fs.stat(filePath);
-      const camera = detectCameraFromFilename(filePath);
+      const camera = await detectCameraWithFallback(filePath);
       const result = {
         filePath,
         fileName: path.basename(filePath),
@@ -274,7 +313,7 @@ server.tool(
   },
   async ({ filePath, cameraModel }) => {
     try {
-      const detectedCamera = cameraModel ?? detectCameraFromFilename(filePath);
+      const detectedCamera = cameraModel ?? await detectCameraWithFallback(filePath);
       let profile = 'Rec.709';
       let confidence = 'heuristic';
 
