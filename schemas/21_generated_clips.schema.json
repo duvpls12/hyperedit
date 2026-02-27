@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "21_generated_clips",
+  "title": "Generated Clips",
+  "description": "Results of synthetic clip generation. Maps request IDs to output video paths and generation metadata.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "total_generated": { "type": "integer" },
+    "total_failed": { "type": "integer" },
+    "clips": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "request_id": { "type": "string" },
+          "gap_id": { "type": "string" },
+          "output_path": { "type": ["string", "null"] },
+          "generation_status": {
+            "type": "string",
+            "enum": ["success", "failed", "pending"]
+          },
+          "comfyui_prompt_id": { "type": "string" },
+          "duration_seconds": { "type": "number" },
+          "resolution": { "type": "string" },
+          "realism_score": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+          "fail_reason": { "type": ["string", "null"] }
+        },
+        "required": ["request_id", "gap_id", "generation_status"]
+      }
+    }
+  },
+  "required": ["project_id", "total_generated", "clips"]
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "_common",
+  "title": "HyperEdit Common Artifact Fields",
+  "description": "Shared base fields required in every numbered HyperEdit artifact",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["pass", "warn", "fail", "pending"],
+      "description": "Artifact outcome: pass = all gates cleared, warn = non-blocking issues, fail = blocking issue, pending = not yet run"
+    },
+    "blocking_issues": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of issues that prevent downstream stages from running. Empty array if none."
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Decisions made without explicit instruction — downstream agents should verify."
+    },
+    "open_questions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Unresolved questions that may require human input or further investigation."
+    },
+    "source_references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "enum": ["file", "url", "artifact", "rag_chunk"] },
+          "path": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["type", "path"]
+      },
+      "description": "Files, URLs, or artifacts consulted to produce this output."
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Project identifier matching the run-ledger project_id."
+    },
+    "stage": {
+      "type": "string",
+      "description": "Pipeline stage that produced this artifact."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when artifact was written."
+    },
+    "agent_version": {
+      "type": "string",
+      "description": "Skill version or commit hash that produced this artifact."
+    }
+  },
+  "required": ["status", "blocking_issues", "assumptions", "open_questions", "source_references"]
+}

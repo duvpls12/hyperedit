@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "12_gap_report",
+  "title": "Gap Report",
+  "description": "Coverage gaps identified in the footage shortlist. Determines whether photo-to-video is triggered.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "has_blocking_gaps": {
+      "type": "boolean",
+      "description": "If true, triggers the photo-to-video stage"
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gap_id": { "type": "string" },
+          "room_zone": { "type": "string" },
+          "gap_type": {
+            "type": "string",
+            "enum": ["missing_room", "direction_break", "insufficient_variety", "low_quality_only"]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["blocking", "non_blocking"]
+          },
+          "resolution": {
+            "type": "string",
+            "enum": ["needs_synthetic", "use_backup_clips", "accept_gap"]
+          },
+          "available_stills": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Paths to property stills that could fill this gap via photo-to-video"
+          },
+          "description": { "type": "string" }
+        },
+        "required": ["gap_id", "gap_type", "severity", "resolution"]
+      }
+    },
+    "photo_to_video_inputs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of still image paths queued for synthetic clip generation (blocking gaps only)"
+    }
+  },
+  "required": ["project_id", "has_blocking_gaps", "gaps"]
+}

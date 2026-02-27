@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "32_audio_qc",
+  "title": "Audio QC",
+  "description": "Quality control for music selection and radio edit structure before assembly begins.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "bpm_detected": { "type": "number" },
+    "bpm_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "beat_grid_alignment_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "duration_match": { "type": "boolean", "description": "Music duration covers or closely matches target video duration" },
+    "loudness_lufs": { "type": "number" },
+    "peak_db": { "type": "number" },
+    "clipping_detected": { "type": "boolean" },
+    "gate_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gate": { "type": "string" },
+          "result": { "type": "string", "enum": ["pass", "warn", "fail"] },
+          "detail": { "type": "string" }
+        }
+      }
+    }
+  },
+  "required": ["project_id", "bpm_detected", "beat_grid_alignment_score", "gate_results"]
+}

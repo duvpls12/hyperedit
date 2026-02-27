@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "22_realism_qc",
+  "title": "Realism QC",
+  "description": "Quality control assessment for generated synthetic clips. Only clips that pass realism QC are forwarded to assembly.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "approved_clips": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "request_ids that passed realism QC and are approved for assembly"
+    },
+    "rejected_clips": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "request_id": { "type": "string" },
+          "reject_reason": { "type": "string" },
+          "retry_recommended": { "type": "boolean" }
+        }
+      }
+    },
+    "qc_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "request_id": { "type": "string" },
+          "motion_artifacts": { "type": "boolean" },
+          "style_match": { "type": "boolean" },
+          "temporal_consistency": { "type": "boolean" },
+          "usable_duration_seconds": { "type": "number" },
+          "overall_result": { "type": "string", "enum": ["pass", "fail"] }
+        },
+        "required": ["request_id", "overall_result"]
+      }
+    }
+  },
+  "required": ["project_id", "approved_clips", "rejected_clips", "qc_checks"]
+}

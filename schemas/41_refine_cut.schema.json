@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "41_refine_cut",
+  "title": "Refine Cut",
+  "description": "Refined timeline after pacing review and directional continuity corrections. One step before picture lock.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "total_duration_seconds": { "type": "number" },
+    "changes_from_rough": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "change_type": { "type": "string", "enum": ["swap", "trim", "extend", "reorder", "remove", "add"] },
+          "clip_id": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "timeline": { "$ref": "40_rough_cut.schema.json#/properties/timeline" },
+    "directional_continuity_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Score >= 0.8 required before picture lock"
+    },
+    "rehook_count": { "type": "integer", "description": "Number of rehooks landing every 5-10s" },
+    "ready_for_picture_lock": { "type": "boolean" }
+  },
+  "required": ["project_id", "total_duration_seconds", "timeline", "directional_continuity_score", "ready_for_picture_lock"]
+}

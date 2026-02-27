@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "30_music_map",
+  "title": "Music Map",
+  "description": "Music selection with BPM analysis and beat grid. This is the structural driver for the entire timeline — assembly reads this to place cuts on beat anchors.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "selected_track": {
+      "type": "object",
+      "properties": {
+        "filename": { "type": "string" },
+        "path": { "type": "string" },
+        "title": { "type": "string" },
+        "bpm": { "type": "number" },
+        "key": { "type": "string" },
+        "duration_seconds": { "type": "number" },
+        "style": { "type": "string" },
+        "selection_reason": { "type": "string" }
+      },
+      "required": ["filename", "path", "bpm", "duration_seconds"]
+    },
+    "beat_grid": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "beat_number": { "type": "integer" },
+          "timestamp_seconds": { "type": "number" },
+          "bar_number": { "type": "integer" },
+          "beat_in_bar": { "type": "integer" },
+          "is_phrase_start": { "type": "boolean" },
+          "energy_level": { "type": "string", "enum": ["low", "medium", "high"] }
+        },
+        "required": ["beat_number", "timestamp_seconds"]
+      },
+      "description": "Full beat grid — assembly uses phrase_starts as primary cut points"
+    },
+    "phrase_anchors": {
+      "type": "array",
+      "items": { "type": "number" },
+      "description": "Timestamps (seconds) of musical phrase starts — preferred cut points for assembly"
+    },
+    "structure": {
+      "type": "object",
+      "properties": {
+        "intro_end_seconds": { "type": "number" },
+        "main_sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "start_seconds": { "type": "number" },
+              "end_seconds": { "type": "number" }
+            }
+          }
+        },
+        "outro_start_seconds": { "type": "number" }
+      }
+    }
+  },
+  "required": ["project_id", "selected_track", "beat_grid", "phrase_anchors"]
+}

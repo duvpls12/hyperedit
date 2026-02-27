@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "01_orchestration_plan",
+  "title": "Orchestration Plan",
+  "description": "Orchestrator's dispatch plan: stage sequence, conditional flags, quality gate definitions.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "stage_sequence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "stage": { "type": "string" },
+          "conditional": { "type": "boolean" },
+          "condition_artifact": { "type": "string", "description": "Artifact to check for conditional stages" },
+          "condition_field": { "type": "string" },
+          "depends_on": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["stage", "conditional", "depends_on"]
+      }
+    },
+    "quality_gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gate_id": { "type": "string" },
+          "description": { "type": "string" },
+          "threshold": { "type": "number" },
+          "fail_action": { "type": "string", "enum": ["retry", "escalate", "skip"] }
+        },
+        "required": ["gate_id", "description", "fail_action"]
+      }
+    },
+    "estimated_stages": { "type": "integer" },
+    "photo_to_video_required": { "type": "boolean", "description": "Will be updated after gap_report is available" },
+    "text_graphics_required": { "type": "boolean" }
+  },
+  "required": ["project_id", "stage_sequence", "quality_gates"]
+}

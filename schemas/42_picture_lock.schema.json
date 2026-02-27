@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "42_picture_lock",
+  "title": "Picture Lock",
+  "description": "Final locked timeline. No further edits to cut points or clip order. Color, graphics, and audio finishing begin only after this artifact is written.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "locked_at": { "type": "string", "format": "date-time" },
+    "total_duration_seconds": { "type": "number" },
+    "timeline": { "$ref": "40_rough_cut.schema.json#/properties/timeline" },
+    "directional_continuity_score": { "type": "number", "minimum": 0.8 },
+    "hook_present": { "type": "boolean" },
+    "rehook_count": { "type": "integer" },
+    "exported_video_path": {
+      "type": ["string", "null"],
+      "description": "Path to picture-locked video export (before color). Set after FFmpeg render."
+    },
+    "exported_frames_directory": {
+      "type": ["string", "null"],
+      "description": "Path to extracted frames directory — used by color agent for ComfyUI grading"
+    }
+  },
+  "required": ["project_id", "total_duration_seconds", "timeline", "directional_continuity_score", "hook_present"]
+}

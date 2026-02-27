@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "50_base_corrections",
+  "title": "Base Corrections",
+  "description": "Per-clip technical color corrections applied after picture lock: exposure, white balance, noise reduction.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "corrections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "clip_id": { "type": "string" },
+          "input_frame_path": { "type": "string" },
+          "output_frame_path": { "type": "string" },
+          "comfyui_prompt_id": { "type": "string" },
+          "mode_used": { "type": "string", "enum": ["Auto", "Preset", "Manual"] },
+          "corrections_applied": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "e.g. ['exposure +0.5', 'white_balance 6500K', 'highlights -30']"
+          },
+          "before_histogram": { "type": "string", "description": "Path to before histogram image (optional)" },
+          "after_histogram": { "type": "string", "description": "Path to after histogram image (optional)" }
+        },
+        "required": ["clip_id", "mode_used"]
+      }
+    },
+    "total_clips_corrected": { "type": "integer" },
+    "consistency_reference_clip": { "type": "string", "description": "clip_id used as color reference for color-matcher" }
+  },
+  "required": ["project_id", "corrections", "total_clips_corrected"]
+}

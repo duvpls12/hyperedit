@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "52_color_qc",
+  "title": "Color QC",
+  "description": "Quality control for color correction and grading pass. Must pass before text/graphics or final QC.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "clipping_detected": { "type": "boolean" },
+    "cross_clip_consistency_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "color_applied_after_lock": { "type": "boolean", "description": "Validates pipeline order constraint" },
+    "gate_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gate": { "type": "string" },
+          "result": { "type": "string", "enum": ["pass", "warn", "fail"] },
+          "detail": { "type": "string" }
+        }
+      }
+    }
+  },
+  "required": ["project_id", "cross_clip_consistency_score", "color_applied_after_lock", "gate_results"]
+}

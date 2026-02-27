@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "61_graphics_layout",
+  "title": "Graphics Layout",
+  "description": "Layout plan for captions, lower thirds, and motion graphics overlays.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "elements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "element_id": { "type": "string" },
+          "type": { "type": "string", "enum": ["caption", "lower_third", "title_card", "cta", "watermark"] },
+          "text": { "type": "string" },
+          "timeline_start_seconds": { "type": "number" },
+          "timeline_end_seconds": { "type": "number" },
+          "position": {
+            "type": "object",
+            "properties": {
+              "x_percent": { "type": "number" },
+              "y_percent": { "type": "number" },
+              "anchor": { "type": "string", "enum": ["top_left", "top_center", "center", "bottom_center", "bottom_left"] }
+            }
+          },
+          "style": {
+            "type": "object",
+            "properties": {
+              "font_family": { "type": "string" },
+              "font_size_px": { "type": "integer" },
+              "color": { "type": "string" },
+              "background": { "type": "string" },
+              "opacity": { "type": "number" }
+            }
+          },
+          "remotion_template": { "type": ["string", "null"], "description": "Remotion template ID if rendered via Remotion" },
+          "safe_area_compliant": { "type": "boolean" }
+        },
+        "required": ["element_id", "type", "text", "timeline_start_seconds", "timeline_end_seconds", "safe_area_compliant"]
+      }
+    }
+  },
+  "required": ["project_id", "elements"]
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "20_synthetic_plan",
+  "title": "Synthetic Clip Plan",
+  "description": "Generation plan for synthetic clips derived from property stills. One entry per blocking gap.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "total_clips_planned": { "type": "integer" },
+    "generation_requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "request_id": { "type": "string" },
+          "gap_id": { "type": "string", "description": "References gap from 12_gap_report" },
+          "source_still_path": { "type": "string" },
+          "target_room_zone": { "type": "string" },
+          "target_shot_class": { "type": "string" },
+          "camera_motion": {
+            "type": "string",
+            "enum": ["dolly_in", "dolly_out", "pan_left", "pan_right", "jib_up", "jib_down", "static"],
+            "description": "IC-LoRA camera control directive"
+          },
+          "positive_prompt": { "type": "string" },
+          "negative_prompt": { "type": "string" },
+          "target_duration_seconds": { "type": "number" },
+          "dispatch_endpoint": { "type": "string", "enum": ["local", "vastai"], "default": "vastai" },
+          "workflow_template": { "type": "string", "default": "skills/comfyui-workflows/image-to-video.json" }
+        },
+        "required": ["request_id", "gap_id", "source_still_path", "positive_prompt", "camera_motion"]
+      }
+    }
+  },
+  "required": ["project_id", "total_clips_planned", "generation_requests"]
+}

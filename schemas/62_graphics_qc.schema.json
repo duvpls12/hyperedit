@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "62_graphics_qc",
+  "title": "Graphics QC",
+  "description": "Quality control for captions and graphics overlays. Validates safe area compliance, readability, and timing alignment.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "all_safe_area_compliant": { "type": "boolean" },
+    "max_words_per_chunk": { "type": "integer", "maximum": 5 },
+    "timing_aligned_to_audio": { "type": "boolean" },
+    "no_caption_collisions": { "type": "boolean", "description": "No captions over faces or key property features" },
+    "gate_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gate": { "type": "string" },
+          "result": { "type": "string", "enum": ["pass", "warn", "fail"] },
+          "detail": { "type": "string" }
+        }
+      }
+    }
+  },
+  "required": ["project_id", "all_safe_area_compliant", "gate_results"]
+}

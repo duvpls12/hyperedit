@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "60_caption_script",
+  "title": "Caption Script",
+  "description": "Word-level caption script derived from Whisper transcription. Chunked at max 5 words or 0.7s pause.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "source_audio_path": { "type": "string" },
+    "transcription_model": { "type": "string", "default": "whisper-base" },
+    "total_chunks": { "type": "integer" },
+    "chunks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "chunk_id": { "type": "string" },
+          "text": { "type": "string" },
+          "start_seconds": { "type": "number", "description": "Relative to clip start" },
+          "end_seconds": { "type": "number" },
+          "word_count": { "type": "integer", "maximum": 5 },
+          "split_reason": { "type": "string", "enum": ["word_limit", "pause_gap", "end_of_speech"] },
+          "clip_id": { "type": "string", "description": "Timeline clip this caption belongs to" }
+        },
+        "required": ["chunk_id", "text", "start_seconds", "end_seconds"]
+      }
+    },
+    "safe_area_validated": { "type": "boolean", "description": "All chunks verified to fit mobile safe area (9:16, 8% padding)" }
+  },
+  "required": ["project_id", "total_chunks", "chunks"]
+}

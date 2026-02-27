@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "72_publish_checklist",
+  "title": "Publish Checklist",
+  "description": "Final pre-delivery checklist. All items must be checked before delivering to client.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "final_video_path": { "type": "string" },
+    "final_video_duration_seconds": { "type": "number" },
+    "delivery_specs_met": { "type": "boolean" },
+    "checklist": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item": { "type": "string" },
+          "checked": { "type": "boolean" },
+          "note": { "type": ["string", "null"] }
+        },
+        "required": ["item", "checked"]
+      }
+    },
+    "delivery_checklist_items": {
+      "type": "object",
+      "description": "Standard items (auto-populated)",
+      "properties": {
+        "hook_in_first_5s": { "type": "boolean" },
+        "rehooks_every_5_10s": { "type": "boolean" },
+        "directional_continuity_ge_0_8": { "type": "boolean" },
+        "music_beat_alignment": { "type": "boolean" },
+        "color_applied_after_lock": { "type": "boolean" },
+        "captions_in_safe_area": { "type": "boolean" },
+        "audio_loudness_target_met": { "type": "boolean" },
+        "final_grade_A_or_B": { "type": "boolean" },
+        "all_artifacts_written": { "type": "boolean" },
+        "all_schemas_valid": { "type": "boolean" }
+      }
+    },
+    "approved_by": { "type": ["string", "null"], "description": "Agent or human who approved for delivery" },
+    "approved_at": { "type": ["string", "null"], "format": "date-time" }
+  },
+  "required": ["project_id", "final_video_path", "checklist", "delivery_checklist_items"]
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "70_final_qc_report",
+  "title": "Final QC Report",
+  "description": "Orchestrator's cross-stage quality validation. Checks every QC gate across all pipeline stages. Determines publish readiness.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "overall_grade": {
+      "type": "string",
+      "enum": ["A", "B", "C", "D", "FAIL"],
+      "description": "A = publish ready, B = publish with minor notes, C = review needed, D = rework needed, FAIL = blocked"
+    },
+    "publish_ready": { "type": "boolean" },
+    "gate_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gate_id": { "type": "string" },
+          "gate_name": { "type": "string" },
+          "stage": { "type": "string" },
+          "result": { "type": "string", "enum": ["pass", "warn", "fail"] },
+          "actual_value": {},
+          "threshold": {},
+          "detail": { "type": "string" }
+        },
+        "required": ["gate_id", "gate_name", "stage", "result"]
+      }
+    },
+    "stage_summaries": {
+      "type": "object",
+      "description": "Per-stage artifact status rollup",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "artifacts_written": { "type": "integer" },
+          "all_valid": { "type": "boolean" },
+          "issues": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "deficiencies": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Specific deficiency callouts for B/C/D grades"
+    },
+    "recommended_actions": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["project_id", "overall_grade", "publish_ready", "gate_results"]
+}

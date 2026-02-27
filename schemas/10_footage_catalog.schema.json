@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "10_footage_catalog",
+  "title": "Footage Catalog",
+  "description": "Full inventory of all ingested raw clips with metadata, shot classification, and quality scores.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "footage_directory": { "type": "string" },
+    "total_clips": { "type": "integer" },
+    "total_duration_seconds": { "type": "number" },
+    "clips": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "clip_id": { "type": "string" },
+          "filename": { "type": "string" },
+          "path": { "type": "string" },
+          "duration_seconds": { "type": "number" },
+          "resolution": { "type": "string" },
+          "fps": { "type": "number" },
+          "codec": { "type": "string" },
+          "shot_class": {
+            "type": "string",
+            "enum": ["wide_exterior", "wide_interior", "medium", "close_up", "aerial", "transition", "unknown"]
+          },
+          "room_zone": { "type": "string", "description": "e.g. living_room, kitchen, master_bedroom, exterior" },
+          "direction": {
+            "type": "string",
+            "enum": ["left_to_right", "right_to_left", "static", "toward_camera", "away_from_camera", "overhead", "unknown"]
+          },
+          "quality_score": { "type": "number", "minimum": 0, "maximum": 10 },
+          "usability": {
+            "type": "string",
+            "enum": ["select", "backup", "reject"],
+            "description": "select = high quality preferred, backup = usable if needed, reject = do not use"
+          },
+          "reject_reason": { "type": ["string", "null"] },
+          "thumbnail_path": { "type": "string" }
+        },
+        "required": ["clip_id", "filename", "path", "duration_seconds", "shot_class", "usability"]
+      }
+    }
+  },
+  "required": ["project_id", "total_clips", "clips"]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "00_project_brief",
+  "title": "Project Brief",
+  "description": "Client brief ingested by the orchestrator at pipeline start. Defines all project parameters and gates.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "property_address": { "type": "string" },
+    "client_name": { "type": "string" },
+    "footage_directory": { "type": "string", "description": "Absolute path to raw footage folder" },
+    "stills_directory": { "type": "string", "description": "Absolute path to property photos folder (optional)" },
+    "target_duration_seconds": { "type": "number", "description": "Target video duration in seconds (e.g. 90 for 1:30)" },
+    "delivery_format": {
+      "type": "object",
+      "properties": {
+        "aspect_ratio": { "type": "string", "enum": ["16:9", "9:16", "1:1", "4:5"] },
+        "resolution": { "type": "string", "enum": ["1920x1080", "3840x2160", "1080x1920"] },
+        "fps": { "type": "integer" }
+      },
+      "required": ["aspect_ratio", "resolution", "fps"]
+    },
+    "music_style": { "type": "string", "description": "Music mood/genre directive (e.g. 'uplifting modern, 120-130 BPM')" },
+    "caption_required": { "type": "boolean", "description": "Whether text captions/graphics are needed" },
+    "quality_gates": {
+      "type": "object",
+      "properties": {
+        "hook_window_seconds": { "type": "number", "default": 5 },
+        "rehook_interval_seconds": { "type": "number", "default": 8 },
+        "directional_continuity_min": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.8 },
+        "audio_loudness_lufs": { "type": "number", "default": -14 }
+      }
+    },
+    "special_instructions": { "type": "string" }
+  },
+  "required": ["project_id", "property_address", "footage_directory", "target_duration_seconds", "delivery_format"]
+}

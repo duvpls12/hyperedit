@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "71_grade_card",
+  "title": "Grade Card",
+  "description": "Structured grade card with per-dimension scores and actionable callouts. Used for client reporting and RAG training data.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "overall_grade": { "type": "string", "enum": ["A", "B", "C", "D", "FAIL"] },
+    "scores": {
+      "type": "object",
+      "properties": {
+        "hook_strength": { "type": "number", "minimum": 0, "maximum": 10 },
+        "pacing": { "type": "number", "minimum": 0, "maximum": 10 },
+        "directional_continuity": { "type": "number", "minimum": 0, "maximum": 10 },
+        "color_consistency": { "type": "number", "minimum": 0, "maximum": 10 },
+        "audio_quality": { "type": "number", "minimum": 0, "maximum": 10 },
+        "caption_readability": { "type": ["number", "null"], "minimum": 0, "maximum": 10 },
+        "overall": { "type": "number", "minimum": 0, "maximum": 10 }
+      },
+      "required": ["hook_strength", "pacing", "directional_continuity", "color_consistency", "audio_quality", "overall"]
+    },
+    "callouts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dimension": { "type": "string" },
+          "observation": { "type": "string" },
+          "severity": { "type": "string", "enum": ["info", "warning", "critical"] }
+        }
+      }
+    },
+    "rag_training_eligible": { "type": "boolean", "description": "True if grade >= B and suitable as positive training example" }
+  },
+  "required": ["project_id", "overall_grade", "scores"]
+}

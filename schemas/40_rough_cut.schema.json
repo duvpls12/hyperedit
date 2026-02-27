@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "40_rough_cut",
+  "title": "Rough Cut",
+  "description": "Initial timeline assembled from selects and music map. Cuts land on beat anchors. Not yet refined — contains pacing notes and review flags.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "total_duration_seconds": { "type": "number" },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "track_position": { "type": "integer", "description": "1-based position on timeline" },
+          "clip_id": { "type": "string" },
+          "clip_type": { "type": "string", "enum": ["real", "synthetic"] },
+          "timeline_start_seconds": { "type": "number" },
+          "timeline_end_seconds": { "type": "number" },
+          "in_point_seconds": { "type": "number" },
+          "out_point_seconds": { "type": "number" },
+          "beat_anchor_seconds": { "type": "number", "description": "Beat timestamp this cut lands on" },
+          "transition": { "type": "string", "enum": ["cut", "dissolve", "fade"], "default": "cut" }
+        },
+        "required": ["track_position", "clip_id", "timeline_start_seconds", "timeline_end_seconds"]
+      }
+    },
+    "pacing_notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "hook_in_window": { "type": "boolean", "description": "True if first compelling shot lands within hook_window_seconds" }
+  },
+  "required": ["project_id", "total_duration_seconds", "timeline"]
+}

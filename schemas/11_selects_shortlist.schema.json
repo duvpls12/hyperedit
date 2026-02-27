@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "11_selects_shortlist",
+  "title": "Selects Shortlist",
+  "description": "Curated shortlist of approved clips for assembly, ordered by sequence position with directional continuity preserved.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "total_selected": { "type": "integer" },
+    "total_duration_seconds": { "type": "number" },
+    "selects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "clip_id": { "type": "string" },
+          "sequence_position": { "type": "integer", "description": "Suggested order in assembly (1-based)" },
+          "in_point_seconds": { "type": "number" },
+          "out_point_seconds": { "type": "number" },
+          "usable_duration_seconds": { "type": "number" },
+          "shot_class": { "type": "string" },
+          "room_zone": { "type": "string" },
+          "direction": { "type": "string" },
+          "select_reason": { "type": "string" }
+        },
+        "required": ["clip_id", "sequence_position", "shot_class"]
+      }
+    },
+    "room_coverage": {
+      "type": "object",
+      "description": "Summary of room zones covered",
+      "additionalProperties": { "type": "integer" }
+    }
+  },
+  "required": ["project_id", "total_selected", "selects"]
+}

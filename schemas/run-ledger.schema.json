@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "run-ledger",
+  "title": "HyperEdit Run Ledger",
+  "description": "Durable execution state for a single HyperEdit project run. Written and read by the orchestrator at every stage transition. Supports resume from checkpoint, skip completed stages, and retry failed stages.",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Unique project identifier (e.g. 3213_cliff_drive_20260227)"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "current_stage": {
+      "type": "string",
+      "enum": [
+        "orchestrator_init",
+        "footage_intake",
+        "photo_to_video",
+        "audio",
+        "assembly",
+        "color",
+        "text_graphics",
+        "orchestrator_qc",
+        "done",
+        "blocked"
+      ]
+    },
+    "client_brief_path": {
+      "type": "string",
+      "description": "Path to 00_project_brief.json"
+    },
+    "artifacts_dir": {
+      "type": "string",
+      "description": "Base directory for all numbered artifacts: state/agents/<project_id>/"
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "orchestrator_init",
+              "footage_intake",
+              "photo_to_video",
+              "audio",
+              "assembly",
+              "color",
+              "text_graphics",
+              "orchestrator_qc"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in_progress", "done", "blocked", "skipped"]
+          },
+          "started_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "retry_count": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "description": "e.g. 10_footage_catalog" },
+                "path": { "type": "string", "description": "Absolute or relative path to the JSON artifact" },
+                "schema": { "type": "string", "description": "Schema filename in schemas/ directory" },
+                "validation_status": {
+                  "type": "string",
+                  "enum": ["pending", "valid", "invalid"]
+                }
+              },
+              "required": ["name", "path", "schema"]
+            }
+          },
+          "blockers": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Human-readable blocker descriptions if status=blocked"
+          },
+          "skip_reason": {
+            "type": ["string", "null"],
+            "description": "Reason stage was skipped (e.g. 'No blocking gaps in gap_report — photo-to-video not needed')"
+          }
+        },
+        "required": ["name", "status", "artifacts", "blockers"]
+      },
+      "minItems": 8,
+      "maxItems": 8,
+      "description": "Ordered pipeline stages. Orchestrator updates in-place."
+    },
+    "qc_summary": {
+      "type": "object",
+      "properties": {
+        "overall_grade": { "type": "string", "enum": ["A", "B", "C", "D", "FAIL"] },
+        "gate_results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "gate": { "type": "string" },
+              "result": { "type": "string", "enum": ["pass", "warn", "fail"] },
+              "detail": { "type": "string" }
+            }
+          }
+        },
+        "publish_ready": { "type": "boolean" }
+      }
+    }
+  },
+  "required": ["project_id", "created_at", "current_stage", "stages"]
+}

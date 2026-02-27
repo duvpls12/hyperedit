@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "31_radio_edit",
+  "title": "Radio Edit",
+  "description": "Audio-driven timing structure for the timeline. Maps music sections to target visual segments with shot budget per section. Assembly reads this to build the rough cut.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "total_duration_seconds": { "type": "number" },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "segment_id": { "type": "string" },
+          "section_name": { "type": "string" },
+          "start_seconds": { "type": "number" },
+          "end_seconds": { "type": "number" },
+          "duration_seconds": { "type": "number" },
+          "target_shot_count": { "type": "integer" },
+          "target_rooms": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "energy_level": { "type": "string", "enum": ["low", "medium", "high"] },
+          "cut_on_beat": { "type": "boolean", "default": true },
+          "beat_anchors": {
+            "type": "array",
+            "items": { "type": "number" },
+            "description": "Preferred cut timestamps within this segment"
+          },
+          "hook_required": { "type": "boolean", "description": "True for first segment (must hook in 3-5s)" }
+        },
+        "required": ["segment_id", "start_seconds", "end_seconds", "target_shot_count", "beat_anchors"]
+      }
+    },
+    "hook_window": {
+      "type": "object",
+      "properties": {
+        "end_seconds": { "type": "number" },
+        "required_shot_class": { "type": "string" }
+      }
+    }
+  },
+  "required": ["project_id", "total_duration_seconds", "segments"]
+}

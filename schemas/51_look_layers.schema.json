@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "51_look_layers",
+  "title": "Look Layers",
+  "description": "Creative grading look applied after base corrections: LUT selection, film emulation, color-matcher cross-clip consistency.",
+  "allOf": [{ "$ref": "_common.schema.json" }],
+  "type": "object",
+  "properties": {
+    "project_id": { "type": "string" },
+    "look_name": { "type": "string", "description": "e.g. 'Warm Golden Hour', 'Clean Neutral', 'Cinematic Teal/Orange'" },
+    "lut_path": { "type": ["string", "null"], "description": "Path to .cube LUT file applied via FFmpeg" },
+    "film_emulation_preset": { "type": ["string", "null"], "description": "EasyColorCorrector Preset mode name (e.g. 'Kodak Portra 400')" },
+    "look_intensity": { "type": "number", "minimum": 0, "maximum": 1, "description": "Blend intensity of look (0=none, 1=full)" },
+    "color_matcher_applied": { "type": "boolean", "description": "Whether color-matcher CLI was used for cross-clip consistency" },
+    "color_matcher_reference": { "type": ["string", "null"], "description": "Reference frame path used with color-matcher" },
+    "per_clip_grades": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "clip_id": { "type": "string" },
+          "graded_path": { "type": "string" },
+          "delta_from_reference": { "type": "number", "description": "Color distance from reference (lower = more consistent)" }
+        },
+        "required": ["clip_id"]
+      }
+    }
+  },
+  "required": ["project_id", "look_name", "look_intensity"]
+}
