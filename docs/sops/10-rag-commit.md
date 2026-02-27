@@ -28,12 +28,25 @@ Invoked by Orchestrator automatically after each stage completes with `status: "
 ## Procedure
 
 1. **Start RAG stack (if not running).**
+
+   **Option A — Docker (full stack with OpenWebUI):**
    ```bash
    cd /Users/davideby/hyperedit/rag-local
    docker compose up -d
    ```
    - Verify: OpenWebUI at `localhost:3000`, Qdrant at `localhost:6333`.
-   - Expected output: both services healthy.
+
+   **Option B — Fast local path (no Docker, LM Studio only):**
+   ```bash
+   cd /Users/davideby/hyperedit/rag-local
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install -r requirements.txt
+   python scripts/build_lmstudio_rag.py   # build index
+   python scripts/query_lmstudio_rag.py "<query>"  # query index
+   ```
+   - Uses `LM_STUDIO_BASE_URL` + `LM_STUDIO_API_KEY` from `/Users/davideby/hyperedit/.env`.
+
+   - Expected output: RAG stack or local index accessible.
 
 2. **Prepare commit payload.**
    - Load stage artifact JSON.
@@ -115,9 +128,20 @@ Invoked by Orchestrator automatically after each stage completes with `status: "
 - Non-blocking — does not gate any pipeline stage.
 - Committed records are consumed by: `skills/hyperedit-orchestrator/` (RAG queries during planning), GPU Learning Pipeline Phase 3 (RAG index build).
 
+## Indexed Data Scope
+
+The RAG index (`hyperedit_knowledge`) contains:
+- `state/video-analysis-single/*.json` — per-video vision analysis
+- `state/audio-analysis/*.json` — audio/DSP analysis results
+- `state/final-analysis/*.md` — synthesis reports
+- `docs/plans/*.md` — planning documents
+- Pipeline stage artifacts (committed by this SOP)
+
 ## Skill Cross-Reference
 
-- Skill: `skills/hyperedit-rag-commit/SKILL.md`
+- Skill: `skills/hyperedit-rag-commit/SKILL.md` _(Wave 4 deliverable — not yet created)_
 - RAG stack: `rag-local/docker-compose.yml` (OpenWebUI + Qdrant)
+- Fast local path: `rag-local/scripts/build_lmstudio_rag.py` + `query_lmstudio_rag.py`
+- Setup reference: `docs/plans/2026-02-25-local-rag-openwebui-sop.md`
 - Intel patterns for seeding: `state/intel/pattern_analysis.json`, `state/intel/perfect_video_blueprint.md`
 - Tutorial corpus: `docs/transcripts/` (33+ indexed transcripts)
