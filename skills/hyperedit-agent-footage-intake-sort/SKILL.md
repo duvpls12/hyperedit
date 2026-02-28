@@ -47,11 +47,18 @@ Footage intake now generates lightweight **720p H.264 proxies** for every clip. 
 | `scripts/run-pipeline-remote.js` | SCP clips to Vast.ai GPU, classify server-side, generate proxies locally | **Primary** — fastest, offloads decode to GPU |
 | `scripts/run-pipeline-local.js --classify-only` | Classify via Ollama tunnel (localhost:8080), no grading | When SSH upload is slow or clips are small |
 | `scripts/run-pipeline-local.js --grade-only` | Grade previously classified clips from shot-catalog.json | Post picture-lock conform |
+| `scripts/bridge-catalog.js` | Transforms `shot-catalog.json` → `10_footage_catalog.json` + `11_selects_shortlist.json` with schema mapping, coverage enforcement, usability scoring | After classification, before orchestrator |
+| `scripts/generate-proxies.js` | 720p H.264 CRF 23 proxy generation with concurrency 4, ~5s/clip | After classification, or standalone |
+| `scripts/grade-pipeline.js` | Benchmarks AI classification against human editor's final cut. Computes precision/recall/F1/letter grade. Supports `--edit list:file.txt`, `--edit clips-dir:path`, `--edit clipwise:session-id`, `--edit premiere:xml` | Post-edit verification / accuracy benchmarking |
 
 ## State paths
 
 - Reads: `state/agents/<project_id>/00_project_brief.json`, raw footage directory
 - Writes: `state/agents/<project_id>/10_footage_catalog.json`, `state/agents/<project_id>/11_selects_shortlist.json`, `state/agents/<project_id>/12_gap_report.json`
+
+## Camera-Aware Drone Override Rule
+
+Only filenames prefixed with `DJI_` can classify as `drone`. If a non-DJI clip is classified as drone by the vision model, it is reclassified to `wide`. This rule is enforced in `run-pipeline-local.js`, `run-pipeline-remote.js`, `gpu-classify.py`, `hyperedit-mcp-server.js`, and `bridge-catalog.js`.
 
 ## Project folder outputs
 

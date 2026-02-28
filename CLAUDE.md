@@ -70,6 +70,8 @@ The local FFmpeg server (`scripts/local-ffmpeg-server.js`, ~7700 lines) is a raw
 Key endpoints on `localhost:3333`:
 - `POST /session/create` - Create new editing session
 - `POST /session/{id}/assets` - Upload asset (auto-generates thumbnails)
+- `POST /session/{id}/import-project` - Import project from shot-catalog.json: symlinks proxies, creates bins, registers assets
+- `PUT /session/{id}/project` - Save clips/tracks/settings to project.json (assembly agent live editing)
 - `POST /session/{id}/transcribe` - Whisper transcription for captions
 - `POST /session/{id}/render` - Render final video
 - `POST /session/{id}/render-motion-graphic` - Render Remotion animation
@@ -435,6 +437,17 @@ CLASSIFY (GPU)  → SORT (bins/)  → PROXY (proxies/)  → EDIT (proxies)  → 
 | `scripts/run-pipeline-local.js --classify-only` | Classify via Ollama tunnel (localhost:8080), skip grading |
 | `scripts/run-pipeline-local.js --grade-only` | Grade previously classified clips from shot-catalog.json (post picture-lock) |
 | `scripts/gpu-classify.py` | Server-side classifier, deployed to Vast.ai instance |
+| `scripts/bridge-catalog.js` | Transforms `shot-catalog.json` → `10_footage_catalog.json` + `11_selects_shortlist.json` with schema mapping, coverage enforcement, usability scoring |
+| `scripts/generate-proxies.js` | 720p H.264 CRF 23 proxy generation with concurrency 4, ~5s/clip |
+| `scripts/grade-pipeline.js` | Benchmarks AI classification against human editor's final cut. Supports `--edit list:file.txt`, `--edit clips-dir:path`, `--edit clipwise:session-id`, `--edit premiere:xml`. Computes precision/recall/F1/letter grade |
+
+### Camera-Aware Drone Override Rule
+
+Only filenames prefixed with `DJI_` can classify as `drone`. This rule is enforced in `run-pipeline-local.js`, `run-pipeline-remote.js`, `gpu-classify.py`, `hyperedit-mcp-server.js`, and `bridge-catalog.js`. If a non-DJI clip is classified as drone by the vision model, it is reclassified to `wide`.
+
+### Import Project Endpoint
+
+`POST /session/{id}/import-project` on the FFmpeg server reads `shot-catalog.json`, symlinks proxies into the session, creates bins, and registers assets. The frontend exposes an "Import Project" button in `Home.tsx` to trigger this endpoint.
 
 ### Auto-Sort Flow
 
@@ -453,6 +466,16 @@ Cowork polls projects/ every 30 min
 After auto-sort completes, the project is ready for the full orchestrator pipeline (`/hyperedit-orchestrator`). The run-ledger gates the orchestrator — it will read `current_stage` and continue from where auto-sort left off.
 
 **Grading happens later:** Only after picture lock, the Color agent conforms proxies → full-res and applies LUTs to final cut clips only.
+
+### Pipeline State (as of 2026-02-27)
+
+First real pipeline run completed end-to-end:
+- **160 clips** classified and sorted into 4 bins: wide (75), detail (64), drone (19), walk-through (2)
+- **All 160 proxies** generated via `scripts/generate-proxies.js`
+- **Orchestrator artifacts initialized:** `00_project_brief`, `01_orchestration_plan`, `12_gap_report`, `10_footage_catalog`, `11_selects_shortlist`
+- **Run-ledger:** `footage_intake=done`, ready for Audio → Assembly → Color stages
+- **GPU instance:** Vast.ai RTX PRO 6000 at $1.076/hr, ~37s/clip average, ~$2.70 total for 160 clips
+- **Bridge catalog:** `scripts/bridge-catalog.js` transforms `shot-catalog.json` into orchestrator-format `10_footage_catalog.json` + `11_selects_shortlist.json`
 
 **Full prompt and schedule config:** `docs/cowork-auto-sort-task.md`
 

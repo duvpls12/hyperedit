@@ -37,7 +37,18 @@ After picture lock is frozen, the Color agent handles **conform** — replacing 
 - `41_refine_cut.json`
 - `42_picture_lock.json` — frozen cut with proxy→source mapping for conform
 
+## Live Editing via FFmpeg Server
+
+The assembly agent can edit the timeline live through the FFmpeg server, allowing the user to watch edits in real time at the dev server (`npm run dev`):
+
+1. **Create session:** `POST /session/create` → receive `session_id`
+2. **Import proxies:** `POST /session/{id}/import-project` — reads `shot-catalog.json`, symlinks proxies into session, creates bins, registers assets
+3. **Place clips on timeline:** `PUT /session/{id}/project` — saves clips/tracks/settings to `project.json`. The frontend `useProject` hook loads from server session and updates in real time.
+4. **Render final output:** `POST /session/{id}/render` — renders the timeline to video
+
+The user can watch the assembly being built at `localhost:5173` (Vite dev server) while the agent places clips.
+
 ## Tool integrations
 
-- **FFmpeg server** (`localhost:3333`): timeline rendering, transitions, speed ramp processing (operates on proxy files)
+- **FFmpeg server** (`localhost:3333`): timeline rendering, transitions, speed ramp processing (operates on proxy files), live project save via `PUT /session/{id}/project`
 - **VideoHelperSuite** (ComfyUI node): Video Combine — merge frame sequences + audio track into final export

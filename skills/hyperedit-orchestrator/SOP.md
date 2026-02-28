@@ -107,7 +107,9 @@ Include stage sequence, conditional flags, and quality gate definitions. Referen
 
 **Step 6 — Dispatch `/hyperedit-footage-intake`**
 
-Update run-ledger: `stages[footage_intake].status = "in_progress"`.
+**Pre-completion check:** Before dispatching, check if the auto-sort pipeline has already completed this stage. If `10_footage_catalog.json`, `11_selects_shortlist.json`, and `12_gap_report.json` already exist in `state/agents/<project_id>/`, validate them and mark `stages[footage_intake].status = "done"` without re-running intake. These artifacts are produced by `scripts/run-pipeline-remote.js` (or `run-pipeline-local.js`) + `scripts/bridge-catalog.js`.
+
+If artifacts do not exist, update run-ledger: `stages[footage_intake].status = "in_progress"`.
 
 Provide context:
 - `00_project_brief.json` path

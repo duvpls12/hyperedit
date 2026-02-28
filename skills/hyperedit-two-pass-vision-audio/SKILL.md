@@ -118,6 +118,17 @@ ssh -p 29449 root@154.59.156.10 "ollama pull qwen2.5vl:7b"
 - **Stop instance immediately after classification completes**
 - **Grading happens locally after picture lock — no GPU needed**
 
+### First Pipeline Run Results (2026-02-27)
+- **160 clips** classified in ~2.5 hrs on RTX PRO 6000 Blackwell
+- **Bins produced:** wide (75), detail (64), drone (19), walk-through (2)
+- **Total GPU cost:** ~$2.70 ($1.076/hr x ~2.5 hrs)
+- **Average classification time:** ~37s/clip (remote mode)
+- **All 160 proxies** generated locally via `scripts/generate-proxies.js` (~5s/clip)
+
+### Camera-Aware Drone Override Rule
+
+Only filenames prefixed with `DJI_` can classify as `drone`. If a non-DJI clip is classified as drone by the vision model, it is reclassified to `wide`. This rule is enforced in `run-pipeline-local.js`, `run-pipeline-remote.js`, `gpu-classify.py`, `hyperedit-mcp-server.js`, and `bridge-catalog.js`.
+
 ---
 
 ## Runtime Execution Sequence

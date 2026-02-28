@@ -62,6 +62,15 @@ Color+Conform  → replace proxies with full-res → apply LUT + grade → only 
 - `state/agents/<project_id>/71_grade_card.json`
 - `state/agents/<project_id>/72_publish_checklist.json`
 
+## Pre-completed Footage Intake via Auto-Sort Pipeline
+
+The footage intake stage can be pre-completed before the orchestrator runs by using the auto-sort pipeline scripts:
+
+1. `scripts/run-pipeline-remote.js` or `scripts/run-pipeline-local.js` — classifies clips and generates proxies
+2. `scripts/bridge-catalog.js` — transforms `shot-catalog.json` into orchestrator-format artifacts: `10_footage_catalog.json` + `11_selects_shortlist.json` + `12_gap_report.json`
+
+When the orchestrator detects existing `10_footage_catalog.json`, `11_selects_shortlist.json`, and `12_gap_report.json` in the artifacts directory, it should treat `footage_intake` as already `done` in the run-ledger and skip to the next pending stage.
+
 ## Shared references
 
 - System overview: [docs/agents/README.md](../../docs/agents/README.md)

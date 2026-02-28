@@ -31,6 +31,19 @@ Dispatched by Orchestrator after both `31_radio_edit.json` (audio timing) and `1
 
 **All timeline operations in this SOP use 720p proxy files, NOT raw footage.** This keeps assembly fast and avoids processing 4K/HEVC during creative editing. Each clip in `11_selects_shortlist.json` includes a `proxy_path` field pointing to `<project>/proxies/<clip_id>_proxy.mp4`. The `42_picture_lock.json` must include a `source_path` → `proxy_path` mapping for every clip so the Color agent can conform (replace proxies with full-res graded files).
 
+## Live Editing Workflow (Optional)
+
+The assembly agent can build the timeline live through the FFmpeg server while the user watches in the browser:
+
+1. Start the dev server: `npm run dev` (serves at `localhost:5173`)
+2. Start the FFmpeg server: `npm run ffmpeg-server` (serves at `localhost:3333`)
+3. Create a session: `POST /session/create`
+4. Import proxies into the session: `POST /session/{id}/import-project` — reads `shot-catalog.json`, symlinks proxies, creates bins, registers assets
+5. As the agent places clips via `PUT /session/{id}/project`, the frontend `useProject` hook reloads and the user sees edits appear in real time at `localhost:5173`
+6. Render the final output: `POST /session/{id}/render`
+
+This workflow is optional — the standard artifact-based assembly procedure below still applies.
+
 ## Procedure
 
 1. **Load timing map and shot pool.**
