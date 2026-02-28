@@ -27,10 +27,22 @@ LOCK_FILE=Path('/Users/davideby/hyperedit/state/video-analysis-single/.batch10.l
 RULEBOOK_PATH=Path('/Users/davideby/hyperedit/docs/plans/cinematic_training_qa_rulebook_v1.json')
 
 key=''
+salad_key=''
+salad_host=''
 for l in Path('/Users/davideby/hyperedit/.env').read_text().splitlines():
-    if l.startswith('LM_STUDIO_API_KEY='):
-        key=l.split('=',1)[1].strip(); break
-H={'Authorization':f'Bearer {key}','Content-Type':'application/json'}
+    if l.startswith('LM_STUDIO_API_KEY='): key=l.split('=',1)[1].strip()
+    elif l.startswith('SALAD_API_KEY='): salad_key=l.split('=',1)[1].strip()
+    elif l.startswith('SALAD_HOST='): salad_host=l.split('=',1)[1].strip()
+
+SALAD_MODE = bool(salad_key)
+SALAD_THINKING_OVERHEAD = 600  # extra tokens for Qwen3 thinking before output
+
+if SALAD_MODE:
+    HOST = salad_host or 'https://papaya-pea-tmu3opuqb55gjpp2.salad.cloud'
+    H = {'Salad-Api-Key': salad_key, 'Content-Type': 'application/json'}
+    VISION_MODELS = [os.getenv('VISION_MODEL_8B', 'qwen3-vl:8b')]
+else:
+    H={'Authorization':f'Bearer {key}','Content-Type':'application/json'}
 
 def req(path,payload=None,method='POST',timeout=180):
     data=None if payload is None else json.dumps(payload).encode()
@@ -41,9 +53,11 @@ def req(path,payload=None,method='POST',timeout=180):
     except: return {'raw':txt}
 
 def chat(model,messages,max_tokens=250,timeout=120):
+    if SALAD_MODE: max_tokens += SALAD_THINKING_OVERHEAD
     return req('/v1/chat/completions',{'model':model,'messages':messages,'temperature':0,'max_tokens':max_tokens},timeout=timeout)['choices'][0]['message'].get('content','')
 
 def list_loaded():
+    if SALAD_MODE: return []
     ids=[]
     try:
         raw=req('/api/v1/models',None,'GET',30)
@@ -85,6 +99,7 @@ def validate_vision_instance_count(count):
 
 
 def ensure_single_vision_instance(model_id):
+    if SALAD_MODE: return model_id  # model always loaded on Salad; no management needed
     ids=list_loaded()
     managed=[i for i in ids if _is_managed_vision_instance(i)]
     if len(managed) > 1:
@@ -115,11 +130,13 @@ def resolve_vision_model_with_fallback():
     raise RuntimeError('All vision model fallbacks failed: ' + json.dumps(failures))
 
 def unload_instances(ids):
+    if SALAD_MODE: return
     for i in ids:
         try: req('/api/v1/models/unload',{'instance_id':i},'POST',60)
         except: pass
 
 def load_audio_models():
+    if SALAD_MODE: return []
     loaded=[]
     for m in AUDIO_MODELS:
         try:
@@ -212,6 +229,14 @@ def temporal_post(video, pass1_json, frames):
     j['temporal_post']={'fps':FPS,'frames_total':len(frames),'shot_boundaries':boundaries,'shots':shots,'summary':{'shot_count':len(shots),'movement_counts':{k:sum(1 for s in shots if s['movement_type']==k) for k in ['static','pan']}}}
     vid=video.stem.replace(' ','_')[:120]
     p=OUT_V/f'{vid}_vision_pass2_temporal.json'; p.write_text(json.dumps(j,indent=2))
+    return p
+
+def stub_audio_pass(video):
+    """Returns a minimal stub audio record when audio models are unavailable (Salad mode)."""
+    vid=video.stem.replace(' ','_')[:120]
+    p=OUT_A/f'{vid}_audio_pass.json'
+    out={'video':str(video),'audio_models':[],'audio_models_loaded':False,'bpm':0.0,'beats':[],'onsets':[],'energy_curve':[],'spectral_brightness':[],'segments':[],'sound_design_events':[],'audio_semantic_summary':[],'music_fit_score':None,'music_recommendations':[]}
+    p.write_text(json.dumps(out,indent=2))
     return p
 
 def audio_pass(video, audio_models):
@@ -472,9 +497,51 @@ def final_synthesis(video, p1, p2, pa):
     return p
 
 
+
+
+def _pid_alive(pid:int)->bool:
+    try:
+        os.kill(pid,0)
+        return True
+    except Exception:
+        return False
+
+def _read_lock_pid():
+    try:
+        return int(LOCK_FILE.read_text().strip())
+    except Exception:
+        return None
+
+def resolve_variant_fallback(video_path: Path) -> Path:
+    """Return a canonical .mp4 fallback when a variant filename is missing."""
+    if video_path.exists():
+        return video_path
+    stem = video_path.stem
+    # collapse known variant suffixes like .f137/.f247/.f399
+    for tag in ('.f137','.f247','.f399'):
+        if tag in stem:
+            base = stem.split(tag)[0]
+            candidates = sorted(video_path.parent.glob(base + '*.mp4'))
+            if candidates:
+                return candidates[0]
+            break
+    # fallback by id prefix before double underscore
+    vid = stem.split('__')[0]
+    candidates = sorted(video_path.parent.glob(vid + '*.mp4'))
+    if candidates:
+        return candidates[0]
+    raise FileNotFoundError(f'Missing source and no canonical fallback found for {video_path}')
+
 def acquire_lock():
     if LOCK_FILE.exists():
-        raise RuntimeError(f'Batch runner lock exists: {LOCK_FILE}. Another run is active or previous run crashed.')
+        pid=_read_lock_pid()
+        if pid and _pid_alive(pid):
+            raise RuntimeError(f'Batch runner lock exists and is live (pid={pid}): {LOCK_FILE}')
+        # stale lock from crashed run
+        try:
+            LOCK_FILE.unlink()
+        except Exception:
+            pass
     LOCK_FILE.write_text(str(os.getpid()) + '\n')
 
 
@@ -493,9 +560,10 @@ def main():
         vids=sorted([p for p in ALL.iterdir() if p.is_file() and p.suffix.lower() in ['.mp4','.mov','.mkv','.webm','.m4v']])[:MAX_VIDEOS]
         print('TARGET_VIDEOS',len(vids))
         for v in vids:
-            print('START',v.name)
-            vid=v.stem.replace(' ','_')[:120]
             try:
+                v = resolve_variant_fallback(v)
+                print('START',v.name)
+                vid=v.stem.replace(' ','_')[:120]
                 vision_model, vision_instance, vision_failures = resolve_vision_model_with_fallback()
                 print('VISION_MODEL_SELECTED', vision_model)
                 if vision_failures:
@@ -511,10 +579,13 @@ def main():
                 p2 = temporal_post(v, p1, frames)
                 unload_instances([vision_instance])
 
-                am = load_audio_models()
-                pa = audio_pass(v, am)
+                if SALAD_MODE:
+                    pa = stub_audio_pass(v)
+                else:
+                    am = load_audio_models()
+                    pa = audio_pass(v, am)
+                    unload_instances(am)
                 final_synthesis(v, p1, p2, pa)
-                unload_instances(am)
                 dest=DONE/v.name
                 shutil.move(str(v), str(dest))
                 print('DONE',v.name,'->',dest)
