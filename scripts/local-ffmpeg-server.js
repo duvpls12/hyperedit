@@ -8590,6 +8590,100 @@ function handleRemoveAssetFromBin(req, res, sessionId, binId, assetId) {
 
 // ============== IMPORT PROJECT ==============
 
+// ---------------------------------------------------------------------------
+// Agent timeline endpoints — add/clear clips for live agent editing
+// ---------------------------------------------------------------------------
+
+async function handleTimelineAddClip(req, res, sessionId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+
+  try {
+    let body = '';
+    for await (const chunk of req) body += chunk;
+    const clip = JSON.parse(body);
+
+    // Required fields
+    if (!clip.assetId || !clip.trackId) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'assetId and trackId are required' }));
+      return;
+    }
+
+    // Find asset to get duration
+    const asset = session.assets.get(clip.assetId);
+    if (!asset) {
+      res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: `Asset ${clip.assetId} not found` }));
+      return;
+    }
+
+    const newClip = {
+      id: clip.id || randomUUID(),
+      assetId: clip.assetId,
+      trackId: clip.trackId,
+      start: typeof clip.start === 'number' ? clip.start : 0,
+      duration: typeof clip.duration === 'number' ? clip.duration : (clip.outPoint || asset.duration) - (clip.inPoint || 0),
+      inPoint: typeof clip.inPoint === 'number' ? clip.inPoint : 0,
+      outPoint: typeof clip.outPoint === 'number' ? clip.outPoint : asset.duration,
+      transform: clip.transform || {},
+    };
+
+    session.project.clips.push(newClip);
+
+    // Persist
+    const projectPath = join(session.dir, 'project.json');
+    writeFileSync(projectPath, JSON.stringify(session.project, null, 2));
+
+    console.log(`[${sessionId}] Agent added clip ${newClip.id} (asset=${clip.assetId}) at ${newClip.start}s on ${newClip.trackId}. Total clips: ${session.project.clips.length}`);
+
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ success: true, clip: newClip, totalClips: session.project.clips.length }));
+  } catch (error) {
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: error.message }));
+  }
+}
+
+function handleTimelineAssetMap(req, res, sessionId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+
+  const map = {};
+  for (const [id, asset] of session.assets) {
+    map[asset.filename] = { id, type: asset.type, duration: asset.duration, filename: asset.filename };
+  }
+
+  res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+  res.end(JSON.stringify({ assets: map, totalAssets: session.assets.size }));
+}
+
+async function handleTimelineClear(req, res, sessionId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+
+  session.project.clips = [];
+  const projectPath = join(session.dir, 'project.json');
+  writeFileSync(projectPath, JSON.stringify(session.project, null, 2));
+
+  console.log(`[${sessionId}] Agent cleared all clips from timeline`);
+
+  res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+  res.end(JSON.stringify({ success: true }));
+}
+
 async function handleImportProject(req, res, sessionId) {
   const session = getSession(sessionId);
   if (!session) {
@@ -9034,6 +9128,18 @@ const server = http.createServer(async (req, res) => {
     // Import project from Charlie drive
     else if (req.method === 'POST' && action === 'import-project') {
       await handleImportProject(req, res, sessionId);
+    }
+    // Agent timeline manipulation: add a single clip
+    else if (req.method === 'POST' && action === 'timeline/add-clip') {
+      await handleTimelineAddClip(req, res, sessionId);
+    }
+    // Agent timeline manipulation: clear all clips
+    else if (req.method === 'POST' && action === 'timeline/clear') {
+      await handleTimelineClear(req, res, sessionId);
+    }
+    // Agent timeline: get asset filename→id mapping
+    else if (req.method === 'GET' && action === 'timeline/asset-map') {
+      handleTimelineAssetMap(req, res, sessionId);
     }
     // Bin CRUD endpoints
     else if (req.method === 'GET' && action === 'bins') {

@@ -160,6 +160,9 @@ export function useProject() {
   const [status, setStatus] = useState('');
   const [serverAvailable, setServerAvailable] = useState<boolean | null>(null);
 
+  // Agent mode: poll server for timeline changes so user can watch agents edit live
+  const [agentMode, setAgentMode] = useState(false);
+
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Refs to track latest state values for saveProject (avoids stale closure issues)
@@ -926,6 +929,34 @@ export function useProject() {
   //   }
   // }, [clips, session, saveProject]);
 
+  // Agent mode: poll server every 2s to reflect agent-driven timeline changes
+  useEffect(() => {
+    if (!agentMode || !session) return;
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`${LOCAL_FFMPEG_URL}/session/${session.sessionId}/project`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.clips) setClips(data.clips);
+
+        // Also refresh assets in case agent added new ones
+        const assetsRes = await fetch(`${LOCAL_FFMPEG_URL}/session/${session.sessionId}/assets`);
+        if (assetsRes.ok) {
+          const ad = await assetsRes.json();
+          const serverAssets: Asset[] = (ad.assets || []).map((a: { id: string; type: 'video' | 'image' | 'audio'; filename: string; duration: number; size: number; width?: number; height?: number; thumbnailUrl?: string | null; aiGenerated?: boolean }) => ({
+            id: a.id, type: a.type, filename: a.filename, duration: a.duration,
+            size: a.size, width: a.width, height: a.height,
+            thumbnailUrl: a.thumbnailUrl ? `${LOCAL_FFMPEG_URL}${a.thumbnailUrl}` : null,
+            streamUrl: `${LOCAL_FFMPEG_URL}/session/${session.sessionId}/assets/${a.id}/stream?v=${Date.now()}`,
+            aiGenerated: a.aiGenerated || false,
+          }));
+          setAssets(serverAssets);
+        }
+      } catch { /* ignore poll errors */ }
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [agentMode, session]);
+
   return {
     // State
     session,
@@ -969,6 +1000,10 @@ export function useProject() {
     loadProject,
     renderProject,
     getDuration,
+
+    // Agent mode
+    agentMode,
+    setAgentMode,
 
     // Setters for direct state manipulation
     setTracks,

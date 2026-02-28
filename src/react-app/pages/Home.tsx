@@ -86,6 +86,9 @@ export default function Home() {
     updateTabAsset,
     // Settings
     setSettings,
+    // Agent mode
+    agentMode,
+    setAgentMode,
   } = useProject();
 
   // Compute the active clips based on which tab is selected
@@ -1924,6 +1927,14 @@ export default function Home() {
                 >
                   <FolderInput className="w-3.5 h-3.5" />
                   <span>Import Project</span>
+                </button>
+                <button
+                  onClick={() => setAgentMode(!agentMode)}
+                  title={agentMode ? 'Agent mode ON — polling server for live edits' : 'Enable agent mode to watch AI agents edit live'}
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs transition-colors ${agentMode ? 'text-emerald-400 bg-emerald-900/30 hover:bg-emerald-900/50' : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800'}`}
+                >
+                  <span className={`w-2 h-2 rounded-full ${agentMode ? 'bg-emerald-400 animate-pulse' : 'bg-zinc-600'}`} />
+                  <span>Agent Mode</span>
                 </button>
               </div>
               <div className="flex-1 overflow-hidden">
