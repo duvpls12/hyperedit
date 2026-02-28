@@ -19,7 +19,24 @@
         }
       }
     },
-    "timeline": { "$ref": "40_rough_cut.schema.json#/properties/timeline" },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "track_position": { "type": "integer" },
+          "clip_id": { "type": "string" },
+          "clip_type": { "type": "string", "enum": ["real", "synthetic"] },
+          "timeline_start_seconds": { "type": "number" },
+          "timeline_end_seconds": { "type": "number" },
+          "in_point_seconds": { "type": "number" },
+          "out_point_seconds": { "type": "number" },
+          "beat_anchor_seconds": { "type": "number" },
+          "transition": { "type": "string", "enum": ["cut", "dissolve", "fade"], "default": "cut" }
+        },
+        "required": ["track_position", "clip_id", "timeline_start_seconds", "timeline_end_seconds"]
+      }
+    },
     "directional_continuity_score": {
       "type": "number",
       "minimum": 0,

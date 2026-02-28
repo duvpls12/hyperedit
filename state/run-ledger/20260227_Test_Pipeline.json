@@ -1,0 +1,153 @@
+{
+  "project_id": "20260227_Test_Pipeline",
+  "created_at": "2026-02-27T20:30:00.000Z",
+  "updated_at": "2026-02-27T21:26:27Z",
+  "current_stage": "color",
+  "client_brief_path": "state/agents/20260227_Test_Pipeline/00_project_brief.json",
+  "artifacts_dir": "state/agents/20260227_Test_Pipeline/",
+  "stages": [
+    {
+      "name": "orchestrator_init",
+      "status": "done",
+      "started_at": "2026-02-27T20:30:00.000Z",
+      "completed_at": "2026-02-27T20:30:00.000Z",
+      "retry_count": 0,
+      "artifacts": [
+        {
+          "name": "00_project_brief",
+          "path": "state/agents/20260227_Test_Pipeline/00_project_brief.json",
+          "schema": "00_project_brief.schema.json",
+          "validation_status": "valid"
+        },
+        {
+          "name": "01_orchestration_plan",
+          "path": "state/agents/20260227_Test_Pipeline/01_orchestration_plan.json",
+          "schema": "01_orchestration_plan.schema.json",
+          "validation_status": "valid"
+        }
+      ],
+      "blockers": []
+    },
+    {
+      "name": "footage_intake",
+      "status": "done",
+      "started_at": "2026-02-27T18:00:00.000Z",
+      "completed_at": "2026-02-27T20:28:00.000Z",
+      "retry_count": 0,
+      "artifacts": [
+        {
+          "name": "10_footage_catalog",
+          "path": "state/agents/20260227_Test_Pipeline/10_footage_catalog.json",
+          "schema": "10_footage_catalog.schema.json",
+          "validation_status": "valid"
+        },
+        {
+          "name": "11_selects_shortlist",
+          "path": "state/agents/20260227_Test_Pipeline/11_selects_shortlist.json",
+          "schema": "11_selects_shortlist.schema.json",
+          "validation_status": "valid"
+        },
+        {
+          "name": "12_gap_report",
+          "path": "state/agents/20260227_Test_Pipeline/12_gap_report.json",
+          "schema": "12_gap_report.schema.json",
+          "validation_status": "valid"
+        }
+      ],
+      "blockers": []
+    },
+    {
+      "name": "photo_to_video",
+      "status": "skipped",
+      "started_at": null,
+      "completed_at": null,
+      "retry_count": 0,
+      "artifacts": [],
+      "blockers": [],
+      "skip_reason": "No blocking gaps in gap_report \u2014 photo-to-video not needed"
+    },
+    {
+      "name": "audio",
+      "status": "done",
+      "started_at": "2026-02-27T20:45:00.000Z",
+      "completed_at": "2026-02-27T21:15:00.000Z",
+      "retry_count": 0,
+      "artifacts": [
+        {
+          "name": "30_music_map",
+          "path": "state/agents/20260227_Test_Pipeline/30_music_map.json",
+          "schema": "30_music_map.schema.json",
+          "validation_status": "valid"
+        },
+        {
+          "name": "31_radio_edit",
+          "path": "state/agents/20260227_Test_Pipeline/31_radio_edit.json",
+          "schema": "31_radio_edit.schema.json",
+          "validation_status": "valid"
+        },
+        {
+          "name": "32_audio_qc",
+          "path": "state/agents/20260227_Test_Pipeline/32_audio_qc.json",
+          "schema": "32_audio_qc.schema.json",
+          "validation_status": "valid"
+        }
+      ],
+      "blockers": []
+    },
+    {
+      "name": "assembly",
+      "status": "done",
+      "started_at": "2026-02-27T21:00:00Z",
+      "completed_at": "2026-02-27T21:26:27Z",
+      "retry_count": 1,
+      "artifacts": [
+        {
+          "name": "40_rough_cut",
+          "path": "state/agents/20260227_Test_Pipeline/40_rough_cut.json",
+          "schema": "40_rough_cut.schema.json",
+          "validation_status": "valid"
+        },
+        {
+          "name": "41_refine_cut",
+          "path": "state/agents/20260227_Test_Pipeline/41_refine_cut.json",
+          "schema": "41_refine_cut.schema.json",
+          "validation_status": "valid"
+        },
+        {
+          "name": "42_picture_lock",
+          "path": "state/agents/20260227_Test_Pipeline/42_picture_lock.json",
+          "schema": "42_picture_lock.schema.json",
+          "validation_status": "valid"
+        }
+      ],
+      "blockers": []
+    },
+    {
+      "name": "color",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "retry_count": 0,
+      "artifacts": [],
+      "blockers": []
+    },
+    {
+      "name": "text_graphics",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "retry_count": 0,
+      "artifacts": [],
+      "blockers": []
+    },
+    {
+      "name": "orchestrator_qc",
+      "status": "pending",
+      "started_at": null,
+      "completed_at": null,
+      "retry_count": 0,
+      "artifacts": [],
+      "blockers": []
+    }
+  ]
+}

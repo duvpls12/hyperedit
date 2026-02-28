@@ -1,0 +1,163 @@
+{
+  "status": "pass",
+  "blocking_issues": [],
+  "assumptions": [
+    "Radio edit: 0-62.62s (phrase boundary), 6 segments, 22 shots total",
+    "Hook: 2 aerial/drone shots in first 5s over ambient intro pad",
+    "Build sections tease exterior then interior before the drop",
+    "Drop at 29.6s triggers fast cuts through bedrooms/bathrooms",
+    "Finale returns to aerials for epic coastal close"
+  ],
+  "open_questions": [],
+  "source_references": [
+    {
+      "type": "artifact",
+      "path": "30_music_map.json"
+    },
+    {
+      "type": "artifact",
+      "path": "11_selects_shortlist.json"
+    },
+    {
+      "type": "artifact",
+      "path": "00_project_brief.json"
+    }
+  ],
+  "project_id": "20260227_Test_Pipeline",
+  "total_duration_seconds": 62.62,
+  "segments": [
+    {
+      "segment_id": "seg_hook",
+      "section_name": "hook",
+      "start_seconds": 0.0,
+      "end_seconds": 5.0,
+      "duration_seconds": 5.0,
+      "target_shot_count": 2,
+      "target_rooms": [
+        "drone",
+        "exterior"
+      ],
+      "energy_level": "medium",
+      "cut_on_beat": true,
+      "beat_anchors": [
+        0.0,
+        2.5
+      ],
+      "hook_required": true
+    },
+    {
+      "segment_id": "seg_build1",
+      "section_name": "build_1",
+      "start_seconds": 5.0,
+      "end_seconds": 18.46,
+      "duration_seconds": 13.46,
+      "target_shot_count": 4,
+      "target_rooms": [
+        "exterior",
+        "yard",
+        "patio"
+      ],
+      "energy_level": "low",
+      "cut_on_beat": true,
+      "beat_anchors": [
+        7.384,
+        10.147,
+        12.934,
+        15.673
+      ],
+      "hook_required": false
+    },
+    {
+      "segment_id": "seg_build2",
+      "section_name": "build_2",
+      "start_seconds": 18.46,
+      "end_seconds": 29.56,
+      "duration_seconds": 11.1,
+      "target_shot_count": 4,
+      "target_rooms": [
+        "living",
+        "kitchen",
+        "dining"
+      ],
+      "energy_level": "medium",
+      "cut_on_beat": true,
+      "beat_anchors": [
+        18.46,
+        21.269,
+        24.102,
+        26.819,
+        29.559
+      ],
+      "hook_required": false
+    },
+    {
+      "segment_id": "seg_drop_a",
+      "section_name": "drop_a",
+      "start_seconds": 29.56,
+      "end_seconds": 40.68,
+      "duration_seconds": 11.12,
+      "target_shot_count": 5,
+      "target_rooms": [
+        "bedroom",
+        "bathroom",
+        "hallway"
+      ],
+      "energy_level": "high",
+      "cut_on_beat": true,
+      "beat_anchors": [
+        32.276,
+        35.062,
+        37.849
+      ],
+      "hook_required": false
+    },
+    {
+      "segment_id": "seg_drop_b",
+      "section_name": "drop_b",
+      "start_seconds": 40.68,
+      "end_seconds": 51.62,
+      "duration_seconds": 10.94,
+      "target_shot_count": 4,
+      "target_rooms": [
+        "kitchen",
+        "living",
+        "garage"
+      ],
+      "energy_level": "high",
+      "cut_on_beat": true,
+      "beat_anchors": [
+        40.681,
+        43.421,
+        46.161,
+        48.878,
+        51.618
+      ],
+      "hook_required": false
+    },
+    {
+      "segment_id": "seg_finale",
+      "section_name": "finale",
+      "start_seconds": 51.62,
+      "end_seconds": 62.62,
+      "duration_seconds": 11.0,
+      "target_shot_count": 3,
+      "target_rooms": [
+        "drone",
+        "exterior",
+        "yard"
+      ],
+      "energy_level": "high",
+      "cut_on_beat": true,
+      "beat_anchors": [
+        54.335,
+        57.051,
+        59.884
+      ],
+      "hook_required": false
+    }
+  ],
+  "hook_window": {
+    "end_seconds": 5.0,
+    "required_shot_class": "drone"
+  }
+}

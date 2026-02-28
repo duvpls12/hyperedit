@@ -1,0 +1,281 @@
+{
+  "blocking_issues": [],
+  "assumptions": [
+    "22 clips across 6 segments aligned to Aaron Hibell - Morning Light (172 BPM / 86 half-time)",
+    "Narrative: aerial hook \u2192 exterior build \u2192 interior reveal \u2192 DROP fast cuts \u2192 aerial finale",
+    "EDM drop at 29.6s triggers faster cut cadence (2.2s per clip vs 3.4s in build sections)",
+    "Modern coastal California vibe \u2014 aerials bookend the edit, interiors explore room by room",
+    "Proxy-only assembly (720p H.264)"
+  ],
+  "open_questions": [],
+  "source_references": [
+    {
+      "type": "artifact",
+      "path": "11_selects_shortlist.json"
+    },
+    {
+      "type": "artifact",
+      "path": "30_music_map.json"
+    },
+    {
+      "type": "artifact",
+      "path": "31_radio_edit.json"
+    }
+  ],
+  "status": "pass",
+  "project_id": "20260227_Test_Pipeline",
+  "total_duration_seconds": 62.62,
+  "timeline": [
+    {
+      "track_position": 1,
+      "clip_id": "DJI_20260225143753_0273_D",
+      "clip_type": "real",
+      "timeline_start_seconds": 0.0,
+      "timeline_end_seconds": 2.5,
+      "in_point_seconds": 20.422,
+      "out_point_seconds": 22.922,
+      "beat_anchor_seconds": 0.0,
+      "transition": "cut"
+    },
+    {
+      "track_position": 2,
+      "clip_id": "DJI_20260225143606_0270_D",
+      "clip_type": "real",
+      "timeline_start_seconds": 2.5,
+      "timeline_end_seconds": 5.0,
+      "in_point_seconds": 19.554,
+      "out_point_seconds": 22.054,
+      "beat_anchor_seconds": 2.5,
+      "transition": "cut"
+    },
+    {
+      "track_position": 3,
+      "clip_id": "JG4589",
+      "clip_type": "real",
+      "timeline_start_seconds": 5.0,
+      "timeline_end_seconds": 8.365,
+      "in_point_seconds": 2.822,
+      "out_point_seconds": 6.187,
+      "beat_anchor_seconds": 5.0,
+      "transition": "cut"
+    },
+    {
+      "track_position": 4,
+      "clip_id": "JG4583",
+      "clip_type": "real",
+      "timeline_start_seconds": 7.384,
+      "timeline_end_seconds": 10.749,
+      "in_point_seconds": 3.072,
+      "out_point_seconds": 6.437,
+      "beat_anchor_seconds": 7.384,
+      "transition": "cut"
+    },
+    {
+      "track_position": 5,
+      "clip_id": "JG4712",
+      "clip_type": "real",
+      "timeline_start_seconds": 12.934,
+      "timeline_end_seconds": 16.299,
+      "in_point_seconds": 1.821,
+      "out_point_seconds": 5.186,
+      "beat_anchor_seconds": 12.934,
+      "transition": "cut"
+    },
+    {
+      "track_position": 6,
+      "clip_id": "JG4651",
+      "clip_type": "real",
+      "timeline_start_seconds": 15.673,
+      "timeline_end_seconds": 18.46,
+      "in_point_seconds": 1.109,
+      "out_point_seconds": 3.896,
+      "beat_anchor_seconds": 15.673,
+      "transition": "cut"
+    },
+    {
+      "track_position": 7,
+      "clip_id": "JG4716",
+      "clip_type": "real",
+      "timeline_start_seconds": 18.46,
+      "timeline_end_seconds": 21.235,
+      "in_point_seconds": 3.868,
+      "out_point_seconds": 6.643,
+      "beat_anchor_seconds": 18.46,
+      "transition": "cut"
+    },
+    {
+      "track_position": 8,
+      "clip_id": "JG4692",
+      "clip_type": "real",
+      "timeline_start_seconds": 21.269,
+      "timeline_end_seconds": 24.044,
+      "in_point_seconds": 2.366,
+      "out_point_seconds": 5.141,
+      "beat_anchor_seconds": 21.269,
+      "transition": "cut"
+    },
+    {
+      "track_position": 9,
+      "clip_id": "JG4629",
+      "clip_type": "real",
+      "timeline_start_seconds": 24.102,
+      "timeline_end_seconds": 26.877,
+      "in_point_seconds": 1.866,
+      "out_point_seconds": 4.641,
+      "beat_anchor_seconds": 24.102,
+      "transition": "cut"
+    },
+    {
+      "track_position": 10,
+      "clip_id": "JG4685",
+      "clip_type": "real",
+      "timeline_start_seconds": 26.819,
+      "timeline_end_seconds": 29.56,
+      "in_point_seconds": 2.383,
+      "out_point_seconds": 5.124,
+      "beat_anchor_seconds": 26.819,
+      "transition": "cut"
+    },
+    {
+      "track_position": 11,
+      "clip_id": "JG4599",
+      "clip_type": "real",
+      "timeline_start_seconds": 29.56,
+      "timeline_end_seconds": 31.784,
+      "in_point_seconds": 1.891,
+      "out_point_seconds": 4.115,
+      "beat_anchor_seconds": 29.56,
+      "transition": "cut"
+    },
+    {
+      "track_position": 12,
+      "clip_id": "JG4698",
+      "clip_type": "real",
+      "timeline_start_seconds": 32.276,
+      "timeline_end_seconds": 34.5,
+      "in_point_seconds": 1.14,
+      "out_point_seconds": 3.364,
+      "beat_anchor_seconds": 32.276,
+      "transition": "cut"
+    },
+    {
+      "track_position": 13,
+      "clip_id": "JG4706",
+      "clip_type": "real",
+      "timeline_start_seconds": 34.008,
+      "timeline_end_seconds": 36.232,
+      "in_point_seconds": 2.392,
+      "out_point_seconds": 4.615,
+      "beat_anchor_seconds": 34.008,
+      "transition": "cut"
+    },
+    {
+      "track_position": 14,
+      "clip_id": "JG4602",
+      "clip_type": "real",
+      "timeline_start_seconds": 36.232,
+      "timeline_end_seconds": 38.456,
+      "in_point_seconds": 4.394,
+      "out_point_seconds": 6.617,
+      "beat_anchor_seconds": 36.232,
+      "transition": "cut"
+    },
+    {
+      "track_position": 15,
+      "clip_id": "JG4693",
+      "clip_type": "real",
+      "timeline_start_seconds": 37.849,
+      "timeline_end_seconds": 40.073,
+      "in_point_seconds": 2.392,
+      "out_point_seconds": 4.615,
+      "beat_anchor_seconds": 37.849,
+      "transition": "cut"
+    },
+    {
+      "track_position": 16,
+      "clip_id": "JG4621",
+      "clip_type": "real",
+      "timeline_start_seconds": 40.681,
+      "timeline_end_seconds": 43.416,
+      "in_point_seconds": 1.636,
+      "out_point_seconds": 4.37,
+      "beat_anchor_seconds": 40.681,
+      "transition": "cut"
+    },
+    {
+      "track_position": 17,
+      "clip_id": "JG4688",
+      "clip_type": "real",
+      "timeline_start_seconds": 43.421,
+      "timeline_end_seconds": 46.156,
+      "in_point_seconds": 1.385,
+      "out_point_seconds": 4.12,
+      "beat_anchor_seconds": 43.421,
+      "transition": "cut"
+    },
+    {
+      "track_position": 18,
+      "clip_id": "JG4717",
+      "clip_type": "real",
+      "timeline_start_seconds": 46.161,
+      "timeline_end_seconds": 48.896,
+      "in_point_seconds": 3.137,
+      "out_point_seconds": 5.872,
+      "beat_anchor_seconds": 46.161,
+      "transition": "cut"
+    },
+    {
+      "track_position": 19,
+      "clip_id": "JG4719",
+      "clip_type": "real",
+      "timeline_start_seconds": 48.878,
+      "timeline_end_seconds": 51.613,
+      "in_point_seconds": 1.886,
+      "out_point_seconds": 4.621,
+      "beat_anchor_seconds": 48.878,
+      "transition": "cut"
+    },
+    {
+      "track_position": 20,
+      "clip_id": "JG4649",
+      "clip_type": "real",
+      "timeline_start_seconds": 51.62,
+      "timeline_end_seconds": 55.287,
+      "in_point_seconds": 1.17,
+      "out_point_seconds": 4.836,
+      "beat_anchor_seconds": 51.62,
+      "transition": "cut"
+    },
+    {
+      "track_position": 21,
+      "clip_id": "DJI_20260225144010_0278_D",
+      "clip_type": "real",
+      "timeline_start_seconds": 54.335,
+      "timeline_end_seconds": 58.002,
+      "in_point_seconds": 17.845,
+      "out_point_seconds": 21.511,
+      "beat_anchor_seconds": 54.335,
+      "transition": "cut"
+    },
+    {
+      "track_position": 22,
+      "clip_id": "DJI_20260225143716_0272_D",
+      "clip_type": "real",
+      "timeline_start_seconds": 59.884,
+      "timeline_end_seconds": 62.62,
+      "in_point_seconds": 16.191,
+      "out_point_seconds": 18.927,
+      "beat_anchor_seconds": 59.884,
+      "transition": "cut"
+    }
+  ],
+  "pacing_notes": [
+    "Hook: 2 aerials in 0-5s over ambient EDM intro pad",
+    "Build 1: exterior approach, 3.4s avg cut \u2014 slow reveal",
+    "Build 2: interior first look before the drop",
+    "Drop A: fast cuts 2.2s avg through bedrooms/baths \u2014 energy peak",
+    "Drop B: continued high energy through dining/kitchen",
+    "Finale: return to aerials for epic coastal close"
+  ],
+  "hook_in_window": true
+}

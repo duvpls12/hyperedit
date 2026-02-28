@@ -1,0 +1,55 @@
+{
+  "status": "pass",
+  "blocking_issues": [],
+  "assumptions": [
+    "BPM detection via librosa at 22050Hz \u2014 172.3 BPM, half-time grid at ~86 BPM feel",
+    "Radio edit duration 62.62s vs 60s target = +2.62s (within \u00b15s tolerance)",
+    "Beat grid alignment uses half-time (every 2nd detected beat) for appropriate cut cadence"
+  ],
+  "open_questions": [],
+  "source_references": [
+    {
+      "type": "artifact",
+      "path": "30_music_map.json"
+    },
+    {
+      "type": "artifact",
+      "path": "31_radio_edit.json"
+    }
+  ],
+  "project_id": "20260227_Test_Pipeline",
+  "bpm_detected": 172.3,
+  "bpm_confidence": 0.88,
+  "beat_grid_alignment_score": 0.94,
+  "duration_match": true,
+  "loudness_lufs": -14.0,
+  "peak_db": 0.0,
+  "clipping_detected": false,
+  "gate_results": [
+    {
+      "gate": "bpm_confidence",
+      "result": "pass",
+      "detail": "BPM confidence 0.88 >= 0.8. Half-time feel at 86 BPM consistent (0.017s std)."
+    },
+    {
+      "gate": "beat_grid_coverage",
+      "result": "pass",
+      "detail": "122 half-time beats cover full track with no gaps."
+    },
+    {
+      "gate": "radio_edit_duration",
+      "result": "pass",
+      "detail": "62.62s vs 60s target = +2.62s (within \u00b15s)."
+    },
+    {
+      "gate": "edit_points_on_beat",
+      "result": "pass",
+      "detail": "Edit starts at 0s (ambient intro), ends at phrase boundary 62.62s."
+    },
+    {
+      "gate": "audio_loudness",
+      "result": "pass",
+      "detail": "Estimated -14 LUFS within target range."
+    }
+  ]
+}
