@@ -266,6 +266,13 @@ async function main() {
       const cls = result.classification || {};
       console.log(`  → ${cls.primary}/${cls.sub} (conf=${cls.confidence}) [${elapsed}s]`);
 
+      // Camera-aware drone override: only DJI files can be drone
+      if (cls.primary === 'drone' && camera !== 'dji') {
+        console.log(`  OVERRIDE: ${camera} clip "${name}" cannot be drone → wide`);
+        cls.primary = 'wide';
+        cls.sub = cls.sub?.startsWith('aerial') ? 'high-angle' : cls.sub || 'establishing';
+      }
+
       // Sort
       const binName = cls.primary || 'unknown';
       sortToBin(videoPath, binName);

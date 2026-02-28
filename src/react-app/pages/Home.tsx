@@ -15,7 +15,7 @@ import ResizableVerticalPanel from '@/react-app/components/ResizableVerticalPane
 import TimelineTabs from '@/react-app/components/TimelineTabs';
 import { useProject, Asset, TimelineClip, CaptionStyle } from '@/react-app/hooks/useProject';
 import { useVideoSession } from '@/react-app/hooks/useVideoSession';
-import { Sparkles, ListOrdered, Copy, Check, X, Download, Play, Palette, Film, Droplets } from 'lucide-react';
+import { Sparkles, ListOrdered, Copy, Check, X, Download, Play, Palette, Film, Droplets, FolderInput } from 'lucide-react';
 import type { TemplateId } from '@/remotion/templates';
 
 interface ChapterData {
@@ -134,6 +134,34 @@ export default function Home() {
     };
     fetchBins();
   }, [session]);
+
+  // Import a Charlie drive project folder (proxies + bin structure) into this session
+  const handleImportProject = useCallback(async () => {
+    const projectPath = prompt('Enter project path on Charlie drive:');
+    if (!projectPath || !session?.sessionId) return;
+    try {
+      const res = await fetch(`http://localhost:3333/session/${session.sessionId}/import-project`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectPath }),
+      });
+      const data = await res.json();
+      if (data.imported !== undefined) {
+        alert(`Imported ${data.imported} clips into ${data.bins.length} bins`);
+        refreshAssets();
+        const binsRes = await fetch(`http://localhost:3333/session/${session.sessionId}/bins`);
+        if (binsRes.ok) {
+          const binsData = await binsRes.json();
+          if (binsData.bins && Array.isArray(binsData.bins)) setBins(binsData.bins);
+        }
+      } else {
+        alert(`Import failed: ${data.error || 'Unknown error'}`);
+      }
+    } catch (e) {
+      console.error('Import failed:', e);
+      alert('Import failed — check console for details');
+    }
+  }, [session, refreshAssets]);
 
   // Get all clips at the current playhead position as layers
   const getPreviewLayers = useCallback(() => {
@@ -1886,7 +1914,19 @@ export default function Home() {
         >
           <div className="flex flex-col h-full">
             {/* Asset Library */}
-            <div className={`${selectedClipId ? 'h-1/2' : 'h-full'} overflow-hidden`}>
+            <div className={`${selectedClipId ? 'h-1/2' : 'h-full'} overflow-hidden flex flex-col`}>
+              {/* Import Project toolbar */}
+              <div className="flex items-center gap-1 px-2 py-1.5 border-b border-zinc-800/60 shrink-0">
+                <button
+                  onClick={handleImportProject}
+                  title="Import Charlie drive project (proxies + bins)"
+                  className="flex items-center gap-1.5 px-2 py-1 rounded text-xs text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
+                >
+                  <FolderInput className="w-3.5 h-3.5" />
+                  <span>Import Project</span>
+                </button>
+              </div>
+              <div className="flex-1 overflow-hidden">
               <AssetBinBrowser
                 sessionId={session?.sessionId ?? null}
                 bins={bins}
@@ -1903,6 +1943,7 @@ export default function Home() {
                 uploading={loading}
                 onOpenGifSearch={() => setShowGifSearch(true)}
               />
+              </div>
             </div>
 
             {/* Clip/Caption Properties Panel (shown when clip is selected) */}

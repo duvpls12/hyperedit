@@ -270,6 +270,16 @@ server.tool(
       const projectPath = path.dirname(filePath);
       const manifestPath = path.join(projectPath, MANIFEST_FILE);
 
+      // Camera-aware drone override: only DJI-named files can be drone
+      const fnameUpper = path.basename(filePath).toUpperCase();
+      const isDji = fnameUpper.startsWith('DJI_') || fnameUpper.startsWith('DJI ');
+      let finalPrimary = primary;
+      let finalSub = sub;
+      if (primary === 'drone' && !isDji) {
+        finalPrimary = 'wide';
+        finalSub = sub.startsWith('aerial') ? 'high-angle' : sub || 'establishing';
+      }
+
       let manifest = {};
       try {
         const raw = await fs.readFile(manifestPath, 'utf-8');
@@ -281,7 +291,7 @@ server.tool(
       manifest[filePath] = {
         filePath,
         fileName: path.basename(filePath),
-        classification: { primary, sub, tags },
+        classification: { primary: finalPrimary, sub: finalSub, tags },
         classifiedAt: new Date().toISOString(),
       };
 

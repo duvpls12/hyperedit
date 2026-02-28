@@ -477,6 +477,15 @@ async function main() {
       }
     }
 
+    // ── Camera-aware drone override ────────────────────────────────────
+    // Only DJI-named files can be classified as drone. Vision model sometimes
+    // tags high-angle or exterior Sony shots as "drone" incorrectly.
+    if (classification.primary === 'drone' && camera !== 'dji') {
+      console.log(`  OVERRIDE: ${camera} clip "${name}" cannot be drone → reclassifying as wide`);
+      classification.primary = 'wide';
+      classification.sub = classification.sub?.startsWith('aerial') ? 'high-angle' : classification.sub || 'establishing';
+    }
+
     // ── Sort to bin ───────────────────────────────────────────────────────
     const binName = classification.primary;
     sortToBin(videoPath, binName);

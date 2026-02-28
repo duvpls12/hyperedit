@@ -207,6 +207,15 @@ def main():
         except Exception as e:
             log(f"  Pass 2 error: {str(e)[:80]}")
 
+    # Camera-aware drone override: only DJI-named files can be drone
+    fname_upper = video.name.upper()
+    is_dji = fname_upper.startswith("DJI_") or fname_upper.startswith("DJI ")
+    if classification.get("primary") == "drone" and not is_dji:
+        log(f"  OVERRIDE: non-DJI file '{video.name}' classified as drone → reclassifying as wide")
+        classification["primary"] = "wide"
+        sub = classification.get("sub", "")
+        classification["sub"] = "high-angle" if sub.startswith("aerial") else (sub or "establishing")
+
     # Output JSON to stdout
     result = {
         "filename": video.name,

@@ -8588,6 +8588,218 @@ function handleRemoveAssetFromBin(req, res, sessionId, binId, assetId) {
   res.end(JSON.stringify(bin));
 }
 
+// ============== IMPORT PROJECT ==============
+
+async function handleImportProject(req, res, sessionId) {
+  const session = getSession(sessionId);
+  if (!session) {
+    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: 'Session not found' }));
+    return;
+  }
+
+  try {
+    const body = await parseBody(req);
+    const { projectPath } = body;
+
+    if (!projectPath) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'projectPath is required' }));
+      return;
+    }
+
+    if (!existsSync(projectPath)) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: `Project path not found: ${projectPath}` }));
+      return;
+    }
+
+    console.log(`[${sessionId}] Importing project from: ${projectPath}`);
+
+    // 1. Read shot-catalog.json
+    const catalogPath = join(projectPath, 'shot-catalog.json');
+    let catalog = [];
+    if (existsSync(catalogPath)) {
+      try {
+        catalog = JSON.parse(readFileSync(catalogPath, 'utf-8'));
+        if (!Array.isArray(catalog)) catalog = [];
+      } catch (e) {
+        console.warn(`[${sessionId}] Could not parse shot-catalog.json: ${e.message}`);
+      }
+    }
+
+    // Build a lookup map from source clip name -> catalog entry
+    const catalogMap = new Map();
+    for (const entry of catalog) {
+      if (entry.filename) catalogMap.set(entry.filename, entry);
+      if (entry.clipName) catalogMap.set(entry.clipName, entry);
+      if (entry.sourceName) catalogMap.set(entry.sourceName, entry);
+    }
+
+    // 2. Scan proxies directory for *_proxy.mp4 files
+    const proxiesDir = join(projectPath, 'proxies');
+    if (!existsSync(proxiesDir)) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: `Proxies directory not found: ${proxiesDir}` }));
+      return;
+    }
+
+    const { readdir, symlink, stat } = await import('fs/promises');
+    const proxyFiles = (await readdir(proxiesDir)).filter(f => f.endsWith('_proxy.mp4'));
+
+    console.log(`[${sessionId}] Found ${proxyFiles.length} proxy files`);
+
+    // 3. Read bins directory structure
+    const binsDir = join(projectPath, 'bins');
+    let binDirNames = [];
+    if (existsSync(binsDir)) {
+      try {
+        const entries = await readdir(binsDir, { withFileTypes: true });
+        binDirNames = entries.filter(e => e.isDirectory()).map(e => e.name);
+      } catch (e) {
+        console.warn(`[${sessionId}] Could not read bins directory: ${e.message}`);
+      }
+    }
+
+    // 4. Load or initialize bins in the session
+    const binsData = loadBins(session);
+
+    // Create a bin for each directory found, keyed by name (avoid duplicates)
+    const binByName = new Map();
+    for (const bin of binsData.bins) {
+      binByName.set(bin.name.toLowerCase(), bin);
+    }
+
+    for (const dirName of binDirNames) {
+      const normalizedName = dirName.toLowerCase();
+      if (!binByName.has(normalizedName)) {
+        const newBin = {
+          id: randomUUID(),
+          name: dirName.charAt(0).toUpperCase() + dirName.slice(1),
+          icon: 'camera',
+          parentId: null,
+          assetIds: [],
+          children: [],
+        };
+        binsData.bins.push(newBin);
+        binByName.set(normalizedName, newBin);
+      }
+    }
+
+    // 5. Import each proxy file as an asset
+    let importedCount = 0;
+    const importedBinNames = new Set();
+
+    for (const proxyFile of proxyFiles) {
+      try {
+        const proxyPath = join(proxiesDir, proxyFile);
+
+        // Derive original clip name from proxy filename (strip _proxy suffix)
+        const originalClipName = proxyFile.replace(/_proxy\.mp4$/, '');
+        const originalExt = originalClipName.includes('.') ? '' : '.MP4';
+        const fullOriginalName = originalClipName.includes('.') ? originalClipName : `${originalClipName}${originalExt}`;
+
+        // Look up catalog entry
+        const catalogEntry = catalogMap.get(fullOriginalName)
+          || catalogMap.get(originalClipName)
+          || catalogMap.get(proxyFile)
+          || {};
+
+        const assetId = randomUUID();
+        const symlinkPath = join(session.assetsDir, `${assetId}.mp4`);
+        const thumbPath = join(session.assetsDir, `${assetId}_thumb.jpg`);
+
+        // Create symlink (avoids doubling disk usage)
+        try {
+          await symlink(proxyPath, symlinkPath);
+        } catch (e) {
+          // If symlink already exists or fails, skip this file
+          console.warn(`[${sessionId}] Symlink failed for ${proxyFile}: ${e.message}`);
+          continue;
+        }
+
+        // Generate thumbnail
+        try {
+          await generateThumbnail(symlinkPath, thumbPath, false);
+        } catch (e) {
+          console.warn(`[${sessionId}] Thumbnail failed for ${proxyFile}: ${e.message}`);
+        }
+
+        // Get file stats (follows symlink to actual file)
+        let fileSize = 0;
+        try {
+          const fileStats = await stat(proxyPath);
+          fileSize = fileStats.size;
+        } catch (e) {
+          console.warn(`[${sessionId}] Stat failed for ${proxyFile}: ${e.message}`);
+        }
+
+        // Build source path (original raw clip on Charlie drive)
+        const footageDir = join(projectPath, 'footage');
+        const sourcePath = join(footageDir, fullOriginalName);
+
+        const asset = {
+          id: assetId,
+          type: 'video',
+          filename: fullOriginalName,
+          path: symlinkPath,
+          thumbPath: existsSync(thumbPath) ? thumbPath : null,
+          duration: catalogEntry.duration || 0,
+          size: fileSize,
+          width: 1280,
+          height: 720,
+          createdAt: Date.now(),
+          // Pipeline metadata
+          camera: catalogEntry.camera || null,
+          colorProfile: catalogEntry.colorProfile || null,
+          classification: catalogEntry.classification || catalogEntry.primaryTag || null,
+          bin: catalogEntry.bin || catalogEntry.primaryTag || null,
+          sourcePath: existsSync(sourcePath) ? sourcePath : null,
+          isProxy: true,
+        };
+
+        session.assets.set(assetId, asset);
+        importedCount++;
+
+        // Assign to the appropriate bin based on classification
+        const assetBinKey = (asset.bin || asset.classification || '').toLowerCase();
+        if (assetBinKey && binByName.has(assetBinKey)) {
+          const targetBin = binByName.get(assetBinKey);
+          if (!targetBin.assetIds.includes(assetId)) {
+            targetBin.assetIds.push(assetId);
+            importedBinNames.add(targetBin.name);
+          }
+        }
+
+      } catch (e) {
+        console.warn(`[${sessionId}] Failed to import ${proxyFile}: ${e.message}`);
+      }
+    }
+
+    // 6. Persist assets and bins
+    saveAssetMetadata(session);
+    saveBins(session, binsData);
+
+    const resultBinNames = binsData.bins
+      .filter(b => b.assetIds.length > 0)
+      .map(b => b.name);
+
+    console.log(`[${sessionId}] Import complete: ${importedCount} clips, ${resultBinNames.length} bins populated`);
+
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({
+      imported: importedCount,
+      bins: resultBinNames,
+      sessionId,
+    }));
+
+  } catch (error) {
+    console.error(`[${sessionId}] Import project error:`, error.message);
+    res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.end(JSON.stringify({ error: error.message }));
+  }
+}
+
 // ============== RAG QUERY ==============
 
 async function handleRAGQuery(req, res) {
@@ -8819,6 +9031,10 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ error: 'Render endpoint not found' }));
       }
     }
+    // Import project from Charlie drive
+    else if (req.method === 'POST' && action === 'import-project') {
+      await handleImportProject(req, res, sessionId);
+    }
     // Bin CRUD endpoints
     else if (req.method === 'GET' && action === 'bins') {
       handleListBins(req, res, sessionId);
@@ -8904,6 +9120,7 @@ server.listen(PORT, () => {
   console.log(`   POST /session/:id/analyze-for-animation - Analyze video, return concept for approval`);
   console.log(`   POST /session/:id/generate-contextual-animation - Content-aware animation (transcribes video first)`);
   console.log(`   POST /session/:id/process-asset - Apply FFmpeg command to an asset`);
+  console.log(`   POST /session/:id/import-project - Import proxies + bins from Charlie drive project`);
   console.log(`\n   GET /session-continuity - Session persistence + heartbeat status`);
   console.log(`\n   GET /health - Health check\n`);
 });
