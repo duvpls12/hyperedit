@@ -27,13 +27,23 @@ Invoke as `/hyperedit-orchestrator` or `/hyperedit-run`.
 
 ```
 ORCHESTRATOR (init)
-  → FOOTAGE INTAKE    (always)
+  → FOOTAGE INTAKE    (always — classify + sort + generate 720p proxies)
   → PHOTO-TO-VIDEO    (conditional: only if 12_gap_report has blocking gaps)
   → AUDIO             (always, must run BEFORE assembly)
-  → ASSEMBLER         (always, reads 30_music_map + 31_radio_edit)
-  → COLOR             (always, only after 42_picture_lock)
+  → ASSEMBLER         (always, uses PROXY files — reads 30_music_map + 31_radio_edit)
+  → COLOR + CONFORM   (always, only after 42_picture_lock — replaces proxies with graded full-res)
   → TEXT & GRAPHICS   (conditional: only if brief specifies captions=true)
 ORCHESTRATOR (QA)
+```
+
+### Proxy-First Workflow
+
+All editing happens on lightweight 720p H.264 proxies. This keeps assembly fast and avoids processing 4K/HEVC footage during the creative phase. Only clips that make the final cut get graded at full resolution during the Color + Conform stage. This saves significant processing time and GPU cost.
+
+```
+Footage Intake → classify → sort → generate 720p proxies
+Assembly       → edit timeline using proxy files only
+Color+Conform  → replace proxies with full-res → apply LUT + grade → only final cut clips
 ```
 
 ## State paths

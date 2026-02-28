@@ -11,13 +11,26 @@ Execute one fully deterministic analysis pipeline per video:
 2. Vision Pass 2 — High-res semantic deep read (1 frame per shot)
 3. Optional Pass 2.5 — 11B refinement on selected shots
 4. Vision fusion (canonical merge)
-5. Unload vision model
-6. Load audio models
-7. Audio DSP + semantic pass
-8. Final synthesis
-9. Move source video to `/done`
+5. **Generate 720p proxy** for editing
+6. Unload vision model
+7. Load audio models
+8. Audio DSP + semantic pass
+9. Final synthesis
+10. Move source video to `/done`
 
 No parallelism. No model overlap. No schema drift.
+
+## Proxy-First Workflow
+
+After classification, generate a **720p H.264 proxy** for each clip. All downstream editing (assembly, review, QC) uses proxies. Full-resolution footage is only re-encoded during the final conform + grade stage after picture lock.
+
+```
+Classify (GPU) → Sort (bins/) → Proxy (proxies/) → Edit with proxies → Conform + Grade (graded/)
+```
+
+**Proxy spec:** 720p longest edge, H.264 CRF 23, ultrafast preset, AAC 128k audio.
+
+**Why:** Not all clips make the final cut. Grading is expensive (4K HEVC → H.264 at ~62x realtime). By deferring grade to post-picture-lock, we only process the 20-40 clips in the final edit rather than all 160+ raw clips.
 
 ---
 
@@ -76,8 +89,11 @@ ssh -p 29449 root@154.59.156.10 -N -f -L 8080:localhost:8080
 # 3. Verify Ollama
 curl http://localhost:8080/api/tags
 
-# 4. Run pipeline
-node scripts/run-pipeline-local.js /Volumes/Charlie/hyperedit-studio/projects/<project_id>
+# 4a. Run pipeline (local decode, remote classify via tunnel)
+node scripts/run-pipeline-local.js /Volumes/Charlie/hyperedit-studio/projects/<project_id> --classify-only
+
+# 4b. Run pipeline (remote decode + classify, local proxies) — PREFERRED
+node scripts/run-pipeline-remote.js /Volumes/Charlie/hyperedit-studio/projects/<project_id>
 ```
 
 ### Model Loading on Fresh Instance
@@ -85,6 +101,22 @@ node scripts/run-pipeline-local.js /Volumes/Charlie/hyperedit-studio/projects/<p
 ssh -p 29449 root@154.59.156.10 "nohup ollama serve > /tmp/ollama.log 2>&1 &"
 ssh -p 29449 root@154.59.156.10 "ollama pull qwen2.5vl:7b"
 ```
+
+### Pipeline Scripts
+
+| Script | Mode | Description |
+|--------|------|-------------|
+| `scripts/run-pipeline-remote.js` | Remote GPU | SCP clips to Vast.ai, classify server-side via `gpu-classify.py`, generate 720p proxies locally. **Fastest — eliminates Mac CPU bottleneck.** |
+| `scripts/run-pipeline-local.js --classify-only` | Local + tunnel | FFmpeg decode locally, classify via Ollama tunnel (localhost:8080). Skip grading. |
+| `scripts/run-pipeline-local.js --grade-only` | Local only | Read existing `shot-catalog.json`, apply LUTs to raw clips. Run after picture lock for conform. |
+| `scripts/gpu-classify.py` | Server-side | Runs on Vast.ai instance. Extracts frames + classifies via local Ollama. Called by `run-pipeline-remote.js` via SSH. |
+
+### Cost Optimization
+- **Instance cost:** $1.076/hr (RTX PRO 6000 Blackwell)
+- **Classification speed:** ~37s/clip (remote), ~50s/clip (local tunnel)
+- **160 clips → ~1.5 hrs classify-only = ~$1.60 total**
+- **Stop instance immediately after classification completes**
+- **Grading happens locally after picture lock — no GPU needed**
 
 ---
 

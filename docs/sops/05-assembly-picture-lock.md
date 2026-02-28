@@ -22,9 +22,14 @@ Dispatched by Orchestrator after both `31_radio_edit.json` (audio timing) and `1
 
 - `30_music_map.json` and `31_radio_edit.json` exist with `status: "pass"` or `"warn"`.
 - `11_selects_shortlist.json` exists with `status: "pass"` or `"warn"`.
+- `<project>/proxies/` directory contains 720p proxy files for all shortlisted clips.
 - FFmpeg server running on `localhost:3333`.
 - ComfyUI + VideoHelperSuite available for final export (Video Combine).
 - `state/agents/<project_id>/` directory exists.
+
+## Proxy-First Editing Rule
+
+**All timeline operations in this SOP use 720p proxy files, NOT raw footage.** This keeps assembly fast and avoids processing 4K/HEVC during creative editing. Each clip in `11_selects_shortlist.json` includes a `proxy_path` field pointing to `<project>/proxies/<clip_id>_proxy.mp4`. The `42_picture_lock.json` must include a `source_path` → `proxy_path` mapping for every clip so the Color agent can conform (replace proxies with full-res graded files).
 
 ## Procedure
 

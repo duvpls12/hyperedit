@@ -200,18 +200,28 @@ Key gate: `directional_continuity_score >= 0.8` in `42_picture_lock.json`.
 
 ---
 
-### Phase 5: Color
+### Phase 5: Conform + Color
 
 **Step 14 — Confirm picture lock**
 
 Verify `42_picture_lock.json` exists and `status == "pass"`. DO NOT dispatch color before picture lock is confirmed.
 
+The picture lock was built from 720p proxy files. This step replaces proxies with full-resolution graded footage — **only for clips in the final cut**.
+
 **Step 15 — Dispatch `/hyperedit-color`**
 
 Provide:
-- `42_picture_lock.json` (contains `exported_frames_directory`)
+- `42_picture_lock.json` (contains proxy→source mapping + clip list with in/out points)
+- `<project>/shot-catalog.json` (camera, color profile, LUT path per clip)
+- Raw footage paths (resolved from proxy→source mapping)
+- LUT library: `/Volumes/Charlie/hyperedit-studio/assets/luts/`
 - ComfyUI local endpoint: `http://localhost:8188`
 - color-matcher CLI path
+
+The Color agent will:
+1. **Conform** — resolve proxy→source mapping, verify all raw files accessible
+2. **Grade** — apply log conversion LUT + correction + creative look to full-res source clips
+3. **Export** — write graded clips to `<project>/graded/`
 
 **Step 16 — Validate outputs**
 
@@ -220,6 +230,8 @@ node scripts/validate-artifact.js state/agents/<project_id>/50_base_corrections.
 node scripts/validate-artifact.js state/agents/<project_id>/51_look_layers.json
 node scripts/validate-artifact.js state/agents/<project_id>/52_color_qc.json
 ```
+
+Verify `<project>/graded/` contains graded files for all clips in the picture lock.
 
 Invoke `/hyperedit-qc-gate` for color stage.
 

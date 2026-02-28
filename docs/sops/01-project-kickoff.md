@@ -51,6 +51,7 @@ Run when the user provides a client brief or invokes `/hyperedit-run <brief>`. T
    - If `format_target == "ai_lot"`: mark `photo_to_video` as `enabled: true`.
    - If client brief has `caption_required: true`: mark `text_graphics` as `enabled: true`.
    - Default: `photo_to_video` and `text_graphics` are `enabled: false` (conditional).
+   - Proxy workflow is **always enabled** — assembly uses 720p proxies, conform+grade happens after picture lock.
    - Expected output: orchestration plan updated with enabled flags.
 
 6. **Dispatch Footage Intake.**

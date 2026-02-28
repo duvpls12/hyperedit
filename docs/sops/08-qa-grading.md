@@ -47,10 +47,12 @@ Dispatched by Orchestrator after all active pipeline stages complete:
    - Identify any remaining direction reversals without reset.
    - Expected output: `continuity_result` with score and violation list.
 
-4. **Verify color-applied-after-lock.**
+4. **Verify conform + color-applied-after-lock.**
    - Confirm `50_base_corrections.json.created_at > 42_picture_lock.json.locked_at`.
    - No color work should predate picture lock.
-   - Expected output: timestamp sequence check result.
+   - Verify that graded output in `<project>/graded/` contains full-res files (not proxies) for all clips in the picture lock.
+   - Confirm the Color agent conformed proxy→source before grading (check `50_base_corrections.json → conform_map`).
+   - Expected output: timestamp sequence check result + conform verification.
 
 5. **Run caption safe area check (if applicable).**
    - Parse `62_graphics_qc.json` — verify all captions within 8% padding safe area (mobile-first, 9:16 viewport).

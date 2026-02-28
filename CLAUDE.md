@@ -167,16 +167,19 @@ This section documents the agent-driven video editing pipeline built on top of C
 
 ```
 ORCHESTRATOR (init)
-  → FOOTAGE INTAKE            always
+  → FOOTAGE INTAKE            always — classify + sort + generate 720p proxies
   → PHOTO-TO-VIDEO            conditional: only if 12_gap_report.has_blocking_gaps == true
   → AUDIO                     always — must complete BEFORE assembly (beat grid drives all cuts)
-  → ASSEMBLY                  always — reads 30_music_map + 31_radio_edit
-  → COLOR                     always — only after 42_picture_lock is confirmed
+  → ASSEMBLY                  always — uses PROXY files, reads 30_music_map + 31_radio_edit
+  → COLOR + CONFORM           always — only after 42_picture_lock; replaces proxies with graded full-res
   → TEXT & GRAPHICS           conditional: only if project_brief.caption_required == true
 ORCHESTRATOR (QA & grading)
 ```
 
-**Critical rule:** Audio BEFORE assembly. The music map and radio edit are the timeline skeleton — assembly without them produces arbitrary cuts.
+**Critical rules:**
+- Audio BEFORE assembly. The music map and radio edit are the timeline skeleton — assembly without them produces arbitrary cuts.
+- Assembly uses **proxy files only** (720p H.264). Full-res footage is not touched until Color + Conform.
+- Color + Conform only grades clips **in the final cut** — not all raw footage. This saves significant time.
 
 ### Skills Directory (`skills/`)
 
@@ -414,19 +417,42 @@ Charlie drive is mounted at `/Volumes/Charlie/`. The HyperEdit project root is `
 
 ## Auto-Sort Pipeline Overview
 
-The Cowork scheduled task (every 30 min) drives the intake + classify + grade flow:
+### Proxy-First Workflow
+
+All editing happens on lightweight **720p H.264 proxies**. Full-resolution footage is only touched at the final conform + grade stage after picture lock. This saves processing time since not all clips make the final cut.
+
+```
+CLASSIFY (GPU)  → SORT (bins/)  → PROXY (proxies/)  → EDIT (proxies)  → CONFORM+GRADE (graded/)
+   Vast.ai         symlinks         720p H.264          assembly           full-res + LUT
+   ~37s/clip        instant          ~5s/clip         on proxies only     only final cut clips
+```
+
+### Pipeline Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/run-pipeline-remote.js` | **Primary** — SCP clips to Vast.ai, classify server-side, generate proxies locally |
+| `scripts/run-pipeline-local.js --classify-only` | Classify via Ollama tunnel (localhost:8080), skip grading |
+| `scripts/run-pipeline-local.js --grade-only` | Grade previously classified clips from shot-catalog.json (post picture-lock) |
+| `scripts/gpu-classify.py` | Server-side classifier, deployed to Vast.ai instance |
+
+### Auto-Sort Flow
+
+The Cowork scheduled task (every 30 min) or manual CLI drives the intake + classify + proxy flow:
 
 ```
 Cowork polls projects/ every 30 min
   → Finds folder with brief.json but no run-ledger.json
   → get_project_brief → list_project_footage
-  → For each video:  extract_frame → get_file_metadata → classify_shot → detect_color_profile → sort_to_bin → list_available_luts → apply_lut
+  → For each video:  extract_frame → get_file_metadata → classify_shot → detect_color_profile → sort_to_bin → generate_proxy
   → For each still:  get_file_metadata → classify_shot → sort_to_bin (primary bin + photos/)
   → Initialize run-ledger.json
   → notify (summary)
 ```
 
 After auto-sort completes, the project is ready for the full orchestrator pipeline (`/hyperedit-orchestrator`). The run-ledger gates the orchestrator — it will read `current_stage` and continue from where auto-sort left off.
+
+**Grading happens later:** Only after picture lock, the Color agent conforms proxies → full-res and applies LUTs to final cut clips only.
 
 **Full prompt and schedule config:** `docs/cowork-auto-sort-task.md`
 

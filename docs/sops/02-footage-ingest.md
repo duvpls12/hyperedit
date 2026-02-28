@@ -22,7 +22,7 @@ Dispatched by Orchestrator after `01_orchestration_plan.json` is written and `fo
 
 - `00_project_brief.json` exists with `status: "pass"`.
 - FFmpeg server running on `localhost:3333`.
-- LM Studio vision model loaded (11B preferred, 8B fallback, 4B last resort — see `13-fallback-escalation.md`).
+- Vision model available: Ollama `qwen2.5vl:7b` on Vast.ai GPU (preferred), or LM Studio local (11B → 8B → 4B fallback — see `13-fallback-escalation.md`).
 - `state/agents/<project_id>/` directory exists.
 
 ## Procedure
@@ -72,12 +72,20 @@ Dispatched by Orchestrator after `01_orchestration_plan.json` is written and `fo
      - Generate synthetic only if still blocked.
    - Expected output: `12_gap_report.json` with gap list + fallback recommendations.
 
-9. **Optional: Upscale low-res clips.**
-   - If any clip resolution < 1080p and `special_instructions` indicates upscaling: invoke video2x CLI.
-   - `video2x -i clip.mp4 -o out.mp4 --scale-factor 2`
-   - Expected output: upscaled clips replaced in session assets.
+9. **Generate 720p proxies for all shortlisted clips.**
+   - For each clip in the selects shortlist, generate a lightweight proxy:
+     `ffmpeg -i <raw_clip> -vf "scale='if(gt(iw,ih),720,-2)':'if(gt(iw,ih),-2,720)'" -c:v libx264 -crf 23 -preset ultrafast -c:a aac -b:a 128k <project>/proxies/<clip_id>_proxy.mp4`
+   - Proxy files go into `<project>/proxies/`.
+   - Skip if proxy already exists (idempotent).
+   - Expected output: all shortlisted clips have corresponding proxy files.
+   - **Why:** Assembly, review, and QC happen on proxies. Full-res is only touched at final conform + grade after picture lock. This saves processing time since not all clips make the final cut.
 
-10. **Write outputs and validate.**
+10. **Optional: Upscale low-res clips.**
+    - If any clip resolution < 1080p and `special_instructions` indicates upscaling: invoke video2x CLI.
+    - `video2x -i clip.mp4 -o out.mp4 --scale-factor 2`
+    - Expected output: upscaled clips replaced in session assets.
+
+11. **Write outputs and validate.**
     - Write `10_footage_catalog.json`, `11_selects_shortlist.json`, `12_gap_report.json`.
     - Run schema validation: `scripts/validate-artifact.js`.
     - Expected output: all 3 artifacts with `status: "pass"` or `"warn"`.
@@ -92,6 +100,7 @@ Dispatched by Orchestrator after `01_orchestration_plan.json` is written and `fo
 | Hook candidate identified | ≥1 hook candidate | — | No hook candidate |
 | Payoff candidate identified | ≥1 payoff candidate | — | No payoff candidate |
 | Gaps labeled blocking/non_blocking | All labeled | — | Any unlabeled gap |
+| Proxies generated for all shortlisted clips | 100% | >90% | <90% |
 
 ## Outputs
 
