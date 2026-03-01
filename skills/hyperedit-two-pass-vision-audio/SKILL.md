@@ -500,3 +500,8 @@ Return:
 - files changed
 - verification outputs
 - local commit hash
+
+## FPS defaults (enforced)
+- quick checks: 1 FPS
+- baseline style matching: 5 FPS (default)
+- escalation rerun: 8 FPS (only if needed)
