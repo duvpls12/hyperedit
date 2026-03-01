@@ -1,5 +1,12 @@
 # CLAUDE.md
 
+## Autonomy Directive (mandatory)
+See [docs/directives/figure-it-out.md](docs/directives/figure-it-out.md).
+Never ask the operator to manually intervene in tooling, infrastructure, or configuration when you have programmatic access.
+Diagnose -> Fix -> Commit.
+Minimum 3 distinct programmatic attempts before reporting blocked.
+
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
@@ -358,7 +365,7 @@ The HyperEdit MCP server exposes Claude Desktop tools for the auto-sort pipeline
 **Start:**
 ```bash
 node mcp/server.js
-# Prints: "HyperEdit MCP server listening on stdio"
+# (no stdout output — uses stdio transport; MCP tools become available in Claude Desktop)
 ```
 
 **Registration:** Add to Claude Desktop MCP config (Claude Desktop → Settings → MCP Servers):
@@ -548,4 +555,3 @@ Fresh instance setup: `ollama serve &` then `ollama pull qwen2.5vl:7b`. See `ski
 Full end-to-end verification checklist: `docs/hyperedit-pipeline-verification.md`
 
 10 verification steps covering: MCP server health, frame extraction, camera detection, shot classification, bin sorting, LUT application, full pipeline run, UI bins, RAG query, folder watcher.
-
