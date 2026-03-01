@@ -1,0 +1,119 @@
+{
+  "status": "warn",
+  "degraded_mode": true,
+  "project_id": "1044_waterbury_20260228",
+  "created_at": "2026-03-01T04:47:44+00:00",
+  "total_selected": 12,
+  "selection_basis": "fps=5 baseline anchors + scene density proxy",
+  "selected": [
+    {
+      "clip_id": "anchor_01",
+      "source": "deliverable_master",
+      "shot_class": "mixed",
+      "room_zone": "unknown",
+      "direction": "unknown",
+      "proxy_path": null,
+      "score": 0.7
+    },
+    {
+      "clip_id": "anchor_02",
+      "source": "deliverable_master",
+      "shot_class": "mixed",
+      "room_zone": "unknown",
+      "direction": "unknown",
+      "proxy_path": null,
+      "score": 0.69
+    },
+    {
+      "clip_id": "anchor_03",
+      "source": "deliverable_master",
+      "shot_class": "mixed",
+      "room_zone": "unknown",
+      "direction": "unknown",
+      "proxy_path": null,
+      "score": 0.68
+    },
+    {
+      "clip_id": "anchor_04",
+      "source": "deliverable_master",
+      "shot_class": "mixed",
+      "room_zone": "unknown",
+      "direction": "unknown",
+      "proxy_path": null,
+      "score": 0.67
+    },
+    {
+      "clip_id": "anchor_05",
+      "source": "deliverable_master",
+      "shot_class": "mixed",
+      "room_zone": "unknown",
+      "direction": "unknown",
+      "proxy_path": null,
+      "score": 0.66
+    },
+    {
+      "clip_id": "anchor_06",
+      "source": "deliverable_master",
+      "shot_class": "mixed",
+      "room_zone": "unknown",
+      "direction": "unknown",
+      "proxy_path": null,
+      "score": 0.65
+    },
+    {
+      "clip_id": "anchor_07",
+      "source": "deliverable_master",
+      "shot_class": "mixed",
+      "room_zone": "unknown",
+      "direction": "unknown",
+      "proxy_path": null,
+      "score": 0.64
+    },
+    {
+      "clip_id": "anchor_08",
+      "source": "deliverable_master",
+      "shot_class": "mixed",
+      "room_zone": "unknown",
+      "direction": "unknown",
+      "proxy_path": null,
+      "score": 0.63
+    },
+    {
+      "clip_id": "anchor_09",
+      "source": "deliverable_master",
+      "shot_class": "mixed",
+      "room_zone": "unknown",
+      "direction": "unknown",
+      "proxy_path": null,
+      "score": 0.62
+    },
+    {
+      "clip_id": "anchor_10",
+      "source": "deliverable_master",
+      "shot_class": "mixed",
+      "room_zone": "unknown",
+      "direction": "unknown",
+      "proxy_path": null,
+      "score": 0.61
+    },
+    {
+      "clip_id": "anchor_11",
+      "source": "deliverable_master",
+      "shot_class": "mixed",
+      "room_zone": "unknown",
+      "direction": "unknown",
+      "proxy_path": null,
+      "score": 0.6
+    },
+    {
+      "clip_id": "anchor_12",
+      "source": "deliverable_master",
+      "shot_class": "mixed",
+      "room_zone": "unknown",
+      "direction": "unknown",
+      "proxy_path": null,
+      "score": 0.59
+    }
+  ],
+  "blocking_issues": []
+}

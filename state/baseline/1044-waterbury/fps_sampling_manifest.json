@@ -1,0 +1,30 @@
+{
+  "project_id": "1044_waterbury_20260228",
+  "source_video": "/Volumes/Charlie/deliverables/Jacob Guthrie/1044 Waterbury Lane/1044 Waterbury Lane.mp4",
+  "fps_policy": {
+    "quick_precheck_fps": 1,
+    "baseline_fps": 5,
+    "escalation_fps": 8
+  },
+  "generated_at_utc": "2026-03-01T04:47:02Z",
+  "samples": {
+    "1": {
+      "dir": "/Users/davideby/hyperedit/state/baseline/1044-waterbury/fps_1",
+      "frame_count": 44,
+      "first_frame": "f_00001.jpg",
+      "last_frame": "f_00044.jpg"
+    },
+    "5": {
+      "dir": "/Users/davideby/hyperedit/state/baseline/1044-waterbury/fps_5",
+      "frame_count": 221,
+      "first_frame": "f_00001.jpg",
+      "last_frame": "f_00221.jpg"
+    },
+    "8": {
+      "dir": "/Users/davideby/hyperedit/state/baseline/1044-waterbury/fps_8",
+      "frame_count": 354,
+      "first_frame": "f_00001.jpg",
+      "last_frame": "f_00354.jpg"
+    }
+  }
+}

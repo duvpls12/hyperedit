@@ -1,0 +1,12 @@
+{
+  "status": "warn",
+  "project_id": "1044_waterbury_20260228",
+  "created_at": "2026-03-01T04:47:44+00:00",
+  "summary": "Degraded final QA: deliverable-only analysis run with partial stage artifact set",
+  "final_qc_result_path": "/Users/davideby/hyperedit/state/agents/1044_waterbury_20260228/final_qc_result.json",
+  "blocking_issues": [],
+  "degraded_labels": [
+    "missing color_qc_result.json",
+    "missing text_graphics_qc_result.json"
+  ]
+}

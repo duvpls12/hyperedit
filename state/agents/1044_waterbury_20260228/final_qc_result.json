@@ -1,0 +1,57 @@
+{
+  "status": "warn",
+  "blocking_issues": [],
+  "assumptions": [
+    "Color/text stages not executed in this deliverable-only baseline cycle"
+  ],
+  "open_questions": [],
+  "source_references": [
+    {
+      "type": "artifact",
+      "path": "/Users/davideby/hyperedit/state/agents/1044_waterbury_20260228/footage_intake_qc_result.json"
+    },
+    {
+      "type": "artifact",
+      "path": "/Users/davideby/hyperedit/state/agents/1044_waterbury_20260228/audio_qc_result.json"
+    },
+    {
+      "type": "artifact",
+      "path": "/Users/davideby/hyperedit/state/agents/1044_waterbury_20260228/assembly_qc_result.json"
+    }
+  ],
+  "project_id": "1044_waterbury_20260228",
+  "stage": "final",
+  "created_at": "2026-03-01T04:47:44+00:00",
+  "overall": "warn",
+  "gates": [
+    {
+      "gate_id": "G-99",
+      "gate_name": "all_artifacts_written",
+      "result": "warn",
+      "actual_value": {
+        "missing_stage_qc": [
+          "color_qc_result.json",
+          "text_graphics_qc_result.json"
+        ]
+      },
+      "threshold": "all active stage qc artifacts present",
+      "detail": "Partial stage set executed in degraded deliverable-analysis cycle"
+    },
+    {
+      "gate_id": "G-100",
+      "gate_name": "no_blocking_issues",
+      "result": "pass",
+      "actual_value": true,
+      "threshold": true,
+      "detail": "No artifact-level blocking_issues present in generated stage artifacts"
+    },
+    {
+      "gate_id": "G-101",
+      "gate_name": "overall_grade",
+      "result": "warn",
+      "actual_value": "C (degraded)",
+      "threshold": "A/B full-stage run",
+      "detail": "Grade computed from available stages + baseline metrics only"
+    }
+  ]
+}

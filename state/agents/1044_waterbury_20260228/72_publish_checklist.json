@@ -1,0 +1,19 @@
+{
+  "status": "warn",
+  "project_id": "1044_waterbury_20260228",
+  "created_at": "2026-03-01T04:47:44+00:00",
+  "publish_ready": false,
+  "delivery_checklist_items": {
+    "picture_lock": true,
+    "audio_qc": true,
+    "assembly_qc": true,
+    "color_qc": false,
+    "text_graphics_qc": false,
+    "final_rollup": true
+  },
+  "recommended_actions": [
+    "Run color stage + color_qc_result.json",
+    "Run text/graphics stage (or explicit skip artifact) + text_graphics_qc_result.json",
+    "Re-run final QC rollup on complete stage set"
+  ]
+}

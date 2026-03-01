@@ -1,0 +1,44 @@
+{
+  "status": "pass",
+  "blocking_issues": [],
+  "assumptions": [
+    "degraded deliverable-only proxy for intake artifacts"
+  ],
+  "open_questions": [],
+  "source_references": [
+    {
+      "type": "artifact",
+      "path": "/Users/davideby/hyperedit/state/agents/1044_waterbury_20260228/10_footage_catalog.json"
+    },
+    {
+      "type": "artifact",
+      "path": "/Users/davideby/hyperedit/state/agents/1044_waterbury_20260228/11_selects_shortlist.json"
+    },
+    {
+      "type": "artifact",
+      "path": "/Users/davideby/hyperedit/state/agents/1044_waterbury_20260228/12_gap_report.json"
+    }
+  ],
+  "project_id": "1044_waterbury_20260228",
+  "stage": "footage_intake",
+  "created_at": "2026-03-01T04:47:44+00:00",
+  "overall": "pass",
+  "gates": [
+    {
+      "gate_id": "G-01",
+      "gate_name": "artifact_validity",
+      "result": "pass",
+      "actual_value": "3/3 present",
+      "threshold": "all present",
+      "detail": "10/11/12 artifacts written and JSON-valid"
+    },
+    {
+      "gate_id": "G-02",
+      "gate_name": "selects_coverage",
+      "result": "pass",
+      "actual_value": 12,
+      "threshold": 8,
+      "detail": "proxy shortlist coverage from baseline anchors"
+    }
+  ]
+}
