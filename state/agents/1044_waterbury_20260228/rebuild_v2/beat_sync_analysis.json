@@ -1,0 +1,12 @@
+{
+  "video": "1044_waterbury_lane",
+  "audio_source": "/Users/davideby/hyperedit/state/baseline/1044-waterbury/audio_dsp_real.json",
+  "bpm": 117.454,
+  "beat_count": 72,
+  "cut_count": 34,
+  "alignment_tolerance_s": 0.12,
+  "aligned_cuts": 20,
+  "alignment_ratio": 0.5714,
+  "mean_cut_to_beat_offset_s": 0.1513,
+  "median_cut_to_beat_offset_s": 0.063
+}

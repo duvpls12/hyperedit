@@ -1,0 +1,15 @@
+{
+  "video": "1044_waterbury_lane",
+  "room_flow": [
+    {
+      "room_tag": "unknown",
+      "start_shot": 1,
+      "end_shot": 35,
+      "duration_s": 44.233,
+      "shots": 35
+    }
+  ],
+  "room_sequence": [
+    "unknown"
+  ]
+}

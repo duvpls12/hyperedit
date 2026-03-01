@@ -1,0 +1,6 @@
+{
+  "step": "0_clean_slate",
+  "deleted": [],
+  "preserved_keep_list": "all existing artifacts preserved; no explicit invalid artifact list was provided in task context",
+  "blocker_if_any": null
+}

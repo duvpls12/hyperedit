@@ -1,0 +1,34 @@
+{
+  "step": "1B_model_load",
+  "api": "http://192.168.1.242:6759/v1",
+  "available": [
+    "openai/gpt-oss-20b",
+    "qwen/qwen2.5-coder-14b",
+    "qwen2-audio-7b",
+    "gemma-music-recommender",
+    "whisper-large-v3-turbo",
+    "qwen/qwen3-vl-8b",
+    "qwen/qwen3-vl-4b",
+    "llama-3.2-11b-vision-instruct",
+    "text-embedding-mxbai-embed-large-v1",
+    "text-embedding-qwen3-embedding-0.6b",
+    "text-embedding-nomic-embed-text-v1.5"
+  ],
+  "warmups": [
+    {
+      "model": "llama-3.2-11b-vision-instruct",
+      "status": "error",
+      "http": 400
+    },
+    {
+      "model": "qwen/qwen3-vl-8b",
+      "status": "error",
+      "http": 400
+    },
+    {
+      "model": "qwen/qwen3-vl-4b",
+      "status": "error",
+      "http": 400
+    }
+  ]
+}

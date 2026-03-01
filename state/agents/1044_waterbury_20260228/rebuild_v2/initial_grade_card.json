@@ -1,0 +1,21 @@
+{
+  "project_id": "1044_waterbury_20260228",
+  "cycle": 1,
+  "overall_score": 47.14,
+  "status": "scaffolded_no_render",
+  "rendered_video_path": null,
+  "top_deltas": [
+    {
+      "metric": "pace_score",
+      "delta_to_90": 90
+    },
+    {
+      "metric": "room_order_score",
+      "delta_to_90": -10.0
+    },
+    {
+      "metric": "beat_alignment_score",
+      "delta_to_90": 32.86
+    }
+  ]
+}

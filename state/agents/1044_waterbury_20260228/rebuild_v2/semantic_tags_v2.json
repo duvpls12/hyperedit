@@ -1,0 +1,1660 @@
+{
+  "video": "1044_waterbury_lane",
+  "version": "v2",
+  "source": "per-shot middle frame classification via LM Studio",
+  "model_ladder": [
+    "llama-3.2-11b-vision-instruct",
+    "qwen/qwen3-vl-8b",
+    "qwen/qwen3-vl-4b"
+  ],
+  "lm_studio_api": "http://192.168.1.242:6759/v1",
+  "tags": [
+    {
+      "shot_index": 1,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00004.jpg",
+      "frame_time_s": 0.8,
+      "shot_start_s": 0.0,
+      "shot_end_s": 1.533,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 2,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00020.jpg",
+      "frame_time_s": 4.0,
+      "shot_start_s": 1.533,
+      "shot_end_s": 6.6,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 3,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00036.jpg",
+      "frame_time_s": 7.2,
+      "shot_start_s": 6.6,
+      "shot_end_s": 7.633,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 4,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00041.jpg",
+      "frame_time_s": 8.2,
+      "shot_start_s": 7.633,
+      "shot_end_s": 8.667,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 5,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00046.jpg",
+      "frame_time_s": 9.2,
+      "shot_start_s": 8.667,
+      "shot_end_s": 9.667,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 6,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00051.jpg",
+      "frame_time_s": 10.2,
+      "shot_start_s": 9.667,
+      "shot_end_s": 10.7,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 7,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00056.jpg",
+      "frame_time_s": 11.2,
+      "shot_start_s": 10.7,
+      "shot_end_s": 11.7,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 8,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00061.jpg",
+      "frame_time_s": 12.2,
+      "shot_start_s": 11.7,
+      "shot_end_s": 12.733,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 9,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00066.jpg",
+      "frame_time_s": 13.2,
+      "shot_start_s": 12.733,
+      "shot_end_s": 13.733,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 10,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00071.jpg",
+      "frame_time_s": 14.2,
+      "shot_start_s": 13.733,
+      "shot_end_s": 14.767,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 11,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00076.jpg",
+      "frame_time_s": 15.2,
+      "shot_start_s": 14.767,
+      "shot_end_s": 15.767,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 12,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00081.jpg",
+      "frame_time_s": 16.2,
+      "shot_start_s": 15.767,
+      "shot_end_s": 16.8,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 13,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00086.jpg",
+      "frame_time_s": 17.2,
+      "shot_start_s": 16.8,
+      "shot_end_s": 17.8,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 14,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00094.jpg",
+      "frame_time_s": 18.8,
+      "shot_start_s": 17.8,
+      "shot_end_s": 19.833,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 15,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00102.jpg",
+      "frame_time_s": 20.4,
+      "shot_start_s": 19.833,
+      "shot_end_s": 20.867,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 16,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00107.jpg",
+      "frame_time_s": 21.4,
+      "shot_start_s": 20.867,
+      "shot_end_s": 21.867,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 17,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00112.jpg",
+      "frame_time_s": 22.4,
+      "shot_start_s": 21.867,
+      "shot_end_s": 22.9,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 18,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00116.jpg",
+      "frame_time_s": 23.2,
+      "shot_start_s": 22.9,
+      "shot_end_s": 23.4,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 19,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00118.jpg",
+      "frame_time_s": 23.6,
+      "shot_start_s": 23.4,
+      "shot_end_s": 23.9,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 20,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00121.jpg",
+      "frame_time_s": 24.2,
+      "shot_start_s": 23.9,
+      "shot_end_s": 24.533,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 21,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00124.jpg",
+      "frame_time_s": 24.8,
+      "shot_start_s": 24.533,
+      "shot_end_s": 25.2,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 22,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00128.jpg",
+      "frame_time_s": 25.6,
+      "shot_start_s": 25.2,
+      "shot_end_s": 25.933,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 23,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00131.jpg",
+      "frame_time_s": 26.2,
+      "shot_start_s": 25.933,
+      "shot_end_s": 26.433,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 24,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00134.jpg",
+      "frame_time_s": 26.8,
+      "shot_start_s": 26.433,
+      "shot_end_s": 26.967,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 25,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00137.jpg",
+      "frame_time_s": 27.4,
+      "shot_start_s": 26.967,
+      "shot_end_s": 27.967,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 26,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00142.jpg",
+      "frame_time_s": 28.4,
+      "shot_start_s": 27.967,
+      "shot_end_s": 29.0,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 27,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00148.jpg",
+      "frame_time_s": 29.6,
+      "shot_start_s": 29.0,
+      "shot_end_s": 30.0,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 28,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00151.jpg",
+      "frame_time_s": 30.2,
+      "shot_start_s": 30.0,
+      "shot_end_s": 30.533,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 29,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00156.jpg",
+      "frame_time_s": 31.2,
+      "shot_start_s": 30.533,
+      "shot_end_s": 31.833,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 30,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00162.jpg",
+      "frame_time_s": 32.4,
+      "shot_start_s": 31.833,
+      "shot_end_s": 32.867,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 31,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00167.jpg",
+      "frame_time_s": 33.4,
+      "shot_start_s": 32.867,
+      "shot_end_s": 34.067,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 32,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00173.jpg",
+      "frame_time_s": 34.6,
+      "shot_start_s": 34.067,
+      "shot_end_s": 35.1,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 33,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00178.jpg",
+      "frame_time_s": 35.6,
+      "shot_start_s": 35.1,
+      "shot_end_s": 36.133,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 34,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00186.jpg",
+      "frame_time_s": 37.2,
+      "shot_start_s": 36.133,
+      "shot_end_s": 38.167,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 35,
+      "frame": "state/baseline/1044-waterbury/fps_5/f_00206.jpg",
+      "frame_time_s": 41.2,
+      "shot_start_s": 38.167,
+      "shot_end_s": 44.233,
+      "room_tag": "unknown",
+      "scene_type": "unknown",
+      "camera_motion": "unknown",
+      "shot_type": "unknown",
+      "mood": "unknown",
+      "confidence": 0.0,
+      "vision_model_used": null,
+      "vision_fallback_chain": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    }
+  ],
+  "blocking_issues": [
+    {
+      "shot_index": 1,
+      "mid_s": 0.767,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 2,
+      "mid_s": 4.067,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 3,
+      "mid_s": 7.117,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 4,
+      "mid_s": 8.15,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 5,
+      "mid_s": 9.167,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 6,
+      "mid_s": 10.183,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 7,
+      "mid_s": 11.2,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 8,
+      "mid_s": 12.217,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 9,
+      "mid_s": 13.233,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 10,
+      "mid_s": 14.25,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 11,
+      "mid_s": 15.267,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 12,
+      "mid_s": 16.283,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 13,
+      "mid_s": 17.3,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 14,
+      "mid_s": 18.817,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 15,
+      "mid_s": 20.35,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 16,
+      "mid_s": 21.367,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 17,
+      "mid_s": 22.383,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 18,
+      "mid_s": 23.15,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 19,
+      "mid_s": 23.65,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 20,
+      "mid_s": 24.217,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 21,
+      "mid_s": 24.867,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 22,
+      "mid_s": 25.567,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 23,
+      "mid_s": 26.183,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 24,
+      "mid_s": 26.7,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 25,
+      "mid_s": 27.467,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 26,
+      "mid_s": 28.483,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 27,
+      "mid_s": 29.5,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 28,
+      "mid_s": 30.267,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 29,
+      "mid_s": 31.183,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 30,
+      "mid_s": 32.35,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 31,
+      "mid_s": 33.467,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 32,
+      "mid_s": 34.583,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 33,
+      "mid_s": 35.617,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 34,
+      "mid_s": 37.15,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    },
+    {
+      "shot_index": 35,
+      "mid_s": 41.2,
+      "issue": "all_models_failed",
+      "fallback_errors": [
+        {
+          "model": "llama-3.2-11b-vision-instruct",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-8b",
+          "error": "http_500"
+        },
+        {
+          "model": "qwen/qwen3-vl-4b",
+          "error": "http_500"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "step": "1A_inputs_frames",
+  "frames_dir": "/Users/davideby/hyperedit/state/baseline/1044-waterbury/fps_5",
+  "frame_count": 221,
+  "ffprobe_path": "/Users/davideby/hyperedit/state/baseline/1044-waterbury/ffprobe.json",
+  "audio_dsp_path": "/Users/davideby/hyperedit/state/baseline/1044-waterbury/audio_dsp_real.json",
+  "scene_log_path": "/Users/davideby/hyperedit/state/baseline/1044-waterbury/scene_detect.log",
+  "timestamp_utc": "2026-03-01T05:13:43.847761+00:00"
+}
